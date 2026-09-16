@@ -384,7 +384,13 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
    um funil são o mesmo template com a cidade trocada, então uma amostra já
    mostra o que está no ar — e mobile porque é de onde vem o tráfego e onde
    as notas são piores. Iframe em vez de screenshot: nunca desatualiza. */
-.amostra{display:flex;gap:26px;align-items:center;flex-wrap:wrap;padding:22px 0 26px}
+/* No desktop o preview fica à esquerda e a lista à direita: dá para comparar
+   a arte da página com as notas sem rolar a tela. Abaixo de 1100px empilha. */
+.funil-corpo{
+  display:grid;grid-template-columns:248px minmax(0,1fr);
+  gap:32px;align-items:start;padding-top:22px;
+}
+.amostra{display:flex;flex-direction:column;gap:16px;align-items:flex-start}
 .moldura{
   position:relative;flex:none;
   width:218px;height:392px;
@@ -404,7 +410,7 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
   transform:scale(.5589);transform-origin:top left;
   pointer-events:none;background:var(--ink-2);
 }
-.amostra-txt{display:flex;flex-direction:column;gap:8px;min-width:0}
+.amostra-txt{display:flex;flex-direction:column;gap:8px;min-width:0;max-width:100%}
 .amostra-txt .rot{
   font-family:var(--ui);font-weight:600;font-size:9.5px;
   letter-spacing:.13em;text-transform:uppercase;color:var(--dim-2);
@@ -455,6 +461,13 @@ table.paginas .nota.ruim{color:var(--bad);border-color:var(--bad-line);backgroun
 .nota-badge.vazia,
 table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background:transparent;font-weight:400}
 
+.par-nota{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
+.agora{
+  font-family:var(--ui);font-weight:600;font-size:9px;
+  letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
+}
+.agora.boa{color:var(--ok)} .agora.media{color:var(--warn)} .agora.ruim{color:var(--bad)}
+
 .fonte{font-family:var(--ui);font-weight:500;font-size:10px;letter-spacing:.06em;color:var(--dim-2);white-space:nowrap}
 .fonte.real{color:var(--ok)}
 .fonte.local{color:var(--gold)}
@@ -475,6 +488,10 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 .lb .lbbar button{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer;font-size:12px;color:var(--paper)}
 .lb .lbbar button:hover{border-color:var(--sage)}
 
+@media (max-width:1100px){
+  .funil-corpo{grid-template-columns:minmax(0,1fr);gap:24px}
+  .amostra{flex-direction:row;align-items:center;gap:26px;flex-wrap:wrap}
+}
 @media (max-width:760px){
   .top{padding-top:24px;padding-bottom:20px;gap:20px}
   .tally{margin-left:0;width:100%}
@@ -593,19 +610,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
      As notas são as do PageSpeed anotadas lá; célula vazia = ainda não medida. */
   /* FUNIS:inicio */
   var FUNIS = [
-    {nome:"Rota 45", versao:"V1", paginas:[
-      {id:"turne-mdv-campina-grande", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-campina-grande/"},
-      {id:"turne-mdv-joao-pessoa", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joao-pessoa/"},
-      {id:"turne-mdv-palmas", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas/"},
-      {id:"turne-mdv-vitoriadaconquista", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista/"},
-      {id:"turne-mdv-brasilia", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-brasilia/"},
-      {id:"turne-mdv-manaus", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-manaus/"},
-      {id:"turne-mdv-belem", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-belem/"},
-      {id:"turne-mdv-sinop", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop/"},
-      {id:"turne-mdv-cuiaba", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba/"},
-      {id:"turne-mdv-ribeirao-preto", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeirao-preto/"}
-    ]},
-    {nome:"Rota 45", versao:"V4", paginas:[
+    {nome:"Rota 45", versao:"ROTA 45 V4", paginas:[
       {id:"turne-mdv-campinagrande-v4", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v4/"},
       {id:"turne-mdv-joaopessoa-v4", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v4/"},
       {id:"turne-mdv-palmas-v4", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas-v4/"},
@@ -617,7 +622,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       {id:"turne-mdv-cuiaba-v4", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v4/"},
       {id:"turne-mdv-ribeiraopreto-v4", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v4/"}
     ]},
-    {nome:"Rota 45", versao:"V5", paginas:[
+    {nome:"Rota 45", versao:"ROTA 45 V5", paginas:[
       {id:"turne-mdv-campinagrande-v5", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:85, desktop:78, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v5/"},
       {id:"turne-mdv-joaopessoa-v5", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v5/"},
       {id:"turne-mdv-palmas-v5", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas-v5/"},
@@ -910,10 +915,12 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         campo: Boolean(m[qual].temCampo),
         local: m.origem === "local",   // Lighthouse rodado na mão, não o PageSpeed
         amostras: m[qual].amostras || null,
+        ultima: typeof m[qual].ultima === "number" ? m[qual].ultima : null,
         quando: m.medidoEm
       };
     }
-    return {valor:p[qual], deOnde:"planilha", campo:false, local:false, quando:null};
+    return {valor:p[qual], deOnde:"planilha", campo:false, local:false,
+            amostras:null, ultima:null, quando:null};
   }
 
   function renderAutomacao(){
@@ -954,6 +961,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           '<h2>' + esc(f.nome) + ' <span class="versao">' + esc(f.versao) + '</span></h2>' +
           '<span class="meta">' + meta + '</span>' +
         '</div>' +
+        '<div class="funil-corpo">' +
         amostra(f) +
         '<div class="tabela-wrap"><table class="paginas">' +
           '<thead><tr>' +
@@ -975,6 +983,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
             '</tr>';
           }).join("") +
         '</tbody></table></div>' +
+        '</div>' +
       '</section>';
     }).join("");
 
@@ -1009,13 +1018,21 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       '</div>';
     }
 
+    /* mostra a maior nota já registrada; quando a última rodada deu menos,
+       o número atual aparece embaixo — senão uma queda real ficaria invisível */
     function nota(n){
       if(n.valor == null) return '<span class="nota vazia" title="ainda não medida">—</span>';
-      var dica = n.amostras && n.amostras.length > 1
-        ? "melhor de " + n.amostras.length + " medições: " + n.amostras.join(", ")
-        : "";
-      return '<span class="nota ' + faixa(n.valor) + '"' +
-        (dica ? ' title="' + dica + '"' : '') + '>' + n.valor + '</span>';
+      var partes = [];
+      if(n.amostras && n.amostras.length > 1){
+        partes.push("última rodada: " + n.amostras.join(", "));
+      }
+      var caiu = typeof n.ultima === "number" && n.ultima < n.valor;
+      if(caiu) partes.push("maior já registrada: " + n.valor);
+      var selo = '<span class="nota ' + faixa(n.valor) + '"' +
+        (partes.length ? ' title="' + partes.join(" · ") + '"' : '') + '>' + n.valor + '</span>';
+      if(!caiu) return selo;
+      return '<span class="par-nota">' + selo +
+        '<span class="agora ' + faixa(n.ultima) + '" title="medição mais recente">agora ' + n.ultima + '</span></span>';
     }
 
     /* de onde veio a nota: medição automática (com ou sem dado de visitantes

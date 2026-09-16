@@ -3,9 +3,14 @@ import { PAGINAS } from "./lista-paginas.js";
 
 /* Mede as páginas no PageSpeed Insights e grava no Postgres.
  *
- * TRÊS MEDIÇÕES POR FORMATO, VALE A MELHOR. A nota de laboratório do PSI
- * oscila muito: a mesma página deu 83, 66 e 43 em execuções seguidas no
- * mesmo dia. Uma medição só não diz nada.
+ * TRÊS MEDIÇÕES POR FORMATO, E A MAIOR NOTA PREVALECE — inclusive sobre as
+ * rodadas anteriores. A nota de laboratório do PSI oscila muito: a mesma
+ * página deu 92, 83, 66 e 41 em execuções do mesmo dia. Guardar a maior evita
+ * que um número ruim por acaso vire a verdade do painel.
+ *
+ * O preço disso é que uma página que piorou de verdade não apareceria. Por
+ * isso o registro também guarda `ultima` (a melhor desta rodada) e as
+ * amostras: o painel mostra a maior, mas deixa ver a medição atual ao lado.
  *
  * CADA AMOSTRA É GRAVADA ASSIM QUE SAI, e a função para de começar trabalho
  * novo antes do limite de execução — assim um estouro nunca joga fora o que
@@ -85,6 +90,11 @@ async function medirPagina(p, chave, expira) {
     desktop: (ant && ant.desktop) || null,
     medidoEm: (ant && ant.medido_em) || null
   };
+  /* melhor nota já registrada, de qualquer rodada anterior */
+  const recorde = {
+    mobile: ((ant && ant.mobile) || {}).nota ?? null,
+    desktop: ((ant && ant.desktop) || {}).nota ?? null
+  };
   const rodada = { mobile: null, desktop: null };
 
   async function amostra(estrategia) {
@@ -96,8 +106,16 @@ async function medirPagina(p, chave, expira) {
     }
     const atual = rodada[estrategia];
     const amostras = ((atual && atual.amostras) || []).concat(r.nota);
-    const melhor = !atual || r.nota > atual.nota ? r : atual;
-    rodada[estrategia] = { ...melhor, amostras };
+    const melhorDaRodada = !atual || r.nota > (atual.ultima ?? atual.nota) ? r : atual;
+    const desta = melhorDaRodada.nota ?? r.nota;
+    const topo = Math.max(desta, recorde[estrategia] ?? -1);
+
+    rodada[estrategia] = {
+      ...r,                 // campo/temCampo vêm sempre da medição mais recente
+      nota: topo,           // a que o painel mostra
+      ultima: desta,        // a melhor desta rodada, para dar para comparar
+      amostras
+    };
     registro[estrategia] = rodada[estrategia];
     registro.medidoEm = new Date().toISOString();
     await gravar(registro);
