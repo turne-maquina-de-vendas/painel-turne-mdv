@@ -349,6 +349,47 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 .funil-head .versao{color:var(--gold)}
 .funil-head .meta{font-family:var(--ui);font-weight:500;font-size:10.5px;letter-spacing:.08em;color:var(--dim-2);margin-left:auto;font-variant-numeric:tabular-nums}
 
+/* Preview ao vivo da primeira página do funil, em celular. As 10 páginas de
+   um funil são o mesmo template com a cidade trocada, então uma amostra já
+   mostra o que está no ar — e mobile porque é de onde vem o tráfego e onde
+   as notas são piores. Iframe em vez de screenshot: nunca desatualiza. */
+.amostra{display:flex;gap:26px;align-items:center;flex-wrap:wrap;padding:22px 0 26px}
+.moldura{
+  position:relative;flex:none;
+  width:218px;height:392px;
+  border:6px solid var(--surface-3);border-radius:26px;
+  background:var(--ink-2);overflow:hidden;
+  box-shadow:0 10px 34px rgba(0,0,0,.40);
+}
+.moldura .aviso{
+  position:absolute;inset:0;z-index:0;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  font-family:var(--ui);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim-2);padding:24px;
+}
+.moldura iframe{
+  position:absolute;top:0;left:0;z-index:1;
+  width:390px;height:701px;border:0;
+  transform:scale(.5589);transform-origin:top left;
+  pointer-events:none;background:var(--ink-2);
+}
+.amostra-txt{display:flex;flex-direction:column;gap:8px;min-width:0}
+.amostra-txt .rot{
+  font-family:var(--ui);font-weight:600;font-size:9.5px;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--dim-2);
+}
+.amostra-txt h3{font-family:var(--disp);font-weight:600;font-size:20px;margin:0;letter-spacing:-.015em}
+.amostra-txt .end{
+  font-family:var(--mono);font-size:10.5px;color:var(--dim-2);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:40ch;
+}
+.amostra-notas{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.amostra-notas .par{display:flex;align-items:center;gap:8px}
+.amostra-notas .cap{
+  font-family:var(--ui);font-weight:600;font-size:9.5px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--dim-2);
+}
+
 .tabela-wrap{overflow-x:auto}
 table.paginas{width:100%;border-collapse:collapse;font-size:14px;min-width:700px}
 table.paginas th{
@@ -367,15 +408,20 @@ td.dia{font-family:var(--ui);font-weight:500;color:var(--dim);white-space:nowrap
 td.num{text-align:center}
 
 /* nota do PageSpeed — no escopo da tabela, para não colidir com as anotações */
+.nota-badge,
 table.paginas .nota{
   display:inline-flex;align-items:center;justify-content:center;
   min-width:44px;padding:6px 10px;border-radius:var(--r-sm);
   font-family:var(--disp);font-weight:600;font-size:15px;
   font-variant-numeric:tabular-nums;border:1px solid;
 }
+.nota-badge.boa,
 table.paginas .nota.boa{color:var(--ok);border-color:var(--ok-line);background:var(--ok-bg)}
+.nota-badge.media,
 table.paginas .nota.media{color:var(--warn);border-color:var(--warn-line);background:var(--warn-bg)}
+.nota-badge.ruim,
 table.paginas .nota.ruim{color:var(--bad);border-color:var(--bad-line);background:var(--bad-bg)}
+.nota-badge.vazia,
 table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background:transparent;font-weight:400}
 
 .fonte{font-family:var(--ui);font-weight:500;font-size:10px;letter-spacing:.06em;color:var(--dim-2);white-space:nowrap}
@@ -462,7 +508,21 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   /* Cada remessa é um lote de entrega. A 02 é a que veio da pasta
      "2 demanda campina grande"; as outras ficam prontas para receber artes. */
   var REMESSAS = [
-    {id:"r01", nome:"Remessa 01", artes:[]},
+    {id:"r01", nome:"Remessa 01", artes:[
+      {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/r3_ad01.jpg"]},
+      {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/r3_ad02.jpg"]},
+      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/r3_ad03.jpg"]},
+      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/r3_ad04.jpg"]},
+      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/r3_ad05.jpg"]},
+      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/r3_ad06.jpg"]},
+      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/r3_ad07.jpg"]},
+      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/r3_ad08.jpg"]},
+      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/r3_ad09.jpg"]},
+      {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/r3_ad10.jpg"]},
+      {id:"ad11",code:"AD11",tipo:"IMG",files:["arts/r3_ad11.jpg"]},
+      {id:"ad12",code:"AD12",tipo:"IMG",files:["arts/r3_ad12.jpg"]},
+      {id:"ad13",code:"AD13",tipo:"IMG",files:["arts/r3_ad13.jpg"]}
+    ]},
     {id:"r02", nome:"Remessa 02", artes:[
       {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/ad01.jpg"]},
       {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/ad02.jpg"]},
@@ -482,21 +542,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       {id:"ad16",code:"AD16",tipo:"IMG",files:["arts/ad16.jpg"]},
       {id:"ad17",code:"AD17",tipo:"CAR",files:["arts/ad17_CARD01.jpg","arts/ad17_CARD02.jpg","arts/ad17_CARD03.jpg","arts/ad17_CARD04.jpg"]}
     ]},
-    {id:"r03", nome:"Remessa 03", artes:[
-      {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/r3_ad01.jpg"]},
-      {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/r3_ad02.jpg"]},
-      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/r3_ad03.jpg"]},
-      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/r3_ad04.jpg"]},
-      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/r3_ad05.jpg"]},
-      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/r3_ad06.jpg"]},
-      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/r3_ad07.jpg"]},
-      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/r3_ad08.jpg"]},
-      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/r3_ad09.jpg"]},
-      {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/r3_ad10.jpg"]},
-      {id:"ad11",code:"AD11",tipo:"IMG",files:["arts/r3_ad11.jpg"]},
-      {id:"ad12",code:"AD12",tipo:"IMG",files:["arts/r3_ad12.jpg"]},
-      {id:"ad13",code:"AD13",tipo:"IMG",files:["arts/r3_ad13.jpg"]}
-    ]},
+    {id:"r03", nome:"Remessa 03", artes:[]},
     {id:"r04", nome:"Remessa 04", artes:[]}
   ];
 
@@ -856,6 +902,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           '<h2>' + esc(f.nome) + ' <span class="versao">' + esc(f.versao) + '</span></h2>' +
           '<span class="meta">' + meta + '</span>' +
         '</div>' +
+        amostra(f) +
         '<div class="tabela-wrap"><table class="paginas">' +
           '<thead><tr>' +
             '<th>Cidade</th><th>Evento</th><th>Status</th>' +
@@ -878,6 +925,37 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         '</tbody></table></div>' +
       '</section>';
     }).join("");
+
+    /* preview da primeira página do funil: as 10 são o mesmo template com a
+       cidade trocada, então uma amostra basta para ver o que está no ar */
+    function amostra(f){
+      var p = f.paginas[0];
+      if(!p) return "";
+      var m = notaVigente(p,"mobile"), d = notaVigente(p,"desktop");
+      var selo = function(n){
+        if(n.valor == null) return '<span class="nota-badge vazia">—</span>';
+        return '<span class="nota-badge ' + faixa(n.valor) + '">' + n.valor + '</span>';
+      };
+      return '<div class="amostra">' +
+        '<div class="moldura">' +
+          '<div class="aviso">pré-visualização indisponível aqui</div>' +
+          '<iframe src="' + esc(p.url) + '" tabindex="-1" ' +
+            'title="Pré-visualização de ' + esc(p.cidade) + '" ' +
+            'sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe>' +
+        '</div>' +
+        '<div class="amostra-txt">' +
+          '<span class="rot">Primeira da lista · preview mobile</span>' +
+          '<h3>' + esc(p.cidade) + '</h3>' +
+          '<span class="end">' + esc(slug(p.url)) + '</span>' +
+          '<div class="amostra-notas">' +
+            '<span class="par"><span class="cap">Mobile</span>' + selo(m) + '</span>' +
+            '<span class="par"><span class="cap">Desktop</span>' + selo(d) + '</span>' +
+          '</div>' +
+          '<a class="abrir-pg" href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer" ' +
+            'style="align-self:flex-start;margin-top:6px">abrir a página ↗</a>' +
+        '</div>' +
+      '</div>';
+    }
 
     function nota(n){
       if(n.valor == null) return '<span class="nota vazia" title="ainda não medida">—</span>';
