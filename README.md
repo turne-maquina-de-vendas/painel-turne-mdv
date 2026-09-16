@@ -19,11 +19,16 @@ No ar em https://painelturnemdv.vercel.app
 
 ## Rotina: mexi no painel
 
-Edite **`ferramentas/painel.fonte.html`** — nunca o `index.html`, que é
-gerado e seria sobrescrito.
+Edite **`ferramentas/painel.fonte.html`** — é a fonte única. Nunca o
+`index.html`, que é gerado e seria sobrescrito, e nunca uma cópia fora do
+projeto: uma cópia de trabalho paralela já apagou o bloco de páginas que o
+gerador tinha acabado de escrever.
 
     python3 ferramentas/gerar-index.py
     git push
+
+Se mexeu na planilha também, rode `atualizar-paginas.py` **antes** do
+`gerar-index.py` — ele escreve dentro da fonte.
 
 ## Como as peças se encaixam
 
