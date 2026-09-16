@@ -11,8 +11,11 @@ import { PAGINAS } from "./lista-paginas.js";
  * novo antes do limite de execução — assim um estouro nunca joga fora o que
  * já foi medido.
  *
- * Precisa de PAGESPEED_API_KEY. Sem chave o Google devolve 429 na primeira
- * chamada (a cota anônima é compartilhada e vive estourada).
+ * A chave do PageSpeed vem da tabela `config` do próprio banco (com a
+ * variável de ambiente como alternativa). Assim o único segredo que a
+ * hospedagem precisa conhecer é a DATABASE_URL, e trocar a chave é um
+ * UPDATE — sem mexer em painel de hospedagem nem refazer deploy.
+ * Sem chave o Google devolve 429 na primeira chamada.
  */
 
 export const config = { maxDuration: 300 };
@@ -24,6 +27,14 @@ const TEMPO_LIMITE = 100000;   // por chamada ao PSI
 const FOLGA = 25000;           // para de começar coisa nova faltando isso
 
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function chaveDoPageSpeed() {
+  try {
+    const [r] = await sql`select valor from config where chave = 'PAGESPEED_API_KEY'`;
+    if (r && r.valor) return r.valor;
+  } catch { /* tabela ausente: cai no ambiente */ }
+  return process.env.PAGESPEED_API_KEY || null;
+}
 
 async function medirUma(url, estrategia, chave) {
   const alvo = new URL("https://www.googleapis.com/pagespeedonline/v5/runPagespeed");
@@ -101,7 +112,7 @@ async function medirPagina(p, chave, expira) {
 }
 
 export default async function handler(req, res) {
-  const chave = process.env.PAGESPEED_API_KEY;
+  const chave = await chaveDoPageSpeed();
   const inicio = Date.now();
   const expira = inicio + (config.maxDuration * 1000) - FOLGA;
 
@@ -116,7 +127,7 @@ export default async function handler(req, res) {
   if (!chave) {
     await sql`insert into execucoes (parte, dados) values (${chaveRun}, ${JSON.stringify({
       quando: new Date().toISOString(), ok: false,
-      erro: "Falta a variável PAGESPEED_API_KEY nas configurações do projeto."
+      erro: "Falta a chave do PageSpeed: grave em config.PAGESPEED_API_KEY no banco."
     })}) on conflict (parte) do update set dados = excluded.dados, quando = now()`;
     res.status(200).send("sem chave");
     return;

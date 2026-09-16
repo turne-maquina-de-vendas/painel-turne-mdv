@@ -55,6 +55,16 @@ await sql`create table if not exists medicoes (
   medido_em timestamptz
 )`;
 
+/* Configuração fica no banco, não em variável de ambiente da hospedagem:
+   assim o único segredo que a Vercel precisa conhecer é a DATABASE_URL —
+   que a integração do Neon já cria sozinha. Trocar a chave do PageSpeed
+   vira um UPDATE, sem mexer em painel de hospedagem nem refazer deploy. */
+await sql`create table if not exists config (
+  chave      text primary key,
+  valor      text not null,
+  atualizado timestamptz not null default now()
+)`;
+
 await sql`create table if not exists execucoes (
   parte  text primary key,
   dados  jsonb not null,

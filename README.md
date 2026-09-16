@@ -42,20 +42,31 @@ gerado e seria sobrescrito.
 (usando `window.claude`) e o gerador a converte na versão da Vercel, que
 usa a função `/api/estado` e uma fila local de envio.
 
-## Variáveis de ambiente
+## Configuração
 
-Copie `.env.example` para `.env.local` e preencha. **O `.env.local` não vai
-para o git** — o `.gitignore` bloqueia. As mesmas variáveis precisam existir
-na Vercel, em Settings → Environment Variables:
+A hospedagem só precisa conhecer **uma** variável:
 
-| Variável | Para quê |
+| Variável | Onde |
 |---|---|
-| `DATABASE_URL` | Postgres do Neon (use a string com pooler) |
-| `PAGESPEED_API_KEY` | Medição automática; sem ela o Google devolve 429 |
+| `DATABASE_URL` | Vercel → Settings → Environment Variables (a integração do Neon já cria) |
+
+Todo o resto mora na tabela `config` do próprio banco. A chave do PageSpeed
+está lá — trocar é um comando, sem mexer em painel de hospedagem nem refazer
+deploy:
+
+    node ferramentas/definir-config.mjs                        # lista
+    node ferramentas/definir-config.mjs PAGESPEED_API_KEY xyz  # grava
+
+Para desenvolver na máquina, copie `.env.example` para `.env.local` e
+preencha a `DATABASE_URL`. **O `.env.local` não vai para o git.**
 
 Primeira vez, para criar as tabelas:
 
     node ferramentas/criar-tabelas.mjs
+
+Para ver o que está guardado:
+
+    node ferramentas/ver-banco.mjs
 
 ## Funções (Vercel)
 
@@ -64,6 +75,9 @@ Primeira vez, para criar as tabelas:
 | `api/estado.js` | `/api/estado` — lê e grava status, anotações e medições |
 | `api/medir.js` | mede as páginas no PageSpeed; `?parte=1..4` |
 | `api/lista-paginas.js` | gerado — as URLs a medir |
+
+A chave do PageSpeed vem da tabela `config`; a variável de ambiente serve
+como alternativa se a tabela não existir.
 
 O `vercel.json` agenda as 4 fatias da medição a cada 3 dias, espaçadas de
 10 minutos.
