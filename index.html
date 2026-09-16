@@ -55,7 +55,8 @@
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
 
   /* medidas */
-  --maxw:1240px;
+  --maxw:100%;        /* a grade de criativos usa a tela toda */
+  --maxw-texto:1240px; /* tabela e textos longos ficam contidos */
   --pad:clamp(18px,4vw,56px);
   --r:14px;
   --r-sm:9px;
@@ -77,7 +78,9 @@ body{
 button,input,textarea,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
 
-/* o container é o que dá o ar "business": conteúdo contido, margens largas */
+/* Largura: a grade de criativos ocupa a tela (cabem 6 por linha em monitor
+   grande, que é como se compara arte); só a tabela de páginas fica contida,
+   porque linha de texto larga demais é ruim de ler. */
 .wrap{max-width:var(--maxw);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
 
 /* etiqueta em caixa alta, o recurso de UI das duas referências */
@@ -329,6 +332,8 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 .env:disabled{opacity:.4;cursor:not-allowed}
 
 /* ---------- páginas no ar ---------- */
+#viewPaginas{max-width:var(--maxw-texto)}
+
 .automacao{
   border:1px solid var(--line);border-left:3px solid var(--gold);
   border-radius:var(--r);background:var(--surface);
