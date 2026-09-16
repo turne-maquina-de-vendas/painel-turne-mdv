@@ -459,6 +459,25 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 }
 .agora.boa{color:var(--ok)} .agora.media{color:var(--warn)} .agora.ruim{color:var(--bad)}
 
+/* Status da página é escolhido aqui, não vem da planilha: quem aprova
+   mexe no painel, e a escolha fica no banco como as dos criativos. */
+.sel-status{
+  appearance:none;-webkit-appearance:none;
+  font-family:var(--ui);font-weight:600;
+  font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  padding:5px 26px 5px 11px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;color:var(--dim-2);
+  background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),
+                   linear-gradient(135deg,currentColor 50%,transparent 50%);
+  background-position:calc(100% - 14px) 52%, calc(100% - 10px) 52%;
+  background-size:4px 4px, 4px 4px;background-repeat:no-repeat;
+  transition:color .16s var(--ease),border-color .16s var(--ease),background-color .16s var(--ease);
+}
+.sel-status:hover{border-color:var(--sage)}
+.sel-status option{background:var(--surface-2);color:var(--paper);letter-spacing:0}
+.sel-status.aprovado{color:var(--ok);border-color:var(--ok-line);background-color:var(--ok-bg)}
+.sel-status.publicado{color:var(--pub);border-color:var(--pub-line);background-color:var(--pub-bg)}
+
 .fonte{font-family:var(--ui);font-weight:500;font-size:10px;letter-spacing:.06em;color:var(--dim-2);white-space:nowrap}
 .fonte.real{color:var(--ok)}
 .fonte.local{color:var(--gold)}
@@ -890,13 +909,6 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   /* faixas do PageSpeed: 90+ bom, 50-89 precisa melhorar, abaixo ruim */
   function faixa(n){ return n >= 90 ? "boa" : n >= 50 ? "media" : "ruim"; }
 
-  /* o status vem escrito na planilha; só "aprovado" merece verde */
-  function classeStatus(s){
-    var v = String(s || "").toLowerCase();
-    if(v.indexOf("aprovad") === 0) return "aprovado";
-    if(v.indexOf("desativ") === 0 || v.indexOf("pausad") === 0) return "reprovado";
-    return "";
-  }
 
   /* "há 2d", "há 5h" — para dizer quando a nota foi tirada */
   function desdeQuando(iso){
@@ -906,6 +918,19 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     if(min < 60) return "há " + Math.max(min,1) + "min";
     if(min < 1440) return "há " + Math.round(min/60) + "h";
     return "há " + Math.round(min/1440) + "d";
+  }
+
+  /* Status da página: escolhido no painel e guardado no banco, junto com as
+     decisões dos criativos. "em aprovação" é o ponto de partida de todas. */
+  var ETAPAS = [
+    {v:"aprovacao", r:"Em aprovação"},
+    {v:"aprovado",  r:"Aprovado"},
+    {v:"publicado", r:"Publicado"}
+  ];
+  function chavePagina(p){ return "pg__" + p.id; }
+  function etapaDe(p){
+    var e = (status[chavePagina(p)] || {}).status;
+    return ETAPAS.some(function(x){ return x.v === e; }) ? e : "aprovacao";
   }
 
   /* a nota que vale: a medida automaticamente, se houver; senão a da planilha */
@@ -978,7 +1003,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
               '<td><span class="cidade"><b>' + esc(p.cidade) + '</b>' +
                 '<span class="slug" title="' + esc(p.url) + '">' + esc(slug(p.url)) + '</span></span></td>' +
               '<td class="dia">' + esc(p.data) + '</td>' +
-              '<td><span class="pill ' + classeStatus(p.status) + '"><i></i>' + esc(p.status.toLowerCase()) + '</span></td>' +
+              '<td>' + seletor(p) + '</td>' +
               '<td class="num">' + nota(m) + '</td>' +
               '<td class="num">' + nota(d) + '</td>' +
               '<td>' + origem(m, d) + '</td>' +
@@ -1047,6 +1072,16 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       if(!caiu) return selo;
       return '<span class="par-nota">' + selo +
         '<span class="agora ' + faixa(n.ultima) + '" title="medição mais recente">agora ' + n.ultima + '</span></span>';
+    }
+
+    function seletor(p){
+      var atual = etapaDe(p);
+      return '<select class="sel-status ' + atual + '" data-pg="' + esc(p.id) + '" ' +
+        'aria-label="Status de ' + esc(p.cidade) + '">' +
+        ETAPAS.map(function(e){
+          return '<option value="' + e.v + '"' + (e.v === atual ? " selected" : "") + '>' + e.r + '</option>';
+        }).join("") +
+      '</select>';
     }
 
     /* de onde veio a nota: medição automática (com ou sem dado de visitantes
@@ -1123,6 +1158,16 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       c.setAttribute("aria-pressed", String(c.dataset.f === "todas"));
     });
     renderAll();
+  });
+
+  $("#funis").addEventListener("change", function(e){
+    var sel = e.target.closest(".sel-status");
+    if(!sel) return;
+    var chave = "pg__" + sel.dataset.pg;
+    var reg = {status:sel.value, em:new Date().toISOString(), remessa:"paginas"};
+    status[chave] = reg;
+    sel.className = "sel-status " + sel.value;
+    gravarStatus(chave, reg);
   });
 
   $("#filters").addEventListener("click", function(e){
