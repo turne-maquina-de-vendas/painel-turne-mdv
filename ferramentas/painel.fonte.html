@@ -906,6 +906,12 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     }
   }
 
+  /* Teto de 95: nota 100 no laboratório é ilusória — a mesma página que
+     pontua 100 entrega AVERAGE no dado de campo. Aplicado também na
+     gravação; aqui é rede de segurança para número vindo da planilha. */
+  var TETO = 95;
+  function limitar(n){ return typeof n === "number" ? Math.min(TETO, n) : n; }
+
   /* faixas do PageSpeed: 90+ bom, 50-89 precisa melhorar, abaixo ruim */
   function faixa(n){ return n >= 90 ? "boa" : n >= 50 ? "media" : "ruim"; }
 
@@ -938,16 +944,16 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     var m = medicoes[p.id];
     if(m && m[qual] && typeof m[qual].nota === "number"){
       return {
-        valor: m[qual].nota,
+        valor: limitar(m[qual].nota),
         deOnde: "medida",
         campo: Boolean(m[qual].temCampo),
         local: m.origem === "local",   // Lighthouse rodado na mão, não o PageSpeed
         amostras: m[qual].amostras || null,
-        ultima: typeof m[qual].ultima === "number" ? m[qual].ultima : null,
+        ultima: limitar(typeof m[qual].ultima === "number" ? m[qual].ultima : null),
         quando: m.medidoEm
       };
     }
-    return {valor:p[qual], deOnde:"planilha", campo:false, local:false,
+    return {valor:limitar(p[qual]), deOnde:"planilha", campo:false, local:false,
             amostras:null, ultima:null, quando:null};
   }
 
@@ -967,8 +973,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     }
     el.className = "automacao";
     el.innerHTML = '<b>Medição automática a cada 12 horas.</b> Cada página é medida ' +
-      '3 vezes em mobile e desktop, e vale a melhor — a nota do PageSpeed oscila ' +
-      'bastante entre execuções. Última rodada ' + desdeQuando(execucao.quando) +
+      '3 vezes em mobile e desktop, e vale a melhor, com teto de 95 — nota 100 ' +
+      'no laboratório é ilusória. Última rodada ' + desdeQuando(execucao.quando) +
       ' · ' + execucao.medidas + ' páginas' +
       (execucao.comErro ? ' · <span class="ruim">' + execucao.comErro + ' falharam</span>' : '') + '.';
   }

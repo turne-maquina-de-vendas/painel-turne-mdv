@@ -20,6 +20,9 @@ const url = process.env.DATABASE_URL ||
   fs.readFileSync(path.join(RAIZ, ".env.local"), "utf8").match(/^DATABASE_URL\s*=\s*"?([^"\n]+)"?/m)[1];
 const sql = neon(url);
 
+const TETO = 95;   // nota 100 no laboratório é ilusória; ver api/medir.js
+const limitar = (n) => (Number.isFinite(n) ? Math.min(TETO, n) : n);
+
 const args = process.argv.slice(2);
 const forcar = args.includes("--forcar");
 const [trecho, mobStr, deskStr] = args.filter((a) => a !== "--forcar");
@@ -39,11 +42,11 @@ function juntar(antes, agora) {
   if (!Number.isFinite(agora)) return antes;           // não informado: não mexe
   if (forcar) {
     const { ultima, ...resto } = antes || {};
-    return { ...resto, nota: agora, amostras: [agora] };
+    return { ...resto, nota: limitar(agora), amostras: [agora] };
   }
   const anterior = (antes || {}).nota;
   const topo = Number.isFinite(anterior) ? Math.max(anterior, agora) : agora;
-  return { ...(antes || {}), nota: topo, ultima: agora, amostras: [agora] };
+  return { ...(antes || {}), nota: limitar(topo), ultima: limitar(agora), amostras: [agora] };
 }
 
 const mob = juntar(p.mobile, novo.mobile);

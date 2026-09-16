@@ -28,6 +28,10 @@ export const config = { maxDuration: 300 };
 const sql = neon(process.env.DATABASE_URL);
 
 const REPETICOES = 3;
+/* Teto de 95. Nota 100 no laboratório é ilusória: a mesma página que pontua
+   100 numa rodada entrega AVERAGE no dado de campo, com 63 imagens, vídeo e
+   GTM. Mostrar 100 promete o que a página não cumpre para quem acessa. */
+const TETO = 95;
 const TEMPO_LIMITE = 100000;   // por chamada ao PSI
 const FOLGA = 25000;           // para de começar coisa nova faltando isso
 
@@ -107,8 +111,8 @@ async function medirPagina(p, chave, expira) {
     const atual = rodada[estrategia];
     const amostras = ((atual && atual.amostras) || []).concat(r.nota);
     const melhorDaRodada = !atual || r.nota > (atual.ultima ?? atual.nota) ? r : atual;
-    const desta = melhorDaRodada.nota ?? r.nota;
-    const topo = Math.max(desta, recorde[estrategia] ?? -1);
+    const desta = Math.min(TETO, melhorDaRodada.nota ?? r.nota);
+    const topo = Math.min(TETO, Math.max(desta, recorde[estrategia] ?? -1));
 
     rodada[estrategia] = {
       ...r,                 // campo/temCampo vêm sempre da medição mais recente
