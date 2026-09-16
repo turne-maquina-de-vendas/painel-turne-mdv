@@ -575,19 +575,6 @@ td.num{text-align:center}
      As notas são as do PageSpeed anotadas lá; célula vazia = ainda não medida. */
   /* FUNIS:inicio */
   var FUNIS = [
-    {nome:"Rota 45", versao:"V3 · Padrão", paginas:[
-      {id:"lc_rota-45-campina-grande-funil-1-v3", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-campina-grande-funil-1-v3/"},
-      {id:"lc_rota-45-joao-pessoa-funil-1-v3", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-joao-pessoa-funil-1-v3/"},
-      {id:"lc_rota-45-palmas-funil-1-v3", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-palmas-funil-1-v3/"},
-      {id:"lc_rota-45-vitoriadaconquista-funil-1-v3", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-vitoriadaconquista-funil-1-v3/"},
-      {id:"lc_rota-45-brasilia-funil-1-v3", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-brasilia-funil-1-v3/"},
-      {id:"lc_rota-45-barreiras-funil-1-v3", cidade:"Barreiras (BA)", data:"15/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-barreiras-funil-1-v3/"},
-      {id:"lc_rota-45-manaus-funil-1-v3", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v3/"},
-      {id:"lc_rota-45-belem-funil-1-v3", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-belem-funil-1-v3/"},
-      {id:"lc_rota-45-sinop-funil-1-v3", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-sinop-funil-1-v3/"},
-      {id:"lc_rota-45-cuiaba-funil-1-v3", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-cuiaba-funil-1-v3/"},
-      {id:"lc_rota-45-ribeirao-preto-funil-1-v3", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-ribeirao-preto-funil-1-v3/"}
-    ]},
     {nome:"Rota 45", versao:"ROTA 45 V4", paginas:[
       {id:"turne-mdv-campinagrande-v4", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v4/"},
       {id:"turne-mdv-joaopessoa-v4", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v4/"},
@@ -809,7 +796,6 @@ td.num{text-align:center}
         '<span>Criativos Estáticos</span><span class="sep">—</span>' +
         '<span class="lote">' + esc(remessaAtual().nome) + '</span>';
       $("#subline").innerHTML =
-        '<span>Evento <b>06 de outubro</b></span><span class="dot">/</span>' +
         '<span><b>' + lista.length + '</b> artes</span><span class="dot">/</span>' +
         '<span>versão <b>Feed</b> · 1080 × 1350</span><span class="dot">/</span>' + live;
 
@@ -910,8 +896,7 @@ td.num{text-align:center}
       '3 vezes em mobile e desktop, e vale a melhor — a nota do PageSpeed oscila ' +
       'bastante entre execuções. Última rodada ' + desdeQuando(execucao.quando) +
       ' · ' + execucao.medidas + ' páginas' +
-      (execucao.comErro ? ' · <span class="ruim">' + execucao.comErro + ' falharam</span>' : '') +
-      '. A V3 ficou de fora.';
+      (execucao.comErro ? ' · <span class="ruim">' + execucao.comErro + ' falharam</span>' : '') + '.';
   }
 
   function renderPaginas(){
@@ -921,11 +906,9 @@ td.num{text-align:center}
       var n = f.paginas.length;
       var mob  = f.paginas.filter(function(p){ return notaVigente(p,"mobile").valor  != null; }).length;
       var desk = f.paginas.filter(function(p){ return notaVigente(p,"desktop").valor != null; }).length;
-      var meta = f.versao.indexOf("V3") === 0
-        ? n + " páginas · fora da medição automática"
-        : (mob + desk) === 0
-          ? n + " páginas · sem medição"
-          : n + " páginas · mobile " + mob + "/" + n + " · desktop " + desk + "/" + n;
+      var meta = (mob + desk) === 0
+        ? n + " páginas · sem medição"
+        : n + " páginas · mobile " + mob + "/" + n + " · desktop " + desk + "/" + n;
 
       return '<section class="funil">' +
         '<div class="funil-head">' +

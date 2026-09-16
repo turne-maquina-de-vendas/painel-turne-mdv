@@ -19,10 +19,9 @@ SHEET = "1IisavtxiR2zbolDmhcivWmMXx3zVuVGNB6TO-S8DN3g"
 GID = "1626754994"
 ROTULO = {"ROTA 45 V3 - PADRÃO": "V3 · Padrão", "ROTA 45 - V4": "V4", "ROTA 45 - V5": "V5"}
 
-# Funis que continuam aparecendo no painel mas ficam fora da medicao automatica.
-# A V3 e o padrao antigo: medir 11 paginas que ninguem vai mais otimizar so
-# consumia o tempo da funcao.
-SEM_MEDICAO = ("V3",)
+# Funis que saem do painel por completo. A V3 e o padrao antigo, substituido
+# pela V4 e V5 — deixar as 11 paginas na tela so poluia a comparacao.
+OCULTAR = ("V3",)
 
 
 def ident(url):
@@ -57,7 +56,8 @@ def ler():
             "id": ident(url), "cidade": cidade, "data": r[1].strip(), "url": url,
             "status": r[4].strip(), "mobile": nota(r[5]), "desktop": nota(r[6]),
         })
-    return [{"funil": f, "versao": ROTULO.get(f, f), "paginas": grupos[f]} for f in ordem]
+    todos = [{"funil": f, "versao": ROTULO.get(f, f), "paginas": grupos[f]} for f in ordem]
+    return [g for g in todos if not g["versao"].startswith(OCULTAR)]
 
 
 def bloco_js(dados):
@@ -88,8 +88,7 @@ _, depois = resto.split(fim, 1)
 io.open(FONTE, "w", encoding="utf-8").write(antes + ini + bloco_js(dados) + "\n" + fim + depois)
 
 lista = [{"id": p["id"], "url": p["url"], "cidade": p["cidade"], "versao": g["versao"]}
-         for g in dados for p in g["paginas"]
-         if not g["versao"].startswith(SEM_MEDICAO)]
+         for g in dados for p in g["paginas"]]
 io.open(os.path.join(FUNCOES, "lista-paginas.mjs"), "w", encoding="utf-8").write(
     "// Gerado por ferramentas/atualizar-paginas.py a partir da planilha MDV - Outubro 2026.\n"
     "// Nao edite a mao: rode o script de novo.\n"
@@ -97,7 +96,6 @@ io.open(os.path.join(FUNCOES, "lista-paginas.mjs"), "w", encoding="utf-8").write
 
 print(f"{sum(len(g['paginas']) for g in dados)} paginas · {len(dados)} funis")
 for g in dados:
-    fora = " (fora da medicao automatica)" if g["versao"].startswith(SEM_MEDICAO) else ""
-    print(f"  {g['versao']}: {len(g['paginas'])}{fora}")
-print(f"{len(lista)} paginas entram na medicao automatica")
+    print(f"  {g['versao']}: {len(g['paginas'])}")
+print(f"ocultos do painel: {', '.join(OCULTAR)}")
 print("\nagora rode: python3 ferramentas/gerar-index.py")

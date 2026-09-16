@@ -152,6 +152,9 @@ export default async (req) => {
         desktop: body.desktop || {},
         medidoEm: limpar(body.medidoEm, 40) || new Date().toISOString()
       });
+    } else if (body.tipo === "apagarMedicao" && body.id) {
+      // para limpar registro de página que saiu do painel
+      await s.delete("psi/" + limpar(body.id, 120));
     } else if (body.tipo === "apagarNota" && body.id) {
       await s.delete("nota/" + limpar(body.id, 80));
     } else {
