@@ -130,6 +130,19 @@ h1{
   display:flex;align-items:baseline;flex-wrap:wrap;gap:0 .3em;
 }
 h1 .sep{color:var(--dim-2);font-size:.6em;font-weight:400}
+/* mora dentro do h1, então precisa zerar a herança do display */
+.btn-drive{
+  align-self:center;
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--ui);font-weight:600;font-size:10.5px;
+  letter-spacing:.11em;text-transform:uppercase;line-height:1;
+  color:var(--dim);text-decoration:none;white-space:nowrap;
+  border:1px solid var(--line);border-radius:999px;
+  padding:9px 15px;margin-left:6px;
+  transition:color .16s var(--ease),border-color .16s var(--ease),background .16s var(--ease);
+}
+.btn-drive svg{width:13px;height:13px;fill:currentColor;flex:none}
+.btn-drive:hover{color:var(--gold);border-color:var(--gold-dim);background:var(--surface)}
 h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 .subline{
   color:var(--dim);font-size:13.5px;
@@ -517,6 +530,10 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 
   /* Cada remessa é um lote de entrega. A 02 é a que veio da pasta
      "2 demanda campina grande"; as outras ficam prontas para receber artes. */
+  /* Pasta no Drive das artes. Vale para todas as remessas; se alguma passar
+     a ter pasta própria, é só dar um campo `drive` a ela. */
+  var DRIVE = "https://drive.google.com/drive/folders/1REePm5VzbxJ2rLcN-3xsPBkw0y2smoU-?usp=share_link";
+
   var REMESSAS = [
     {id:"r01", nome:"Remessa 01", artes:[
       {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/r3_ad01.jpg"]},
@@ -773,9 +790,15 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 
     if(secao === "criativos"){
       var lista = artesDoLote();
+      var r = remessaAtual();
       $("#titulo").innerHTML =
         '<span>Criativos Estáticos</span><span class="sep">—</span>' +
-        '<span class="lote">' + esc(remessaAtual().nome) + '</span>';
+        '<span class="lote">' + esc(r.nome) + '</span>' +
+        (r.drive || DRIVE
+          ? '<a class="btn-drive" href="' + esc(r.drive || DRIVE) + '" target="_blank" rel="noopener noreferrer">' +
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.2 3h7.6l5.2 9-3.8 6.6H7.4L3.6 12z"/></svg>' +
+            'Acessar pasta do Drive</a>'
+          : '');
       $("#subline").innerHTML =
         '<span><b>' + lista.length + '</b> artes</span><span class="dot">/</span>' +
         '<span>versão <b>Feed</b> · 1080 × 1350</span><span class="dot">/</span>' + live;
