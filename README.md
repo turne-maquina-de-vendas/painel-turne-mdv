@@ -32,14 +32,14 @@ gerado e seria sobrescrito.
         │  ferramentas/atualizar-paginas.py
         ├──────────────────────────────────┐
         ▼                                  ▼
-    ferramentas/painel.fonte.html    netlify/functions/lista-paginas.mjs
+    ferramentas/painel.fonte.html    api/lista-paginas.js
         │                                  │  (o que a medição percorre)
         │  ferramentas/gerar-index.py      │
         ▼                                  │
     index.html  ◄──────── /api/estado ◄────┘
 
 `painel.fonte.html` é a fonte única. Ela roda como artifact no claude.ai
-(usando `window.claude`) e o gerador a converte na versão do Netlify, que
+(usando `window.claude`) e o gerador a converte na versão da Vercel, que
 usa a função `/api/estado` e uma fila local de envio.
 
 ## Variáveis de ambiente
