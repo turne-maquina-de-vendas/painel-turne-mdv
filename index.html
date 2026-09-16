@@ -987,10 +987,21 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       '</section>';
     }).join("");
 
-    /* preview da primeira página do funil: as 10 são o mesmo template com a
-       cidade trocada, então uma amostra basta para ver o que está no ar */
+    /* Preview da página com a melhor nota do funil. As 10 são o mesmo
+       template com a cidade trocada, então qualquer uma mostra o layout —
+       e escolhendo a de melhor desempenho o preview vira a referência do
+       que o funil entrega quando está no seu melhor. */
+    function melhorPagina(f){
+      var pontuada = f.paginas.map(function(p){
+        var m = notaVigente(p,"mobile"), d = notaVigente(p,"desktop");
+        return {p:p, mob: m.valor == null ? -1 : m.valor, desk: d.valor == null ? -1 : d.valor};
+      });
+      pontuada.sort(function(a,b){ return (b.mob - a.mob) || (b.desk - a.desk); });
+      return pontuada.length ? pontuada[0].p : null;
+    }
+
     function amostra(f){
-      var p = f.paginas[0];
+      var p = melhorPagina(f);
       if(!p) return "";
       var m = notaVigente(p,"mobile"), d = notaVigente(p,"desktop");
       var selo = function(n){
@@ -1005,7 +1016,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
             'sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe>' +
         '</div>' +
         '<div class="amostra-txt">' +
-          '<span class="rot">Primeira da lista · preview mobile</span>' +
+          '<span class="rot">Melhor nota do funil · preview mobile</span>' +
           '<h3>' + esc(p.cidade) + '</h3>' +
           '<span class="end">' + esc(slug(p.url)) + '</span>' +
           '<div class="amostra-notas">' +
