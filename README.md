@@ -1,5 +1,7 @@
 # Painel Campina Grande — Turnê Máquina de Vendas
 
+Repositório: `turne-maquina-de-vendas/painel-turne-mdv`
+
 Duas seções:
 
 - **Criativos** — as artes de feed por remessa, com aprovação
