@@ -116,13 +116,14 @@ export default async function handler(req, res) {
   const inicio = Date.now();
   const expira = inicio + (config.maxDuration * 1000) - FOLGA;
 
-  const parte = Number(req.query?.parte) || 0;
-  const PARTES = 4;
-  const fatia = Math.ceil(PAGINAS.length / PARTES);
-  const minhas = parte >= 1 && parte <= PARTES
-    ? PAGINAS.slice((parte - 1) * fatia, parte * fatia)
-    : PAGINAS;
-  const chaveRun = "psi-" + (parte || "tudo");
+  /* Sem fatias fixas: cada execução pega as páginas mais desatualizadas e
+     mede até o tempo acabar. Uma medição leva ~90s (3 amostras em mobile e
+     desktop), então cabem ~3 por execução — e as chamadas agendadas vão se
+     revezando sozinhas até cobrir a lista, sem eu ter que acertar a conta. */
+  const ordem = await sql`select id, medido_em from medicoes`;
+  const quando = new Map(ordem.map((r) => [r.id, r.medido_em ? new Date(r.medido_em).getTime() : 0]));
+  const minhas = [...PAGINAS].sort((a, b) => (quando.get(a.id) ?? 0) - (quando.get(b.id) ?? 0));
+  const chaveRun = "psi-" + (Number(req.query?.parte) || "auto");
 
   if (!chave) {
     await sql`insert into execucoes (parte, dados) values (${chaveRun}, ${JSON.stringify({
@@ -145,9 +146,10 @@ export default async function handler(req, res) {
 
   await sql`insert into execucoes (parte, dados) values (${chaveRun}, ${JSON.stringify({
     quando: new Date().toISOString(),
-    ok: semNota === 0 && feitas.length === minhas.length,
+    ok: semNota === 0,
     medidas: feitas.length,
-    naFatia: minhas.length,
+    naLista: minhas.length,
+    maisAntiga: feitas.length ? feitas[0].cidade + " " + feitas[0].versao : null,
     comErro: semNota,
     segundos: Math.round((Date.now() - inicio) / 1000)
   })}) on conflict (parte) do update set dados = excluded.dados, quando = now()`;
