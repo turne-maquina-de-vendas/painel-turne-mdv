@@ -38,6 +38,11 @@
   --bad:#FF6B57;
   --bad-bg:rgba(255,107,87,.12);
   --bad-line:rgba(255,107,87,.34);
+  /* publicado: azul, deliberadamente longe do verde de "aprovado" — são
+     etapas diferentes e confundir as duas é o erro mais caro aqui */
+  --pub:#5B9DF9;
+  --pub-bg:rgba(91,157,249,.12);
+  --pub-line:rgba(91,157,249,.36);
 
   /* tipografia */
   --disp:"Bricolage Grotesque",system-ui,sans-serif;
@@ -154,6 +159,7 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 .t.is-ok{border-color:var(--ok-line)}    .t.is-ok .n{color:var(--ok)}
 .t.is-warn{border-color:var(--warn-line)} .t.is-warn .n{color:var(--warn)}
 .t.is-bad{border-color:var(--bad-line)}  .t.is-bad .n{color:var(--bad)}
+.t.is-pub{border-color:var(--pub-line)}  .t.is-pub .n{color:var(--pub)}
 
 .live{
   display:inline-flex;align-items:center;gap:7px;
@@ -230,6 +236,7 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 .card[data-st="aprovado"]::before{background:var(--ok)}
 .card[data-st="ajuste"]::before{background:var(--warn)}
 .card[data-st="reprovado"]::before{background:var(--bad)}
+.card[data-st="publicado"]::before{background:var(--pub)}
 
 .shot{position:relative;aspect-ratio:4/5;background:var(--ink-2);overflow:hidden;cursor:zoom-in}
 .shot img{width:100%;height:100%;object-fit:cover;display:block}
@@ -266,13 +273,14 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 .pill.aprovado{color:var(--ok);border-color:var(--ok-line);background:var(--ok-bg)}
 .pill.ajuste{color:var(--warn);border-color:var(--warn-line);background:var(--warn-bg)}
 .pill.reprovado{color:var(--bad);border-color:var(--bad-line);background:var(--bad-bg)}
+.pill.publicado{color:var(--pub);border-color:var(--pub-line);background:var(--pub-bg)}
 
-.acoes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:12px 13px 0}
+.acoes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:12px 11px 0}
 .ab{
-  padding:9px 2px;border-radius:var(--r-sm);cursor:pointer;
+  padding:9px 1px;border-radius:var(--r-sm);cursor:pointer;
   border:1px solid var(--line);background:var(--surface-2);color:var(--dim);
-  font-size:12px;font-weight:600;letter-spacing:-.005em;
-  display:flex;align-items:center;justify-content:center;gap:5px;
+  font-size:10.5px;font-weight:600;letter-spacing:-.015em;white-space:nowrap;
+  display:flex;align-items:center;justify-content:center;gap:3px;
   transition:border-color .16s var(--ease),color .16s var(--ease);
 }
 .ab:hover{color:var(--paper);border-color:var(--sage)}
@@ -280,6 +288,7 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 .ab.ok[aria-pressed="true"]{background:var(--ok);border-color:var(--ok)}
 .ab.warn[aria-pressed="true"]{background:var(--warn);border-color:var(--warn)}
 .ab.bad[aria-pressed="true"]{background:var(--bad);border-color:var(--bad)}
+.ab.pub[aria-pressed="true"]{background:var(--pub);border-color:var(--pub);color:#061020}
 
 .abrir{
   margin-top:12px;width:100%;text-align:left;cursor:pointer;
@@ -475,6 +484,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     <button class="chip" data-f="aprovado" aria-pressed="false">Aprovadas</button>
     <button class="chip" data-f="ajuste" aria-pressed="false">Ajustar</button>
     <button class="chip" data-f="reprovado" aria-pressed="false">Reprovadas</button>
+    <button class="chip" data-f="publicado" aria-pressed="false">Publicadas</button>
     <button class="chip" data-f="comentadas" aria-pressed="false">Com anotação</button>
   </div>
   <div class="grid" id="grid"></div>
@@ -523,25 +533,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       {id:"ad12",code:"AD12",tipo:"IMG",files:["arts/r3_ad12.jpg"]},
       {id:"ad13",code:"AD13",tipo:"IMG",files:["arts/r3_ad13.jpg"]}
     ]},
-    {id:"r02", nome:"Remessa 02", artes:[
-      {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/ad01.jpg"]},
-      {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/ad02.jpg"]},
-      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/ad03.jpg"]},
-      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/ad04.jpg"]},
-      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/ad05.jpg"]},
-      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/ad06.jpg"]},
-      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/ad07.jpg"]},
-      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/ad08.jpg"]},
-      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/ad09.jpg"]},
-      {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/ad10.jpg"]},
-      {id:"ad11",code:"AD11",tipo:"IMG",files:["arts/ad11.jpg"]},
-      {id:"ad12",code:"AD12",tipo:"IMG",files:["arts/ad12.jpg"]},
-      {id:"ad13",code:"AD13",tipo:"IMG",files:["arts/ad13.jpg"]},
-      {id:"ad14",code:"AD14",tipo:"IMG",files:["arts/ad14.jpg"]},
-      {id:"ad15",code:"AD15",tipo:"IMG",files:["arts/ad15.jpg"]},
-      {id:"ad16",code:"AD16",tipo:"IMG",files:["arts/ad16.jpg"]},
-      {id:"ad17",code:"AD17",tipo:"CAR",files:["arts/ad17_CARD01.jpg","arts/ad17_CARD02.jpg","arts/ad17_CARD03.jpg","arts/ad17_CARD04.jpg"]}
-    ]},
+    {id:"r02", nome:"Remessa 02", artes:[]},
     {id:"r03", nome:"Remessa 03", artes:[]},
     {id:"r04", nome:"Remessa 04", artes:[]}
   ];
@@ -588,12 +580,13 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   ];
   /* FUNIS:fim */
 
-  var LABEL = {pendente:"pendente",aprovado:"aprovado",ajuste:"ajustar",reprovado:"reprovado"};
+  var LABEL = {pendente:"pendente",aprovado:"aprovado",ajuste:"ajustar",
+               reprovado:"reprovado",publicado:"publicado"};
 
   // estado
   var status   = {};     // arteKey -> {status, em, remessa}
   var notas    = [];     // {id, arteKey, remessa, texto, criadoEm}
-  var lote     = "r02";
+  var lote     = "r01";   // abre na primeira remessa que tem artes
   var filtro   = "todas";
   var slide    = {};     // arteKey -> índice do card do carrossel
   var aberta   = null;   // arteKey com o bloco de anotações aberto
@@ -740,9 +733,10 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         '</div>' +
 
         '<div class="acoes">' +
-          '<button class="ab ok"   data-v="aprovado"  aria-pressed="'+(s==="aprovado")+'">✓ Aprovar</button>' +
-          '<button class="ab warn" data-v="ajuste"    aria-pressed="'+(s==="ajuste")+'">± Ajustar</button>' +
-          '<button class="ab bad"  data-v="reprovado" aria-pressed="'+(s==="reprovado")+'">✕ Reprovar</button>' +
+          '<button class="ab ok"   data-v="aprovado"  aria-pressed="'+(s==="aprovado")+'">Aprovar</button>' +
+          '<button class="ab warn" data-v="ajuste"    aria-pressed="'+(s==="ajuste")+'">Ajustar</button>' +
+          '<button class="ab bad"  data-v="reprovado" aria-pressed="'+(s==="reprovado")+'">Reprovar</button>' +
+          '<button class="ab pub"  data-v="publicado" aria-pressed="'+(s==="publicado")+'">Publicado</button>' +
         '</div>' +
 
         '<button class="abrir'+(n?" tem":"")+'" data-abrir aria-expanded="'+open+'">' +
@@ -786,13 +780,14 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         '<span><b>' + lista.length + '</b> artes</span><span class="dot">/</span>' +
         '<span>versão <b>Feed</b> · 1080 × 1350</span><span class="dot">/</span>' + live;
 
-      var c = {pendente:0,aprovado:0,ajuste:0,reprovado:0};
+      var c = {pendente:0,aprovado:0,ajuste:0,reprovado:0,publicado:0};
       lista.forEach(function(a){ c[st(a.key)]++; });
       tally.innerHTML =
         tile("", doisDigitos(c.pendente), "pendentes") +
         tile("is-ok", doisDigitos(c.aprovado), "aprovadas") +
         tile("is-warn", doisDigitos(c.ajuste), "ajustar") +
         tile("is-bad", doisDigitos(c.reprovado), "reprovadas") +
+        tile("is-pub", doisDigitos(c.publicado), "publicadas") +
         tile("", doisDigitos(notasDoLote(lote).length), "anotações");
     }else{
       var todas = [];
