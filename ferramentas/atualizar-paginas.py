@@ -9,7 +9,7 @@ Rode sempre que mexerem na planilha, e depois gerar-index.py:
     python3 ferramentas/gerar-index.py
     netlify deploy --prod
 """
-import csv, io, json, os, re, urllib.request
+import csv, io, json, os, re, unicodedata, urllib.request
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONTE = os.path.join(RAIZ, "ferramentas", "painel.fonte.html")
@@ -17,11 +17,46 @@ FUNCOES = os.path.join(RAIZ, "api")
 
 SHEET = "1IisavtxiR2zbolDmhcivWmMXx3zVuVGNB6TO-S8DN3g"
 GID = "1626754994"
-ROTULO = {"ROTA 45 V3 - PADRÃO": "V3 · Padrão", "ROTA 45 - V4": "V4", "ROTA 45 - V5": "V5"}
+ROTULO = {"ROTA 45 V3 - PADRÃO": "V3 · Padrão", "ROTA 45 V1": "V1",
+          "ROTA 45 - V4": "V4", "ROTA 45 V4": "V4",
+          "ROTA 45 - V5": "V5", "ROTA 45 V5": "V5"}
 
 # Funis que saem do painel por completo. A V3 e o padrao antigo, substituido
 # pela V4 e V5 — deixar as 11 paginas na tela so poluia a comparacao.
 OCULTAR = ("V3",)
+
+
+def normal(t):
+    """sem acento, sem pontuacao, minusculo — para casar cidade com slug"""
+    t = unicodedata.normalize("NFKD", t).encode("ascii", "ignore").decode()
+    return re.sub(r"[^a-z0-9]", "", t.lower())
+
+
+def realinhar(paginas, versao):
+    """A coluna de URL da planilha ja veio embaralhada em relacao a de cidade
+    (a V1 tinha "Campina Grande" apontando para a pagina de Vitoria). Cada slug
+    diz a cidade dele, entao da para reparear com seguranca — mas so quando o
+    casamento e 1:1 e completo. Se sobrar duvida, mantem a ordem da planilha e
+    avisa, porque errar o link e pior do que mostrar o que la esta."""
+    achados = {}
+    for pag in paginas:
+        cidade = normal(re.sub(r"\(.*?\)", "", pag["cidade"]))
+        donos = [q for q in paginas if cidade and cidade in normal(q["url"])]
+        if len(donos) != 1:
+            return paginas, None
+        achados[pag["id"]] = donos[0]
+
+    if len({q["url"] for q in achados.values()}) != len(paginas):
+        return paginas, None
+
+    trocas = 0
+    saida = []
+    for pag in paginas:
+        certo = achados[pag["id"]]
+        if certo["url"] != pag["url"]:
+            trocas += 1
+        saida.append({**pag, "url": certo["url"], "id": ident(certo["url"])})
+    return saida, (f"{versao}: {trocas} URLs realinhadas pelo nome da cidade" if trocas else None)
 
 
 def ident(url):
@@ -56,7 +91,13 @@ def ler():
             "id": ident(url), "cidade": cidade, "data": r[1].strip(), "url": url,
             "status": r[4].strip(), "mobile": nota(r[5]), "desktop": nota(r[6]),
         })
-    todos = [{"funil": f, "versao": ROTULO.get(f, f), "paginas": grupos[f]} for f in ordem]
+    todos = []
+    for f in ordem:
+        versao = ROTULO.get(f, f)
+        paginas, aviso = realinhar(grupos[f], versao)
+        if aviso:
+            print("  !", aviso)
+        todos.append({"funil": f, "versao": versao, "paginas": paginas})
     return [g for g in todos if not g["versao"].startswith(OCULTAR)]
 
 
