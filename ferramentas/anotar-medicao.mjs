@@ -4,6 +4,13 @@
 
        node ferramentas/anotar-medicao.mjs <trecho-da-url> <mobile> <desktop>
        node ferramentas/anotar-medicao.mjs campinagrande-v4 78 79
+
+   Com --forcar, o valor informado passa a ser o único: descarta o recorde
+   anterior. Serve para quando a nota alta foi um acaso e não representa a
+   página — a regra da maior nota deixa de valer para aquela entrada, até a
+   próxima rodada automática.
+
+       node ferramentas/anotar-medicao.mjs ribeiraopreto-v5 89 --forcar
 */
 import { neon } from "@neondatabase/serverless";
 import fs from "node:fs"; import path from "node:path"; import { fileURLToPath } from "node:url";
@@ -13,7 +20,9 @@ const url = process.env.DATABASE_URL ||
   fs.readFileSync(path.join(RAIZ, ".env.local"), "utf8").match(/^DATABASE_URL\s*=\s*"?([^"\n]+)"?/m)[1];
 const sql = neon(url);
 
-const [trecho, mobStr, deskStr] = process.argv.slice(2);
+const args = process.argv.slice(2);
+const forcar = args.includes("--forcar");
+const [trecho, mobStr, deskStr] = args.filter((a) => a !== "--forcar");
 if (!trecho) { console.error("informe um trecho da URL, ex: campinagrande-v4"); process.exit(1); }
 const novo = { mobile: Number(mobStr), desktop: Number(deskStr) };
 
@@ -28,6 +37,10 @@ const p = achadas[0];
 
 function juntar(antes, agora) {
   if (!Number.isFinite(agora)) return antes;           // não informado: não mexe
+  if (forcar) {
+    const { ultima, ...resto } = antes || {};
+    return { ...resto, nota: agora, amostras: [agora] };
+  }
   const anterior = (antes || {}).nota;
   const topo = Number.isFinite(anterior) ? Math.max(anterior, agora) : agora;
   return { ...(antes || {}), nota: topo, ultima: agora, amostras: [agora] };
