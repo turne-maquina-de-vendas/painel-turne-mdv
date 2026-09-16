@@ -105,7 +105,14 @@ métricas de comportamento (sessões, rolagem, rage clicks).
 
 ## Deploy
 
-Tem que ser por CLI ou git — arrastar a pasta no Netlify Drop publica o
-site mas não as funções, e aí cada pessoa vê só as próprias anotações.
+O site é conectado a este repositório: **`git push` na branch `main`
+publica sozinho**, funções incluídas.
+
+    git push
+
+Para publicar sem passar pelo git (útil para testar antes de commitar):
 
     netlify deploy --prod
+
+Arrastar a pasta no Netlify Drop não serve: publica o site mas não as
+funções, e aí cada pessoa vê só as próprias anotações.
