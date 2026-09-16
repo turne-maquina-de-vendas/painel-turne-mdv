@@ -5,7 +5,7 @@ import io, json, os, urllib.request
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TRAB = os.path.join(RAIZ, ".medicoes")
 LISTA = os.path.join(RAIZ, "ferramentas", "urls-para-medir.txt")
-API = os.environ.get("API", "https://adsmaquinadevendas.netlify.app/api/estado")
+API = os.environ.get("API", "https://painelturnemdv.vercel.app/api/estado")
 
 
 def nota(caminho):

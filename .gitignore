@@ -3,3 +3,9 @@ node_modules/
 .medicoes/
 ferramentas/urls-para-medir.txt
 .DS_Store
+
+# segredos
+.env
+.env.local
+.env.*.local
+.vercel/

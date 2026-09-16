@@ -8,7 +8,7 @@ set -u
 RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LISTA="$RAIZ/ferramentas/urls-para-medir.txt"
 TRAB="$RAIZ/.medicoes"
-API="${API:-https://adsmaquinadevendas.netlify.app/api/estado}"
+API="${API:-https://painelturnemdv.vercel.app/api/estado}"
 export CHROME_PATH="${CHROME_PATH:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
 
 [ -s "$LISTA" ] || { echo "rode antes: python3 ferramentas/listar-urls.py"; exit 1; }

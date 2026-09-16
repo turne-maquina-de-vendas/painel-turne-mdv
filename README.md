@@ -9,13 +9,13 @@ Duas seções:
 - **Páginas** — as páginas no ar, com as notas do PageSpeed mobile e
   desktop de cada uma.
 
-No ar em https://adsmaquinadevendas.netlify.app
+No ar em https://painelturnemdv.vercel.app
 
 ## Rotina: mexeram na planilha
 
     python3 ferramentas/atualizar-paginas.py
     python3 ferramentas/gerar-index.py
-    netlify deploy --prod
+    git push
 
 ## Rotina: mexi no painel
 
@@ -23,7 +23,7 @@ Edite **`ferramentas/painel.fonte.html`** — nunca o `index.html`, que é
 gerado e seria sobrescrito.
 
     python3 ferramentas/gerar-index.py
-    netlify deploy --prod
+    git push
 
 ## Como as peças se encaixam
 
@@ -42,30 +42,42 @@ gerado e seria sobrescrito.
 (usando `window.claude`) e o gerador a converte na versão do Netlify, que
 usa a função `/api/estado` e uma fila local de envio.
 
-## Funções
+## Variáveis de ambiente
+
+Copie `.env.example` para `.env.local` e preencha. **O `.env.local` não vai
+para o git** — o `.gitignore` bloqueia. As mesmas variáveis precisam existir
+na Vercel, em Settings → Environment Variables:
+
+| Variável | Para quê |
+|---|---|
+| `DATABASE_URL` | Postgres do Neon (use a string com pooler) |
+| `PAGESPEED_API_KEY` | Medição automática; sem ela o Google devolve 429 |
+
+Primeira vez, para criar as tabelas:
+
+    node ferramentas/criar-tabelas.mjs
+
+## Funções (Vercel)
 
 | Arquivo | O que faz |
 |---|---|
-| `estado.mjs` | `/api/estado` — lê e grava status, anotações e medições |
-| `medir-background.mjs` | mede as 31 páginas no PageSpeed (limite 15 min) |
-| `agendar.mjs` | dispara a medição a cada 3 dias, 05:00 UTC |
-| `lista-paginas.mjs` | gerado — as URLs a medir |
+| `api/estado.js` | `/api/estado` — lê e grava status, anotações e medições |
+| `api/medir.js` | mede as páginas no PageSpeed; `?parte=1..4` |
+| `api/lista-paginas.js` | gerado — as URLs a medir |
+
+O `vercel.json` agenda as 4 fatias da medição a cada 3 dias, espaçadas de
+10 minutos.
 
 ## Armazenamento
 
-Cada anotação é um blob próprio (`nota/<id>`), cada decisão é
-`status/<arteKey>`, cada medição é `psi/<id>`. Guardar tudo num documento
-único fazia o último a salvar apagar o que o outro tinha acabado de
-escrever. As leituras usam consistência forte — sem isso o Netlify
-devolvia uma versão antiga logo após gravar, e a anotação "sumia" no F5.
+Postgres no Neon. Cada anotação é uma linha em `anotacoes`, cada decisão uma
+linha em `status_artes`, cada medição uma linha em `medicoes`. Guardar tudo
+num documento único fazia o último a salvar apagar o que o outro tinha
+acabado de escrever.
 
-O blob `indice` é o resultado montado, refeito a cada gravação para as
-leituras serem rápidas.
-
-No navegador, o que a pessoa escreve entra numa fila em `localStorage`
-antes de ir para a rede e só sai de lá quando o servidor confirma. Se a
-conexão cair ou a página for atualizada no meio, a fila é reenviada
-sozinha.
+No navegador, o que a pessoa escreve entra numa fila em `localStorage` antes
+de ir para a rede e só sai de lá quando o servidor confirma. Se a conexão
+cair ou a página for atualizada no meio, a fila é reenviada sozinha.
 
 ## Medição automática do PageSpeed
 
@@ -74,12 +86,12 @@ compartilhada e vive estourada):
 
 1. console.cloud.google.com → ative a **PageSpeed Insights API** →
    Credenciais → Criar chave de API
-2. `netlify env:set PAGESPEED_API_KEY SUA_CHAVE`
-3. `netlify deploy --prod`
+2. Coloque em `.env.local` e em Settings → Environment Variables na Vercel
+3. Faça um novo deploy
 
 Medir agora, sem esperar os 3 dias:
 
-    curl -X POST https://adsmaquinadevendas.netlify.app/.netlify/functions/medir-background
+    curl https://painelturnemdv.vercel.app/api/medir?parte=1
 
 A coluna **Medição** no painel diz de onde veio cada nota:
 
@@ -107,14 +119,7 @@ métricas de comportamento (sessões, rolagem, rage clicks).
 
 ## Deploy
 
-O site é conectado a este repositório: **`git push` na branch `main`
+O projeto é conectado a este repositório na Vercel: **`git push` na `main`
 publica sozinho**, funções incluídas.
 
     git push
-
-Para publicar sem passar pelo git (útil para testar antes de commitar):
-
-    netlify deploy --prod
-
-Arrastar a pasta no Netlify Drop não serve: publica o site mas não as
-funções, e aí cada pessoa vê só as próprias anotações.

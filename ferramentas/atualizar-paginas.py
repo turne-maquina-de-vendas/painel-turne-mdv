@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Le a planilha "MDV - Outubro 2026" e alimenta as duas pontas:
    - o bloco FUNIS de ferramentas/painel.fonte.html (o que a pessoa ve)
-   - netlify/functions/lista-paginas.mjs (o que a medicao automatica percorre)
+   - api/lista-paginas.js (o que a medicao automatica percorre)
 
 Rode sempre que mexerem na planilha, e depois gerar-index.py:
 
@@ -13,7 +13,7 @@ import csv, io, json, os, re, urllib.request
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONTE = os.path.join(RAIZ, "ferramentas", "painel.fonte.html")
-FUNCOES = os.path.join(RAIZ, "netlify", "functions")
+FUNCOES = os.path.join(RAIZ, "api")
 
 SHEET = "1IisavtxiR2zbolDmhcivWmMXx3zVuVGNB6TO-S8DN3g"
 GID = "1626754994"
@@ -89,7 +89,7 @@ io.open(FONTE, "w", encoding="utf-8").write(antes + ini + bloco_js(dados) + "\n"
 
 lista = [{"id": p["id"], "url": p["url"], "cidade": p["cidade"], "versao": g["versao"]}
          for g in dados for p in g["paginas"]]
-io.open(os.path.join(FUNCOES, "lista-paginas.mjs"), "w", encoding="utf-8").write(
+io.open(os.path.join(FUNCOES, "lista-paginas.js"), "w", encoding="utf-8").write(
     "// Gerado por ferramentas/atualizar-paginas.py a partir da planilha MDV - Outubro 2026.\n"
     "// Nao edite a mao: rode o script de novo.\n"
     "export const PAGINAS = " + json.dumps(lista, ensure_ascii=False, indent=2) + ";\n")

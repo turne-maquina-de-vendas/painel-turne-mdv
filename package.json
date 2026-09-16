@@ -5,6 +5,8 @@
   "type": "module",
   "description": "Painel de aprovacao das artes de feed - Turne Maquina de Vendas",
   "dependencies": {
-    "@netlify/blobs": "^8.1.0"
+    "@neondatabase/serverless": "^1.1.0",
+    "@netlify/blobs": "^8.1.0",
+    "vercel": "^59.19.0"
   }
 }

@@ -7,7 +7,7 @@
 import io, json, os, sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LISTA = os.path.join(RAIZ, "netlify", "functions", "lista-paginas.mjs")
+LISTA = os.path.join(RAIZ, "api", "lista-paginas.js")
 SAIDA = os.path.join(RAIZ, "ferramentas", "urls-para-medir.txt")
 
 filtro = sys.argv[1].upper() if len(sys.argv) > 1 else None
