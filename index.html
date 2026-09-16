@@ -939,7 +939,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     var el = $("#automacao");
     if(!execucao){
       el.className = "automacao";
-      el.innerHTML = '<b>Medição automática a cada 3 dias.</b> ' +
+      el.innerHTML = '<b>Medição automática a cada 12 horas.</b> ' +
         'Ainda não rodou — até lá as notas são as da planilha.';
       return;
     }
@@ -950,7 +950,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       return;
     }
     el.className = "automacao";
-    el.innerHTML = '<b>Medição automática a cada 3 dias.</b> Cada página é medida ' +
+    el.innerHTML = '<b>Medição automática a cada 12 horas.</b> Cada página é medida ' +
       '3 vezes em mobile e desktop, e vale a melhor — a nota do PageSpeed oscila ' +
       'bastante entre execuções. Última rodada ' + desdeQuando(execucao.quando) +
       ' · ' + execucao.medidas + ' páginas' +

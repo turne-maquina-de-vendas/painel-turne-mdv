@@ -3,31 +3,31 @@
   "crons": [
     {
       "path": "/api/medir?parte=1",
-      "schedule": "0 5 */3 * *"
+      "schedule": "0 5,17 * * *"
     },
     {
       "path": "/api/medir?parte=2",
-      "schedule": "8 5 */3 * *"
+      "schedule": "8 5,17 * * *"
     },
     {
       "path": "/api/medir?parte=3",
-      "schedule": "16 5 */3 * *"
+      "schedule": "16 5,17 * * *"
     },
     {
       "path": "/api/medir?parte=4",
-      "schedule": "24 5 */3 * *"
+      "schedule": "24 5,17 * * *"
     },
     {
       "path": "/api/medir?parte=5",
-      "schedule": "32 5 */3 * *"
+      "schedule": "32 5,17 * * *"
     },
     {
       "path": "/api/medir?parte=6",
-      "schedule": "40 5 */3 * *"
+      "schedule": "40 5,17 * * *"
     },
     {
       "path": "/api/medir?parte=7",
-      "schedule": "48 5 */3 * *"
+      "schedule": "48 5,17 * * *"
     }
   ],
   "headers": [

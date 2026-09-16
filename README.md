@@ -84,8 +84,8 @@ Para ver o que está guardado:
 A chave do PageSpeed vem da tabela `config`; a variável de ambiente serve
 como alternativa se a tabela não existir.
 
-O `vercel.json` agenda as 4 fatias da medição a cada 3 dias, espaçadas de
-10 minutos.
+O `vercel.json` agenda as 7 fatias da medição a cada 12 horas (05h e 17h
+UTC), espaçadas de 8 minutos.
 
 ## Armazenamento
 
@@ -108,7 +108,7 @@ compartilhada e vive estourada):
 2. Coloque em `.env.local` e em Settings → Environment Variables na Vercel
 3. Faça um novo deploy
 
-Medir agora, sem esperar os 3 dias:
+Medir agora, sem esperar o próximo ciclo:
 
     curl https://painelturnemdv.vercel.app/api/medir?parte=1
 
