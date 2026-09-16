@@ -1,0 +1,10 @@
+{
+  "name": "painel-campina-grande",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Painel de aprovacao das artes de feed - Turne Maquina de Vendas",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}

@@ -1,0 +1,1284 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Painel de aprovacao das artes de feed - Turne Maquina de Vendas, Campina Grande.">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B0F0C'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%23E9E43C' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='%23E9E43C'/%3E%3C/svg%3E">
+<title>Remessa Campina Grande</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<style>
+/* Painel de aprovação — ground escuro fixo por decisão: as artes são
+   escuras e o julgamento de cor precisa de um fundo neutro constante. */
+:root{
+  --ink:#0B0F0C;
+  --surface:#131A14;
+  --surface-2:#1A231B;
+  --line:#253026;
+  --line-soft:#1C251D;
+  --text:#EAF0EA;
+  --muted:#8D9B8E;
+  --muted-2:#67755F;
+  --accent:#E9E43C;
+  --accent-dim:#8E8B23;
+  --ok:#3FA45C;
+  --warn:#E39B3C;
+  --bad:#D65A48;
+  --radius:10px;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+/* display: flex/grid nos elementos abaixo venceria o atributo hidden */
+[hidden]{display:none !important}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--text);
+  font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:14px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* ---------- seções (nível de cima) ---------- */
+.secoes{
+  display:flex;
+  gap:0;
+  padding:0 26px;
+  background:#080B08;
+  border-bottom:1px solid var(--line);
+}
+.sec{
+  position:relative;
+  padding:13px 20px 12px;
+  border:none;background:transparent;cursor:pointer;
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted-2);
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  display:flex;align-items:center;gap:8px;
+}
+.sec:hover{color:var(--text)}
+.sec[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.sec .qt{
+  font-size:9.5px;letter-spacing:.06em;
+  background:var(--surface-2);border:1px solid var(--line);
+  color:var(--muted);padding:1px 6px;border-radius:999px;
+}
+.sec[aria-selected="true"] .qt{border-color:var(--accent-dim);color:var(--accent)}
+
+/* ---------- cabeçalho ---------- */
+.top{
+  background:linear-gradient(180deg,#101710 0%,var(--ink) 100%);
+  padding:22px 26px 18px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  gap:22px 32px;
+}
+.brand{display:flex;flex-direction:column;gap:4px;min-width:0}
+.eyebrow{
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:10.5px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+h1{
+  font-family:"Anton",Impact,"Archivo",sans-serif;
+  font-weight:400;
+  font-size:clamp(28px,4.4vw,44px);
+  line-height:.98;
+  margin:0;
+  letter-spacing:.01em;
+  text-wrap:balance;
+  display:flex;
+  align-items:baseline;
+  flex-wrap:wrap;
+  gap:0 .34em;
+}
+h1 .sep{color:var(--muted-2);font-size:.62em;font-weight:400}
+h1 .lote{font-size:.62em;color:var(--accent)}
+.subline{
+  color:var(--muted);
+  font-size:12.5px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+.subline .dot{color:var(--muted-2)}
+.subline b{color:var(--text);font-weight:600}
+
+.tally{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.tally .t{
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+  padding:7px 13px 8px;
+  border:1px solid var(--line);
+  background:var(--surface);
+  border-radius:var(--radius);
+  min-width:76px;
+}
+.tally .n{
+  font-family:"Anton",Impact,sans-serif;
+  font-size:22px;
+  line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.tally .l{
+  font-family:"JetBrains Mono",monospace;
+  font-size:9.5px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.t.is-ok{border-color:#27512F}      .t.is-ok .n{color:var(--ok)}
+.t.is-warn{border-color:#54401F}    .t.is-warn .n{color:var(--warn)}
+.t.is-bad{border-color:#53291F}     .t.is-bad .n{color:var(--bad)}
+
+.live{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:"JetBrains Mono",monospace;font-size:10px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+}
+.live .bulb{width:7px;height:7px;border-radius:50%;background:var(--muted-2);flex:none}
+.live.on .bulb{background:var(--ok);box-shadow:0 0 0 3px rgba(63,164,92,.18)}
+.live.off .bulb{background:var(--warn)}
+
+/* ---------- abas de remessa ---------- */
+.tabs{
+  display:flex;
+  gap:2px;
+  padding:0 26px;
+  border-bottom:1px solid var(--line);
+  background:var(--ink);
+  overflow-x:auto;
+  scrollbar-width:thin;
+}
+.tab{
+  position:relative;
+  flex:none;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:1px;
+  padding:11px 18px 12px;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  color:var(--muted);
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+  text-align:left;
+  white-space:nowrap;
+}
+.tab:hover{color:var(--text);background:var(--surface)}
+.tab .tl{font-family:"Archivo",sans-serif;font-weight:700;font-size:13.5px;letter-spacing:.01em}
+.tab .tm{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.06em;color:var(--muted-2)}
+.tab[aria-selected="true"]{color:var(--text);border-bottom-color:var(--accent);background:var(--surface)}
+.tab[aria-selected="true"] .tl{color:var(--accent)}
+.tab[aria-selected="true"] .tm{color:var(--muted)}
+.tab.vazia .tl{font-weight:500}
+.tab .sinal{
+  position:absolute;top:9px;right:8px;
+  width:6px;height:6px;border-radius:50%;background:var(--accent);
+}
+
+/* ---------- área das artes ---------- */
+.board{padding:22px 26px 70px}
+
+.filters{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:0 0 18px}
+.chip{
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--muted);
+  padding:5px 12px;
+  border-radius:999px;
+  font-size:12px;
+  cursor:pointer;
+}
+.chip:hover{border-color:var(--muted-2);color:var(--text)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#14170A;font-weight:600}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:18px;
+  align-items:start;
+}
+
+.vazio{
+  grid-column:1/-1;
+  border:1px dashed var(--line);
+  border-radius:var(--radius);
+  padding:44px 30px;
+  text-align:center;
+  color:var(--muted);
+  display:flex;flex-direction:column;gap:7px;align-items:center;
+}
+.vazio strong{font-family:"Anton",Impact,sans-serif;font-weight:400;font-size:21px;color:var(--text)}
+.vazio span{font-size:13px;max-width:44ch;line-height:1.6}
+.vazio code{
+  font-family:"JetBrains Mono",monospace;font-size:11.5px;
+  background:var(--surface-2);border:1px solid var(--line);
+  padding:2px 7px;border-radius:5px;color:var(--accent);
+}
+
+/* ---------- card ---------- */
+.card{
+  position:relative;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--surface);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  transition:border-color .14s ease;
+}
+.card:hover{border-color:var(--muted-2)}
+.card.aberta{border-color:var(--accent-dim)}
+
+/* barra de status na lateral */
+.card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;z-index:3;
+  background:transparent;
+}
+.card[data-st="aprovado"]::before{background:var(--ok)}
+.card[data-st="ajuste"]::before{background:var(--warn)}
+.card[data-st="reprovado"]::before{background:var(--bad)}
+
+.shot{
+  position:relative;
+  aspect-ratio:4/5;
+  background:#0A0D0A;
+  overflow:hidden;
+  cursor:zoom-in;
+}
+.shot img{width:100%;height:100%;object-fit:cover;display:block}
+
+.tagline{
+  position:absolute;top:8px;left:8px;right:8px;
+  display:flex;justify-content:space-between;gap:6px;pointer-events:none;
+}
+.tag{
+  font-family:"JetBrains Mono",monospace;
+  font-size:10px;letter-spacing:.06em;
+  background:rgba(8,11,8,.78);
+  backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,.09);
+  padding:3px 7px;border-radius:5px;
+}
+.tag.car{color:var(--accent);border-color:var(--accent-dim)}
+
+.navarrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:26px;height:34px;border:none;border-radius:5px;
+  background:rgba(8,11,8,.72);color:#fff;cursor:pointer;
+  opacity:0;transition:opacity .14s ease;font-size:13px;line-height:1;
+}
+.card:hover .navarrow,.navarrow:focus-visible{opacity:1}
+.navarrow.prev{left:6px} .navarrow.next{right:6px}
+
+.barra{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 10px 0;
+}
+.barra .code{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted)}
+.pill{
+  margin-left:auto;display:inline-flex;align-items:center;gap:5px;
+  font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  font-family:"JetBrains Mono",monospace;
+  padding:3px 8px;border-radius:999px;
+  border:1px solid var(--line);color:var(--muted);
+}
+.pill i{width:6px;height:6px;border-radius:50%;background:currentColor;font-style:normal;flex:none}
+.pill.aprovado{color:var(--ok);border-color:#27512F;background:rgba(63,164,92,.1)}
+.pill.ajuste{color:var(--warn);border-color:#54401F;background:rgba(227,155,60,.1)}
+.pill.reprovado{color:var(--bad);border-color:#53291F;background:rgba(214,90,72,.1)}
+
+/* botões de decisão dentro do card */
+.acoes{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:9px 10px 0}
+.ab{
+  padding:7px 2px;border-radius:6px;cursor:pointer;
+  border:1px solid var(--line);background:var(--surface-2);color:var(--muted);
+  font-size:11.5px;font-weight:600;letter-spacing:.01em;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+}
+.ab:hover{color:var(--text);border-color:var(--muted-2)}
+.ab[aria-pressed="true"]{color:#0B0F0C;font-weight:700}
+.ab.ok[aria-pressed="true"]{background:var(--ok);border-color:var(--ok)}
+.ab.warn[aria-pressed="true"]{background:var(--warn);border-color:var(--warn)}
+.ab.bad[aria-pressed="true"]{background:var(--bad);border-color:var(--bad)}
+
+/* faixa que abre as anotações */
+.abrir{
+  margin-top:9px;width:100%;text-align:left;cursor:pointer;
+  padding:8px 10px;background:transparent;border:none;
+  border-top:1px solid var(--line-soft);
+  font-family:"JetBrains Mono",monospace;font-size:11px;
+  color:var(--muted);display:flex;align-items:center;gap:6px;
+}
+.abrir:hover{color:var(--text);background:var(--surface-2)}
+.abrir.tem{color:var(--accent)}
+.abrir .seta{margin-left:auto;transition:transform .14s ease}
+.card.aberta .abrir .seta{transform:rotate(180deg)}
+
+.notas{
+  padding:2px 10px 11px;
+  display:flex;flex-direction:column;gap:8px;
+  border-top:1px solid var(--line-soft);
+}
+.lista{display:flex;flex-direction:column;gap:7px;max-height:200px;overflow-y:auto}
+.nota{display:flex;flex-direction:column;gap:2px}
+.nota .when{font-family:"JetBrains Mono",monospace;color:var(--muted-2);font-size:9.5px}
+.nota .body{
+  background:var(--surface-2);border:1px solid var(--line-soft);
+  border-radius:8px;border-top-left-radius:3px;
+  padding:7px 10px;font-size:12.5px;white-space:pre-wrap;overflow-wrap:anywhere;
+}
+.nota.sys .body{background:transparent;border-style:dashed;color:var(--muted);font-size:11.5px}
+.nota.pendente .when{color:var(--accent)}
+.nota.pendente .body{border-color:var(--accent-dim)}
+.notas textarea{
+  width:100%;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:7px;padding:8px 10px;font-size:12.5px;
+  resize:vertical;min-height:62px;line-height:1.45;
+}
+.rodape{display:flex;align-items:center;gap:8px}
+.rodape .hint{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--muted-2)}
+.env{
+  margin-left:auto;background:var(--accent);border:none;color:#14170A;
+  font-weight:700;font-size:12px;padding:6px 14px;border-radius:6px;cursor:pointer;
+}
+.env:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---------- páginas no ar ---------- */
+.funil{margin:0 0 30px}
+.funil-head{
+  display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding:0 0 10px;border-bottom:1px solid var(--line);margin-bottom:0;
+}
+.funil-head h2{
+  font-family:"Anton",Impact,sans-serif;font-weight:400;
+  font-size:19px;margin:0;letter-spacing:.01em;
+}
+.funil-head .versao{color:var(--accent)}
+.funil-head .meta{
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;
+  letter-spacing:.06em;color:var(--muted-2);margin-left:auto;
+}
+
+.tabela-wrap{overflow-x:auto}
+table.paginas{width:100%;border-collapse:collapse;font-size:13px;min-width:660px}
+table.paginas th{
+  font-family:"JetBrains Mono",monospace;font-size:9.5px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);
+  font-weight:400;text-align:left;padding:10px 10px 8px;white-space:nowrap;
+}
+table.paginas th.num{text-align:center;width:74px}
+table.paginas td{
+  padding:10px;border-top:1px solid var(--line-soft);vertical-align:middle;
+}
+table.paginas tbody tr:hover{background:var(--surface)}
+.cidade{display:flex;flex-direction:column;gap:2px;min-width:0}
+.cidade b{font-weight:600;font-size:13.5px}
+.cidade .slug{
+  font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted-2);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:34ch;
+}
+td.dia{font-family:"JetBrains Mono",monospace;color:var(--muted);white-space:nowrap}
+td.num{text-align:center}
+
+.nota{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:38px;padding:4px 8px;border-radius:7px;
+  font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:500;
+  font-variant-numeric:tabular-nums;
+  border:1px solid;
+}
+.nota.boa{color:var(--ok);border-color:#27512F;background:rgba(63,164,92,.12)}
+.nota.media{color:var(--warn);border-color:#54401F;background:rgba(227,155,60,.12)}
+.nota.ruim{color:var(--bad);border-color:#53291F;background:rgba(214,90,72,.12)}
+.nota.vazia{color:var(--muted-2);border-color:var(--line);background:transparent}
+
+.abrir-pg{
+  font-family:"JetBrains Mono",monospace;font-size:11px;
+  color:var(--muted);text-decoration:none;white-space:nowrap;
+  border:1px solid var(--line);border-radius:6px;padding:5px 10px;
+  display:inline-block;
+}
+.abrir-pg:hover{color:var(--accent);border-color:var(--accent-dim)}
+
+.automacao{
+  border:1px solid var(--line);border-left:3px solid var(--accent-dim);
+  border-radius:var(--radius);background:var(--surface);
+  padding:10px 14px;margin:0 0 16px;font-size:12.5px;color:var(--muted);
+}
+.automacao b{color:var(--text);font-weight:600}
+.automacao.alerta{border-left-color:var(--warn)}
+.automacao .ruim{color:var(--bad)}
+
+.fonte{
+  font-family:"JetBrains Mono",monospace;font-size:10px;
+  letter-spacing:.04em;color:var(--muted-2);white-space:nowrap;
+}
+.fonte.real{color:var(--ok)}
+.fonte.local{color:var(--accent)}
+
+.legenda{
+  display:flex;gap:16px;flex-wrap:wrap;align-items:center;
+  font-family:"JetBrains Mono",monospace;font-size:10px;
+  letter-spacing:.06em;color:var(--muted-2);margin:0 0 20px;
+}
+.legenda span{display:inline-flex;align-items:center;gap:6px}
+.legenda i{width:9px;height:9px;border-radius:3px;font-style:normal;flex:none}
+.legenda i.boa{background:var(--ok)} .legenda i.media{background:var(--warn)} .legenda i.ruim{background:var(--bad)}
+
+/* ---------- lightbox ---------- */
+.lb{
+  position:fixed;inset:0;z-index:60;background:rgba(6,8,6,.94);
+  display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;padding:26px;
+}
+.lb.on{display:flex}
+.lb img{max-width:min(96vw,900px);max-height:82vh;object-fit:contain;border-radius:6px}
+.lb .lbbar{display:flex;gap:10px;align-items:center;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted)}
+.lb .lbbar button{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:5px 11px;cursor:pointer;font-size:12px}
+
+@media (max-width:640px){
+  .top{padding:18px 16px 14px}
+  .tabs{padding:0 16px}
+  .board{padding:18px 16px 50px}
+  .tally{margin-left:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<nav class="secoes" id="secoes" role="tablist" aria-label="Seções">
+  <button class="sec" role="tab" data-s="criativos" aria-selected="true">Criativos <span class="qt" id="qtCri">30</span></button>
+  <button class="sec" role="tab" data-s="paginas" aria-selected="false">Páginas <span class="qt" id="qtPag">31</span></button>
+</nav>
+
+<header class="top">
+  <div class="brand">
+    <span class="eyebrow">Turnê Máquina de Vendas</span>
+    <h1 id="titulo"></h1>
+    <div class="subline" id="subline"></div>
+  </div>
+  <div class="tally" id="tally"></div>
+</header>
+
+<nav class="tabs" id="tabs" role="tablist" aria-label="Remessas"></nav>
+
+<main class="board" id="viewCriativos">
+  <div class="filters" id="filters">
+    <button class="chip" data-f="todas" aria-pressed="true">Todas</button>
+    <button class="chip" data-f="pendente" aria-pressed="false">Pendentes</button>
+    <button class="chip" data-f="aprovado" aria-pressed="false">Aprovadas</button>
+    <button class="chip" data-f="ajuste" aria-pressed="false">Ajustar</button>
+    <button class="chip" data-f="reprovado" aria-pressed="false">Reprovadas</button>
+    <button class="chip" data-f="comentadas" aria-pressed="false">Com anotação</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<main class="board" id="viewPaginas" hidden>
+  <div class="automacao" id="automacao"></div>
+  <div class="legenda">
+    <span>Nota PageSpeed</span>
+    <span><i class="boa"></i>90–100 bom</span>
+    <span><i class="media"></i>50–89 precisa melhorar</span>
+    <span><i class="ruim"></i>0–49 ruim</span>
+  </div>
+  <div id="funis"></div>
+</main>
+
+<div class="lb" id="lb">
+  <img id="lbImg" alt="">
+  <div class="lbbar">
+    <button type="button" id="lbPrev">←</button>
+    <span id="lbCap">AD01</span>
+    <button type="button" id="lbNext">→</button>
+    <button type="button" id="lbClose">fechar (esc)</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Cada remessa é um lote de entrega. A 02 é a que veio da pasta
+     "2 demanda campina grande"; as outras ficam prontas para receber artes. */
+  var REMESSAS = [
+    {id:"r01", nome:"Remessa 01", artes:[]},
+    {id:"r02", nome:"Remessa 02", artes:[
+      {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/ad01.jpg"]},
+      {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/ad02.jpg"]},
+      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/ad03.jpg"]},
+      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/ad04.jpg"]},
+      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/ad05.jpg"]},
+      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/ad06.jpg"]},
+      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/ad07.jpg"]},
+      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/ad08.jpg"]},
+      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/ad09.jpg"]},
+      {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/ad10.jpg"]},
+      {id:"ad11",code:"AD11",tipo:"IMG",files:["arts/ad11.jpg"]},
+      {id:"ad12",code:"AD12",tipo:"IMG",files:["arts/ad12.jpg"]},
+      {id:"ad13",code:"AD13",tipo:"IMG",files:["arts/ad13.jpg"]},
+      {id:"ad14",code:"AD14",tipo:"IMG",files:["arts/ad14.jpg"]},
+      {id:"ad15",code:"AD15",tipo:"IMG",files:["arts/ad15.jpg"]},
+      {id:"ad16",code:"AD16",tipo:"IMG",files:["arts/ad16.jpg"]},
+      {id:"ad17",code:"AD17",tipo:"CAR",files:["arts/ad17_CARD01.jpg","arts/ad17_CARD02.jpg","arts/ad17_CARD03.jpg","arts/ad17_CARD04.jpg"]}
+    ]},
+    {id:"r03", nome:"Remessa 03", artes:[
+      {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/r3_ad01.jpg"]},
+      {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/r3_ad02.jpg"]},
+      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/r3_ad03.jpg"]},
+      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/r3_ad04.jpg"]},
+      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/r3_ad05.jpg"]},
+      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/r3_ad06.jpg"]},
+      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/r3_ad07.jpg"]},
+      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/r3_ad08.jpg"]},
+      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/r3_ad09.jpg"]},
+      {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/r3_ad10.jpg"]},
+      {id:"ad11",code:"AD11",tipo:"IMG",files:["arts/r3_ad11.jpg"]},
+      {id:"ad12",code:"AD12",tipo:"IMG",files:["arts/r3_ad12.jpg"]},
+      {id:"ad13",code:"AD13",tipo:"IMG",files:["arts/r3_ad13.jpg"]}
+    ]},
+    {id:"r04", nome:"Remessa 04", artes:[]}
+  ];
+
+  /* chave global de cada arte: "r02__ad01" — é o id do doc de status
+     e o vínculo das anotações, para as remessas nunca se misturarem. */
+  var BY_KEY = {};
+  REMESSAS.forEach(function(r){
+    r.artes.forEach(function(a){
+      a.remessa = r.id;
+      a.key = r.id + "__" + a.id;
+      BY_KEY[a.key] = a;
+    });
+  });
+
+  /* Páginas no ar, conforme a planilha "MDV - Outubro 2026".
+     As notas são as do PageSpeed anotadas lá; célula vazia = ainda não medida. */
+  /* FUNIS:inicio */
+  var FUNIS = [
+    {nome:"Rota 45", versao:"V3 · Padrão", paginas:[
+      {id:"lc_rota-45-campina-grande-funil-1-v3", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-campina-grande-funil-1-v3/"},
+      {id:"lc_rota-45-joao-pessoa-funil-1-v3", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-joao-pessoa-funil-1-v3/"},
+      {id:"lc_rota-45-palmas-funil-1-v3", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-palmas-funil-1-v3/"},
+      {id:"lc_rota-45-vitoriadaconquista-funil-1-v3", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-vitoriadaconquista-funil-1-v3/"},
+      {id:"lc_rota-45-brasilia-funil-1-v3", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-brasilia-funil-1-v3/"},
+      {id:"lc_rota-45-barreiras-funil-1-v3", cidade:"Barreiras (BA)", data:"15/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-barreiras-funil-1-v3/"},
+      {id:"lc_rota-45-manaus-funil-1-v3", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v3/"},
+      {id:"lc_rota-45-belem-funil-1-v3", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-belem-funil-1-v3/"},
+      {id:"lc_rota-45-sinop-funil-1-v3", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-sinop-funil-1-v3/"},
+      {id:"lc_rota-45-cuiaba-funil-1-v3", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-cuiaba-funil-1-v3/"},
+      {id:"lc_rota-45-ribeirao-preto-funil-1-v3", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-ribeirao-preto-funil-1-v3/"}
+    ]},
+    {nome:"Rota 45", versao:"ROTA 45 V4", paginas:[
+      {id:"turne-mdv-campinagrande-v4", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v4/"},
+      {id:"turne-mdv-joaopessoa-v4", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v4/"},
+      {id:"turne-mdv-palmas-v4", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas-v4/"},
+      {id:"turne-mdv-vitoriadaconquista-v4", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista-v4/"},
+      {id:"turne-mdv-brasilia-v4", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-brasilia-v4/"},
+      {id:"turne-mdv-manaus-v4", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-manaus-v4/"},
+      {id:"turne-mdv-belem-v4", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-belem-v4/"},
+      {id:"turne-mdv-sinop-v4", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop-v4/"},
+      {id:"turne-mdv-cuiaba-v4", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v4/"},
+      {id:"turne-mdv-ribeiraopreto-v4", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v4/"}
+    ]},
+    {nome:"Rota 45", versao:"ROTA 45 V5", paginas:[
+      {id:"turne-mdv-campinagrande-v5", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:85, desktop:78, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v5/"},
+      {id:"turne-mdv-joaopessoa-v5", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v5/"},
+      {id:"turne-mdv-palmas-v5", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas-v5/"},
+      {id:"turne-mdv-vitoriadaconquista-v5", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista-v5/"},
+      {id:"turne-mdv-brasilia-v5", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-brasilia-v5/"},
+      {id:"turne-mdv-manaus-v5", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-manaus-v5/"},
+      {id:"turne-mdv-belem-v5", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-belem-v5/"},
+      {id:"turne-mdv-sinop-v5", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop-v5/"},
+      {id:"turne-mdv-cuiaba-v5", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v5/"},
+      {id:"turne-mdv-ribeiraopreto-v5", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v5/"}
+    ]}
+  ];
+  /* FUNIS:fim */
+
+  var LABEL = {pendente:"pendente",aprovado:"aprovado",ajuste:"ajustar",reprovado:"reprovado"};
+
+  // estado
+  var status   = {};     // arteKey -> {status, em, remessa}
+  var notas    = [];     // {id, arteKey, remessa, texto, criadoEm}
+  var lote     = "r02";
+  var filtro   = "todas";
+  var slide    = {};     // arteKey -> índice do card do carrossel
+  var aberta   = null;   // arteKey com o bloco de anotações aberto
+  var rascunho = {};     // arteKey -> texto ainda não enviado
+  var focado   = false;  // o textarea estava com o cursor antes de repintar
+  var lbArte = null, lbIdx = 0;
+
+  var secao = "criativos";   // "criativos" | "paginas"
+
+  /* medições automáticas do PageSpeed, quando existirem: id da página ->
+     {mobile:{nota,campo,temCampo}, desktop:{...}, medidoEm}. Vazio = o painel
+     mostra o que está na planilha. */
+  var medicoes = {};
+  var execucao = null;       // como foi a última rodada automática
+
+  var $ = function(s){ return document.querySelector(s); };
+  var grid = $("#grid"), tally = $("#tally"), tabs = $("#tabs");
+
+  function remessaAtual(){
+    for(var i=0;i<REMESSAS.length;i++){ if(REMESSAS[i].id === lote) return REMESSAS[i]; }
+    return REMESSAS[0];
+  }
+  function artesDoLote(){ return remessaAtual().artes; }
+
+  function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+
+  function quando(iso){
+    var d = new Date(iso);
+    if(isNaN(d)) return "";
+    var hh = String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+    if(d.toDateString() === new Date().toDateString()) return "hoje " + hh;
+    return String(d.getDate()).padStart(2,"0") + "/" + String(d.getMonth()+1).padStart(2,"0") + " " + hh;
+  }
+
+  function st(key){ return (status[key] && status[key].status) || "pendente"; }
+  function notasDe(key){ return notas.filter(function(n){ return n.arteKey === key; }); }
+  function notasDoLote(id){ return notas.filter(function(n){ return n.remessa === id; }); }
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];
+    });
+  }
+
+  // ---------- render ----------
+  function renderTabs(){
+    tabs.innerHTML = REMESSAS.map(function(r){
+      var n = r.artes.length;
+      var ativo = r.id === lote;
+      var meta;
+      if(!n){
+        meta = "aguardando artes";
+      }else{
+        var ok = r.artes.filter(function(a){ return st(a.key) === "aprovado"; }).length;
+        meta = ok + "/" + n + " aprovadas";
+      }
+      var sinal = n && notasDoLote(r.id).length > 0 && !ativo;
+      return '<button class="tab'+(n?"":" vazia")+'" role="tab" data-lote="'+r.id+'" aria-selected="'+ativo+'">' +
+        (sinal ? '<span class="sinal" title="tem anotações"></span>' : '') +
+        '<span class="tl">'+r.nome+'</span>' +
+        '<span class="tm">'+meta+'</span>' +
+      '</button>';
+    }).join("");
+  }
+
+  function blocoNotas(a){
+    var lista = notasDe(a.key).slice().sort(function(x,y){
+      return String(x.criadoEm).localeCompare(String(y.criadoEm));
+    });
+
+    var itens = "";
+    if(status[a.key] && status[a.key].status && status[a.key].status !== "pendente"){
+      itens += '<div class="nota sys"><div class="body">Marcada como <b>' +
+               LABEL[status[a.key].status] + '</b> · ' + quando(status[a.key].em) + '</div></div>';
+    }
+    itens += lista.map(function(n){
+      return '<div class="nota'+(n.pendente?" pendente":"")+'">' +
+        '<span class="when">'+quando(n.criadoEm)+(n.pendente?" · enviando…":"")+'</span>' +
+        '<div class="body">'+esc(n.texto)+'</div>' +
+      '</div>';
+    }).join("");
+
+    if(!itens) itens = '<p class="nota sys"><span class="body">Nenhuma anotação ainda.</span></p>';
+
+    return '<div class="notas">' +
+      '<div class="lista">'+itens+'</div>' +
+      '<textarea data-msg aria-label="Anotação para '+a.code+'"></textarea>' +
+      '<div class="rodape">' +
+        '<span class="hint">⌘/Ctrl + Enter envia</span>' +
+        '<button type="button" class="env" data-anotar>Anotar</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function renderGrid(){
+    var lista = artesDoLote();
+
+    if(!lista.length){
+      grid.innerHTML = '<div class="vazio">' +
+        '<strong>' + esc(remessaAtual().nome) + ' ainda não tem artes</strong>' +
+        '<span>Quando as artes chegarem, elas entram aqui do mesmo jeito: versão feed, ' +
+        'status e anotações próprios. A aba guarda a aprovação separada das outras remessas.</span>' +
+        '<code>Downloads / demanda campina grande</code>' +
+      '</div>';
+      return;
+    }
+
+    var visiveis = lista.filter(function(a){
+      if(filtro === "todas") return true;
+      if(filtro === "comentadas") return notasDe(a.key).length > 0;
+      return st(a.key) === filtro;
+    });
+
+    if(!visiveis.length){
+      grid.innerHTML = '<div class="vazio"><strong>Nenhuma arte neste filtro</strong>' +
+        '<span>Volte para “Todas” para ver as ' + lista.length + ' artes da ' +
+        esc(remessaAtual().nome.toLowerCase()) + '.</span></div>';
+      return;
+    }
+
+    grid.innerHTML = visiveis.map(function(a){
+      var s = st(a.key);
+      var n = notasDe(a.key).length;
+      var i = slide[a.key] || 0;
+      var car = a.tipo === "CAR";
+      var open = aberta === a.key;
+
+      return '<article class="card'+(open?" aberta":"")+'" data-key="'+a.key+'" data-st="'+s+'">' +
+        '<div class="shot" data-zoom role="button" tabindex="0" aria-label="Ver '+a.code+' em tamanho grande">' +
+          '<img src="'+a.files[i]+'" alt="Arte '+a.code+(car?" card "+(i+1):"")+'" loading="lazy">' +
+          '<div class="tagline">' +
+            '<span class="tag">'+a.code+'</span>' +
+            (car ? '<span class="tag car">carrossel '+(i+1)+'/'+a.files.length+'</span>' : '') +
+          '</div>' +
+          (car ? '<button class="navarrow prev" data-nav="-1" aria-label="Card anterior">‹</button>' +
+                 '<button class="navarrow next" data-nav="1" aria-label="Próximo card">›</button>' : '') +
+        '</div>' +
+
+        '<div class="barra">' +
+          '<span class="code">'+(car?"4 cards · feed":"feed")+'</span>' +
+          '<span class="pill '+(s!=="pendente"?s:"")+'"><i></i>'+LABEL[s]+'</span>' +
+        '</div>' +
+
+        '<div class="acoes">' +
+          '<button class="ab ok"   data-v="aprovado"  aria-pressed="'+(s==="aprovado")+'">✓ Aprovar</button>' +
+          '<button class="ab warn" data-v="ajuste"    aria-pressed="'+(s==="ajuste")+'">± Ajustar</button>' +
+          '<button class="ab bad"  data-v="reprovado" aria-pressed="'+(s==="reprovado")+'">✕ Reprovar</button>' +
+        '</div>' +
+
+        '<button class="abrir'+(n?" tem":"")+'" data-abrir aria-expanded="'+open+'">' +
+          '<span>✎ '+(n ? n + (n===1?" anotação":" anotações") : "Anotar")+'</span>' +
+          '<span class="seta">⌄</span>' +
+        '</button>' +
+
+        (open ? blocoNotas(a) : "") +
+      '</article>';
+    }).join("");
+
+    // devolve o rascunho (e o cursor) ao textarea depois de repintar
+    if(aberta){
+      var ta = grid.querySelector('.card[data-key="'+aberta+'"] textarea[data-msg]');
+      if(ta){
+        ta.value = rascunho[aberta] || "";
+        if(focado){
+          ta.focus();
+          ta.setSelectionRange(ta.value.length, ta.value.length);
+        }
+      }
+    }
+  }
+
+  function tile(cls,n,l){
+    return '<div class="t '+cls+'"><span class="n">'+n+'</span><span class="l">'+l+'</span></div>';
+  }
+  function doisDigitos(n){ return String(n).padStart(2,"0"); }
+
+  function renderCabecalho(){
+    var live = '<span class="live" id="live"><span class="bulb"></span><span id="liveTxt">conectando</span></span>';
+    var estadoLive = $("#live") ? $("#live").className : "live off";
+    var textoLive  = $("#liveTxt") ? $("#liveTxt").textContent : "conectando";
+
+    if(secao === "criativos"){
+      var lista = artesDoLote();
+      $("#titulo").innerHTML =
+        '<span>Campina Grande</span><span class="sep">—</span>' +
+        '<span class="lote">' + esc(remessaAtual().nome) + '</span>';
+      $("#subline").innerHTML =
+        '<span>Evento <b>06 de outubro</b></span><span class="dot">/</span>' +
+        '<span><b>' + lista.length + '</b> artes</span><span class="dot">/</span>' +
+        '<span>versão <b>Feed</b> · 1080 × 1350</span><span class="dot">/</span>' + live;
+
+      var c = {pendente:0,aprovado:0,ajuste:0,reprovado:0};
+      lista.forEach(function(a){ c[st(a.key)]++; });
+      tally.innerHTML =
+        tile("", doisDigitos(c.pendente), "pendentes") +
+        tile("is-ok", doisDigitos(c.aprovado), "aprovadas") +
+        tile("is-warn", doisDigitos(c.ajuste), "ajustar") +
+        tile("is-bad", doisDigitos(c.reprovado), "reprovadas") +
+        tile("", doisDigitos(notasDoLote(lote).length), "anotações");
+    }else{
+      var todas = [];
+      FUNIS.forEach(function(f){ todas = todas.concat(f.paginas); });
+      var comMobile  = todas.filter(function(p){ return p.mobile  != null; });
+      var comDesktop = todas.filter(function(p){ return p.desktop != null; });
+
+      $("#titulo").innerHTML = '<span>Páginas no ar</span>';
+      $("#subline").innerHTML =
+        '<span><b>' + todas.length + '</b> páginas</span><span class="dot">/</span>' +
+        '<span><b>' + FUNIS.length + '</b> funis</span><span class="dot">/</span>' +
+        '<span>outubro 2026</span><span class="dot">/</span>' + live;
+
+      tally.innerHTML =
+        tile("", todas.length, "páginas") +
+        tile("", comMobile.length + "/" + todas.length, "medidas") +
+        notaTile(media(comMobile, "mobile"), "méd. mobile") +
+        notaTile(media(comDesktop, "desktop"), "méd. desktop");
+    }
+
+    // o indicador é recriado junto com a subline: devolve o estado atual
+    if($("#live")){ $("#live").className = estadoLive; $("#liveTxt").textContent = textoLive; }
+
+    function media(lista, campo){
+      if(!lista.length) return null;
+      var soma = lista.reduce(function(t,p){ return t + p[campo]; }, 0);
+      return Math.round(soma / lista.length);
+    }
+    function notaTile(v, rotulo){
+      if(v == null) return tile("", "—", rotulo);
+      return tile(faixa(v) === "boa" ? "is-ok" : faixa(v) === "media" ? "is-warn" : "is-bad", v, rotulo);
+    }
+  }
+
+  /* faixas do PageSpeed: 90+ bom, 50-89 precisa melhorar, abaixo ruim */
+  function faixa(n){ return n >= 90 ? "boa" : n >= 50 ? "media" : "ruim"; }
+
+  /* o status vem escrito na planilha; só "aprovado" merece verde */
+  function classeStatus(s){
+    var v = String(s || "").toLowerCase();
+    if(v.indexOf("aprovad") === 0) return "aprovado";
+    if(v.indexOf("desativ") === 0 || v.indexOf("pausad") === 0) return "reprovado";
+    return "";
+  }
+
+  /* "há 2d", "há 5h" — para dizer quando a nota foi tirada */
+  function desdeQuando(iso){
+    var t = new Date(iso).getTime();
+    if(isNaN(t)) return "";
+    var min = Math.round((Date.now() - t) / 60000);
+    if(min < 60) return "há " + Math.max(min,1) + "min";
+    if(min < 1440) return "há " + Math.round(min/60) + "h";
+    return "há " + Math.round(min/1440) + "d";
+  }
+
+  /* a nota que vale: a medida automaticamente, se houver; senão a da planilha */
+  function notaVigente(p, qual){
+    var m = medicoes[p.id];
+    if(m && m[qual] && typeof m[qual].nota === "number"){
+      return {
+        valor: m[qual].nota,
+        deOnde: "medida",
+        campo: Boolean(m[qual].temCampo),
+        local: m.origem === "local",   // Lighthouse rodado na mão, não o PageSpeed
+        amostras: m[qual].amostras || null,
+        quando: m.medidoEm
+      };
+    }
+    return {valor:p[qual], deOnde:"planilha", campo:false, local:false, quando:null};
+  }
+
+  function renderAutomacao(){
+    var el = $("#automacao");
+    if(!execucao){
+      el.className = "automacao";
+      el.innerHTML = '<b>Medição automática a cada 3 dias.</b> ' +
+        'Ainda não rodou — até lá as notas são as da planilha.';
+      return;
+    }
+    if(execucao.erro){
+      el.className = "automacao alerta";
+      el.innerHTML = '<b>A medição automática não rodou.</b> ' + esc(execucao.erro) +
+        ' Enquanto isso, as notas são as da planilha.';
+      return;
+    }
+    el.className = "automacao";
+    el.innerHTML = '<b>Medição automática a cada 3 dias.</b> Cada página é medida ' +
+      '3 vezes em mobile e desktop, e vale a melhor — a nota do PageSpeed oscila ' +
+      'bastante entre execuções. Última rodada ' + desdeQuando(execucao.quando) +
+      ' · ' + execucao.medidas + ' páginas' +
+      (execucao.comErro ? ' · <span class="ruim">' + execucao.comErro + ' falharam</span>' : '') +
+      '. A V3 ficou de fora.';
+  }
+
+  function renderPaginas(){
+    renderAutomacao();
+
+    $("#funis").innerHTML = FUNIS.map(function(f){
+      var n = f.paginas.length;
+      var mob  = f.paginas.filter(function(p){ return notaVigente(p,"mobile").valor  != null; }).length;
+      var desk = f.paginas.filter(function(p){ return notaVigente(p,"desktop").valor != null; }).length;
+      var meta = f.versao.indexOf("V3") === 0
+        ? n + " páginas · fora da medição automática"
+        : (mob + desk) === 0
+          ? n + " páginas · sem medição"
+          : n + " páginas · mobile " + mob + "/" + n + " · desktop " + desk + "/" + n;
+
+      return '<section class="funil">' +
+        '<div class="funil-head">' +
+          '<h2>' + esc(f.nome) + ' <span class="versao">' + esc(f.versao) + '</span></h2>' +
+          '<span class="meta">' + meta + '</span>' +
+        '</div>' +
+        '<div class="tabela-wrap"><table class="paginas">' +
+          '<thead><tr>' +
+            '<th>Cidade</th><th>Evento</th><th>Status</th>' +
+            '<th class="num">Mobile</th><th class="num">Desktop</th>' +
+            '<th>Medição</th><th></th>' +
+          '</tr></thead><tbody>' +
+          f.paginas.map(function(p){
+            var m = notaVigente(p,"mobile"), d = notaVigente(p,"desktop");
+            return '<tr>' +
+              '<td><span class="cidade"><b>' + esc(p.cidade) + '</b>' +
+                '<span class="slug" title="' + esc(p.url) + '">' + esc(slug(p.url)) + '</span></span></td>' +
+              '<td class="dia">' + esc(p.data) + '</td>' +
+              '<td><span class="pill ' + classeStatus(p.status) + '"><i></i>' + esc(p.status.toLowerCase()) + '</span></td>' +
+              '<td class="num">' + nota(m) + '</td>' +
+              '<td class="num">' + nota(d) + '</td>' +
+              '<td>' + origem(m, d) + '</td>' +
+              '<td><a class="abrir-pg" href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer">abrir ↗</a></td>' +
+            '</tr>';
+          }).join("") +
+        '</tbody></table></div>' +
+      '</section>';
+    }).join("");
+
+    function nota(n){
+      if(n.valor == null) return '<span class="nota vazia" title="ainda não medida">—</span>';
+      var dica = n.amostras && n.amostras.length > 1
+        ? "melhor de " + n.amostras.length + " medições: " + n.amostras.join(", ")
+        : "";
+      return '<span class="nota ' + faixa(n.valor) + '"' +
+        (dica ? ' title="' + dica + '"' : '') + '>' + n.valor + '</span>';
+    }
+
+    /* de onde veio a nota: medição automática (com ou sem dado de visitantes
+       reais) ou o número digitado na planilha */
+    function origem(m, d){
+      if(m.deOnde !== "medida" && d.deOnde !== "medida"){
+        return '<span class="fonte">planilha</span>';
+      }
+      var quando = desdeQuando(m.quando || d.quando);
+      var real = m.campo || d.campo;
+      var rotulo, classe, explica;
+
+      if(m.local || d.local){
+        rotulo = "local";
+        classe = " local";
+        explica = "Lighthouse rodado na máquina, não o PageSpeed. Mede a mesma coisa, mas em outro hardware — a nota pode variar alguns pontos.";
+      }else if(real){
+        rotulo = "no ar";
+        classe = " real";
+        explica = "inclui dados de visitantes reais (CrUX)";
+      }else{
+        rotulo = "teste";
+        classe = "";
+        explica = "teste em laboratório; a página ainda não tem visitas suficientes para o dado real";
+      }
+      return '<span class="fonte' + classe + '" title="' + explica + '">' +
+        quando + ' · ' + rotulo + '</span>';
+    }
+    function slug(u){
+      return String(u).trim().replace(/^https?:\/\/[^/]+\//, "").replace(/\/$/, "");
+    }
+  }
+
+  function renderSecoes(){
+    Array.prototype.forEach.call(document.querySelectorAll(".sec"), function(b){
+      b.setAttribute("aria-selected", String(b.dataset.s === secao));
+    });
+    var ehCriativos = secao === "criativos";
+    tabs.hidden = !ehCriativos;
+    $("#viewCriativos").hidden = !ehCriativos;
+    $("#viewPaginas").hidden = ehCriativos;
+
+    var totalArtes = REMESSAS.reduce(function(t,r){ return t + r.artes.length; }, 0);
+    var totalPags  = FUNIS.reduce(function(t,f){ return t + f.paginas.length; }, 0);
+    $("#qtCri").textContent = totalArtes;
+    $("#qtPag").textContent = totalPags;
+  }
+
+  function renderAll(){
+    renderSecoes();
+    renderCabecalho();
+    if(secao === "criativos"){ renderTabs(); renderGrid(); }
+    else{ renderPaginas(); }
+  }
+
+  // ---------- interações ----------
+  $("#secoes").addEventListener("click", function(e){
+    var b = e.target.closest(".sec");
+    if(!b || b.dataset.s === secao) return;
+    secao = b.dataset.s;
+    aberta = null; focado = false;
+    renderAll();
+    window.scrollTo({top:0, behavior:"instant"});
+  });
+
+  tabs.addEventListener("click", function(e){
+    var b = e.target.closest(".tab");
+    if(!b || b.dataset.lote === lote) return;
+    lote = b.dataset.lote;
+    filtro = "todas";
+    aberta = null; focado = false;
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"), function(c){
+      c.setAttribute("aria-pressed", String(c.dataset.f === "todas"));
+    });
+    renderAll();
+  });
+
+  $("#filters").addEventListener("click", function(e){
+    var b = e.target.closest(".chip");
+    if(!b) return;
+    filtro = b.dataset.f;
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"), function(c){
+      c.setAttribute("aria-pressed", String(c === b));
+    });
+    renderGrid();
+  });
+
+  grid.addEventListener("click", function(e){
+    var card = e.target.closest(".card");
+    if(!card) return;
+    var key = card.dataset.key, a = BY_KEY[key];
+
+    var nav = e.target.closest("[data-nav]");
+    if(nav){
+      e.stopPropagation();
+      slide[key] = ((slide[key] || 0) + Number(nav.dataset.nav) + a.files.length) % a.files.length;
+      renderGrid(); return;
+    }
+    if(e.target.closest("[data-zoom]")){ abrirLb(key, slide[key] || 0); return; }
+
+    var dec = e.target.closest(".ab");
+    if(dec){ decidir(key, dec.dataset.v); return; }
+
+    if(e.target.closest("[data-abrir]")){
+      var fechando = aberta === key;
+      aberta = fechando ? null : key;
+      focado = !fechando;          // abriu: o cursor já vai para a caixa
+      renderGrid();
+      return;
+    }
+    if(e.target.closest("[data-anotar]")){ enviarNota(key); return; }
+  });
+
+  grid.addEventListener("keydown", function(e){
+    var zoom = e.target.closest("[data-zoom]");
+    if(zoom && (e.key === "Enter" || e.key === " ")){
+      e.preventDefault();
+      var k = e.target.closest(".card").dataset.key;
+      abrirLb(k, slide[k] || 0);
+      return;
+    }
+    if(e.target.matches("textarea[data-msg]") && (e.metaKey || e.ctrlKey) && e.key === "Enter"){
+      e.preventDefault();
+      enviarNota(e.target.closest(".card").dataset.key);
+    }
+  });
+
+  grid.addEventListener("input", function(e){
+    if(!e.target.matches("textarea[data-msg]")) return;
+    rascunho[e.target.closest(".card").dataset.key] = e.target.value;
+  });
+  grid.addEventListener("focusin", function(e){
+    if(e.target.matches("textarea[data-msg]")) focado = true;
+  });
+  grid.addEventListener("focusout", function(e){
+    if(e.target.matches("textarea[data-msg]")) focado = false;
+  });
+
+  function decidir(key, valor){
+    var novo = (st(key) === valor) ? "pendente" : valor;
+    var reg = {status:novo, em:new Date().toISOString(), remessa:BY_KEY[key].remessa};
+    status[key] = reg;
+    renderAll();
+    gravarStatus(key, reg);
+  }
+
+  function enviarNota(key){
+    var texto = (rascunho[key] || "").trim();
+    if(!texto) return;
+    var nota = {
+      arteKey: key,
+      remessa: BY_KEY[key].remessa,
+      texto: texto,
+      criadoEm: new Date().toISOString()
+    };
+    rascunho[key] = "";
+    gravarNota(nota);
+  }
+
+  // ---------- lightbox ----------
+  function abrirLb(key, i){
+    lbArte = BY_KEY[key]; lbIdx = i;
+    pintarLb();
+    $("#lb").classList.add("on");
+    $("#lbClose").focus();
+  }
+  function pintarLb(){
+    $("#lbImg").src = lbArte.files[lbIdx];
+    $("#lbImg").alt = "Arte " + lbArte.code;
+    $("#lbCap").textContent = lbArte.code + (lbArte.files.length > 1 ? " · card " + (lbIdx+1) + "/" + lbArte.files.length : "");
+    var multi = lbArte.files.length > 1;
+    $("#lbPrev").style.visibility = multi ? "visible" : "hidden";
+    $("#lbNext").style.visibility = multi ? "visible" : "hidden";
+  }
+  function fecharLb(){ $("#lb").classList.remove("on"); }
+  $("#lbClose").addEventListener("click", fecharLb);
+  $("#lb").addEventListener("click", function(e){ if(e.target === this) fecharLb(); });
+  $("#lbPrev").addEventListener("click", function(){ lbIdx = (lbIdx - 1 + lbArte.files.length) % lbArte.files.length; pintarLb(); });
+  $("#lbNext").addEventListener("click", function(){ lbIdx = (lbIdx + 1) % lbArte.files.length; pintarLb(); });
+  document.addEventListener("keydown", function(e){
+    if(!$("#lb").classList.contains("on")) return;
+    if(e.key === "Escape") fecharLb();
+    if(e.key === "ArrowLeft") $("#lbPrev").click();
+    if(e.key === "ArrowRight") $("#lbNext").click();
+  });
+
+  // ---------- guarda local (rede de segurança) ----------
+  function salvarLocal(){
+    lsSet("mv_cg_status", JSON.stringify(status));
+    lsSet("mv_cg_notas", JSON.stringify(notas));
+  }
+  function carregarLocal(){
+    try{
+      status = JSON.parse(lsGet("mv_cg_status") || "{}") || {};
+      notas  = JSON.parse(lsGet("mv_cg_notas")  || "[]") || [];
+    }catch(e){ status = {}; notas = []; }
+  }
+
+  function marcarLive(on, msg){
+    var el = $("#live");
+    el.className = "live " + (on ? "on" : "off");
+    $("#liveTxt").textContent = msg || (on ? "ao vivo" : "só neste navegador");
+    el.title = on ? "Status e anotações são compartilhados em tempo real."
+                  : (msg || "Sem conexão com o painel compartilhado.");
+  }
+
+  // ---------- gravação ----------
+  function gravarStatus(key, reg){
+    enfileirar({tipo:"status", key:key, status:reg.status, em:reg.em, remessa:reg.remessa});
+  }
+
+  function gravarNota(nota){
+    enfileirar({tipo:"nota", arteKey:nota.arteKey, remessa:nota.remessa,
+                texto:nota.texto, criadoEm:nota.criadoEm});
+  }
+
+  // ---------- sincronismo com o servidor ----------
+  /* Estado compartilhado mora numa função Netlify (Netlify Blobs).
+     Busca a cada 4s, e logo depois de cada gravação.
+
+     Nada que a pessoa escreve depende da rede dar certo na hora: a anotação
+     entra numa fila guardada no próprio navegador, aparece na tela marcada
+     como "enviando…", e só sai da fila quando o servidor confirma. Se a
+     conexão cair, ou a pessoa atualizar a página no meio, a fila continua
+     lá e é reenviada sozinha. */
+  var API = "/api/estado";
+  var ultimaSig = "";
+  var notasServidor = [];
+  var fila = [];          // anotações e decisões ainda não confirmadas
+  var enviando = false;
+
+  function carregarFila(){
+    try{ fila = JSON.parse(lsGet("mv_cg_fila") || "[]") || []; }catch(e){ fila = []; }
+  }
+  function salvarFila(){ lsSet("mv_cg_fila", JSON.stringify(fila)); }
+
+  /* junta o que veio do servidor com o que ainda está na fila */
+  function recompor(){
+    notas = notasServidor.concat(
+      fila.filter(function(f){ return f.tipo === "nota"; }).map(function(f){
+        return {id:f.id, arteKey:f.arteKey, remessa:f.remessa,
+                texto:f.texto, criadoEm:f.criadoEm, pendente:true};
+      })
+    ).sort(function(a,b){ return String(a.criadoEm).localeCompare(String(b.criadoEm)); });
+
+    fila.filter(function(f){ return f.tipo === "status"; }).forEach(function(f){
+      status[f.key] = {status:f.status, em:f.em, remessa:f.remessa};
+    });
+
+    salvarLocal();
+    renderAll();
+  }
+
+  function aplicar(estado){
+    if(!estado || typeof estado !== "object") return;
+    var sig = JSON.stringify(estado) + "|" + fila.length;
+    if(sig === ultimaSig) return;        // nada mudou: não repinta
+    ultimaSig = sig;
+    status = estado.artes || {};
+    notasServidor = estado.anotacoes || [];
+    medicoes = estado.medicoes || {};      // notas do PageSpeed medidas sozinhas
+    execucao = estado.execucao || null;
+    recompor();
+  }
+
+  function buscar(){
+    return fetch(API, {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(e){ marcarLive(true, fila.length ? "enviando pendentes" : null); aplicar(e); esvaziar(); })
+      .catch(function(){ marcarLive(false, "sem conexão — nada foi perdido"); });
+  }
+
+  function mandar(payload){
+    return fetch(API, {
+      method:"POST",
+      headers:{"content-type":"application/json"},
+      body:JSON.stringify(payload)
+    })
+      .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(e){ marcarLive(true); aplicar(e); return true; })
+      .catch(function(){ marcarLive(false, "sem conexão — nada foi perdido"); return false; });
+  }
+
+  /* envia a fila em ordem, um de cada vez; o que falhar fica para a próxima */
+  function esvaziar(){
+    if(enviando || !fila.length) return;
+    enviando = true;
+    var item = fila[0];
+    var carga = item.tipo === "nota"
+      ? {tipo:"nota", arteKey:item.arteKey, remessa:item.remessa, texto:item.texto, criadoEm:item.criadoEm}
+      : {tipo:"status", key:item.key, status:item.status, em:item.em, remessa:item.remessa};
+
+    mandar(carga).then(function(ok){
+      enviando = false;
+      if(!ok) return;                 // tenta de novo na próxima busca
+      fila.shift(); salvarFila(); recompor();
+      esvaziar();
+    });
+  }
+
+  function enfileirar(item){
+    item.id = "f-" + Date.now() + "-" + Math.random().toString(36).slice(2,7);
+    fila.push(item); salvarFila(); recompor(); esvaziar();
+  }
+
+  // ---------- boot ----------
+  carregarLocal();
+  carregarFila();
+  recompor();
+  marcarLive(false, "conectando");
+  buscar();
+
+  setInterval(function(){ if(!document.hidden) buscar(); }, 4000);
+  document.addEventListener("visibilitychange", function(){ if(!document.hidden) buscar(); });
+  window.addEventListener("online", buscar);
+
+})();
+</script>
+</body>
+</html>

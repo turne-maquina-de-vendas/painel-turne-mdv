@@ -1,0 +1,5 @@
+node_modules/
+.netlify/
+.medicoes/
+ferramentas/urls-para-medir.txt
+.DS_Store
