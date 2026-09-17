@@ -113,7 +113,7 @@ def ler():
 
 
 def bloco_js(dados):
-    L = ["  var FUNIS = ["]
+    L = ["  var FUNIS_MDV = ["]   # o nome tem de casar com carregarProduto()
     for g in dados:
         L.append('    {nome:"Rota 45", versao:%s, paginas:[' % json.dumps(g["versao"], ensure_ascii=False))
         for p in g["paginas"]:
