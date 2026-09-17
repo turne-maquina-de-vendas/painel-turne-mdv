@@ -164,10 +164,13 @@ assert "window.claude" not in s and "enfileirar({tipo:" in s and "esvaziar" in s
 titulo = "<title>Remessa Campina Grande</title>"
 corpo = s.split(titulo, 1)[1]
 cabeca, resto = corpo.split("</style>", 1)
-favicon = ("<link rel=\"icon\" href=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' "
-           "viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B0F0C'/%3E"
-           "%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%23E9E43C' stroke-width='3'/%3E"
-           "%3Ccircle cx='16' cy='16' r='2.5' fill='%23E9E43C'/%3E%3C/svg%3E\">")
+# Arquivos de verdade em vez de data URI: vários navegadores ignoram SVG
+# embutido no href e caem no /favicon.ico.
+favicon = (
+    '<link rel="icon" href="/favicon.ico" sizes="any">\n'
+    '<link rel="icon" type="image/svg+xml" href="/favicon.svg">\n'
+    '<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">\n'
+    '<link rel="apple-touch-icon" href="/apple-touch-icon.png">')
 
 doc = ("""<!doctype html>
 <html lang="pt-BR">
