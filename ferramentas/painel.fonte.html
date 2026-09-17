@@ -344,6 +344,15 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 }
 .env:disabled{opacity:.4;cursor:not-allowed}
 
+/* ---------- criativos em vídeo ---------- */
+.grid-video{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.card.video .tela{
+  position:relative;aspect-ratio:9/16;background:var(--ink-2);overflow:hidden;
+}
+.card.video .tela iframe{
+  position:absolute;inset:0;width:100%;height:100%;border:0;
+}
+
 /* ---------- páginas no ar ---------- */
 #viewPaginas{max-width:var(--maxw-texto)}
 
@@ -511,8 +520,9 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 </style>
 
 <nav class="secoes" role="tablist" aria-label="Seções"><div class="secoes-in" id="secoes">
-  <button class="sec" role="tab" data-s="criativos" aria-selected="true">Criativos <span class="qt" id="qtCri">30</span></button>
-  <button class="sec" role="tab" data-s="paginas" aria-selected="false">Páginas <span class="qt" id="qtPag">31</span></button>
+  <button class="sec" role="tab" data-s="criativos" aria-selected="true">Criativos em Imagem <span class="qt" id="qtCri">0</span></button>
+  <button class="sec" role="tab" data-s="videos" aria-selected="false">Criativos em Vídeo <span class="qt" id="qtVid">0</span></button>
+  <button class="sec" role="tab" data-s="paginas" aria-selected="false">Páginas <span class="qt" id="qtPag">0</span></button>
 </div></nav>
 
 <header class="top wrap">
@@ -537,6 +547,19 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     <button class="chip" data-f="comentadas" aria-pressed="false">Com anotação</button>
   </div>
   <div class="grid" id="grid"></div>
+</main>
+
+<main class="board" id="viewVideos" hidden>
+  <div class="filters" id="filtrosVideo">
+    <button class="chip" data-fv="todas" aria-pressed="true">Todos</button>
+    <button class="chip" data-fv="pendente" aria-pressed="false">Pendentes</button>
+    <button class="chip" data-fv="aprovado" aria-pressed="false">Aprovados</button>
+    <button class="chip" data-fv="ajuste" aria-pressed="false">Ajustar</button>
+    <button class="chip" data-fv="reprovado" aria-pressed="false">Reprovados</button>
+    <button class="chip" data-fv="publicado" aria-pressed="false">Publicados</button>
+    <button class="chip" data-fv="comentadas" aria-pressed="false">Com anotação</button>
+  </div>
+  <div id="tipos"></div>
 </main>
 
 <main class="board" id="viewPaginas" hidden>
@@ -604,6 +627,73 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     {id:"r04", nome:"Remessa 04", artes:[]}
   ];
 
+  /* Criativos em vídeo, vindos da pasta do Drive. Só a versão stories.
+     O player é um embed do Drive: nada é baixado nem versionado aqui, e o
+     vídeo nunca fica desatualizado em relação ao que está na pasta. */
+  /* VIDEOS:inicio */
+  var VIDEOS = [
+    {tipo:"AUTORIDADE", videos:[
+      {id:"autoridade__ad01", code:"AD01", drive:"1y72oqPismYRLTjv9dPfbfymyEfL622p9"},
+      {id:"autoridade__ad02", code:"AD02", drive:"1sLFki7lBLJTFVmrqV1xsbyULnt0F2HWI"},
+      {id:"autoridade__ad03", code:"AD03", drive:"1kO-BtbD4xMXJ5qpO6XMDiSeEhlz0xW4p"},
+      {id:"autoridade__ad04", code:"AD04", drive:"1BqiDGODkkeyiDeCZBLcZQHfOP4nMmsSg"},
+      {id:"autoridade__ad05", code:"AD05", drive:"1TrQm825p8w8SmA-otLBlv9cODeMiXLEt"}
+    ]},
+    {tipo:"DIFERENCIAL", videos:[
+      {id:"diferencial__ad01", code:"AD01", drive:"1JM60m9rYdr6cauhMq6jDl-svXR9cJ7Ld"},
+      {id:"diferencial__ad02", code:"AD02", drive:"1IQG5D-ltyOkc4GdqZo9bzoX5aS4R2rGm"},
+      {id:"diferencial__ad03", code:"AD03", drive:"1acN2_B52cXwH0V4nC4tEtLWj5k1TqS_P"}
+    ]},
+    {tipo:"GERAÇÃO DE VALOR", videos:[
+      {id:"geracaodevalor__ad01", code:"AD01", drive:"1XsUkZGJSSWpd4OM9KstzyRTRB0fv7heG"},
+      {id:"geracaodevalor__ad02", code:"AD02", drive:"1qPxrN3kiIeAicH1dI4tJT6ekrr43Ulxu"},
+      {id:"geracaodevalor__ad03", code:"AD03", drive:"1CeyHM0gzCoOhxEQENMk7yhL9C7WMsjOJ"},
+      {id:"geracaodevalor__ad04", code:"AD04", drive:"15AA5S3NDVrOEmqslni4rzf42gTw72nBS"},
+      {id:"geracaodevalor__ad05", code:"AD05", drive:"1OUv2914szW1ZXU6h3fSS1SMa2ct-XWht"},
+      {id:"geracaodevalor__ad06", code:"AD06", drive:"1VAGHs0JDML2MeD_vL9-f2JCL3PaA2Tfn"},
+      {id:"geracaodevalor__ad07", code:"AD07", drive:"11ZW3nT8AbRPrfZra8_54VXeOjvmghM1j"},
+      {id:"geracaodevalor__ad08", code:"AD08", drive:"167TzDb_AILFdswS1WROaPhZqlherK-Oj"},
+      {id:"geracaodevalor__ad09", code:"AD09", drive:"1cG4nvsjwlN3tcAP6-6bY0OvY_FD5Hrc1"},
+      {id:"geracaodevalor__ad10", code:"AD10", drive:"1fOKXyhpRyMsRSkYmSS7LFnlYJRpZ3Cl0"},
+      {id:"geracaodevalor__ad11", code:"AD11", drive:"1WbHBV9T1TPaJXHnvG2ufOEr8KRK9wj38"},
+      {id:"geracaodevalor__ad12", code:"AD12", drive:"1R6r5hvlQSe4wnM_qLJKocu95WXMxNevZ"}
+    ]},
+    {tipo:"IDENTIFICAÇÃO", videos:[
+      {id:"identificacao__ad01", code:"AD01", drive:"1yxqgpMa9QCdI7vCNMN-X4nwx6ruddCnN"},
+      {id:"identificacao__ad02", code:"AD02", drive:"1VJ3tSbP39wsufvviyVhe6uwhzM7ibBBv"},
+      {id:"identificacao__ad03", code:"AD03", drive:"1fGlFwSGf270rjTYmJNJM4kd8kfBxiTcZ"},
+      {id:"identificacao__ad04", code:"AD04", drive:"1dqlr5iz3lJiDzODrFjymF1RpWYSintoA"},
+      {id:"identificacao__ad05", code:"AD05", drive:"1VFOfx0fipQZ6JTbfGHNQ8YAmk6h5nXH2"}
+    ]},
+    {tipo:"POSICIONAMENTO", videos:[
+      {id:"posicionamento__ad01", code:"AD01", drive:"1Nt4baVoBJFgSvdHhHRhjaewpgD5SKZPY"},
+      {id:"posicionamento__ad02", code:"AD02", drive:"1gvR3DiqQ53EVuQdXtn4N3uLN95acmS8d"},
+      {id:"posicionamento__ad03", code:"AD03", drive:"1zWjQC7nKizzAf5IIynqfqNpZWhRgM9Gh"},
+      {id:"posicionamento__ad04", code:"AD04", drive:"1kodA06y0eQI5hjvhv8oVCV8EgnDFW_FP"},
+      {id:"posicionamento__ad05", code:"AD05", drive:"1_3X8dMdQVHDBtMjjsYbiom5jwi6eMBHa"}
+    ]},
+    {tipo:"PROVA SOCIAL", videos:[
+      {id:"provasocial__ad01", code:"AD01", drive:"1-K5J2qVteg5aD9l-95OjAmnQSTietNgq"},
+      {id:"provasocial__ad02", code:"AD02", drive:"1eCBk4fCuR_8bWvtK4FyK5EcRXTfCYunD"},
+      {id:"provasocial__ad03", code:"AD03", drive:"11J8wrQHj6H2oay0ZkRsX5GTc7FuJ28yT"},
+      {id:"provasocial__ad04", code:"AD04", drive:"1dBBuBDISC1DYV7Cv_yQ7dMWBxjJv4_Hl"}
+    ]},
+    {tipo:"QUEBRA DE OBJEÇÃO", videos:[
+      {id:"quebradeobjecao__ad01", code:"AD01", drive:"1YV4H8hyi4B4vXDVUgNgEXO0i1xmcLAiP"},
+      {id:"quebradeobjecao__ad02", code:"AD02", drive:"1l1Z29Sw7hOJrPSlepR6tvQe1itD6Ej5g"},
+      {id:"quebradeobjecao__ad03", code:"AD03", drive:"17Ia4oAUfZa7daSLUMl8KXP8Q43okVIoK"},
+      {id:"quebradeobjecao__ad04", code:"AD04", drive:"1WF9bMkRk-q7sHs9W1-URGyFsKtvtlFjx"},
+      {id:"quebradeobjecao__ad05", code:"AD05", drive:"1KMuXksgzX-dwt8f7jIwyEXFxwP9-xeV0"}
+    ]}
+  ];
+  /* VIDEOS:fim */
+
+  var VIDEO_POR_ID = {};
+  VIDEOS.forEach(function(g){
+    g.videos.forEach(function(v){ v.tipo = g.tipo; VIDEO_POR_ID["vd__" + v.id] = v; });
+  });
+  function chaveVideo(v){ return "vd__" + v.id; }
+
   /* chave global de cada arte: "r02__ad01" — é o id do doc de status
      e o vínculo das anotações, para as remessas nunca se misturarem. */
   var BY_KEY = {};
@@ -666,6 +756,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   var notas    = [];     // {id, arteKey, remessa, texto, criadoEm}
   var lote     = "r01";   // abre na primeira remessa que tem artes
   var filtro   = "todas";
+  var filtroV  = "todas";   // filtro da aba de vídeo
   var slide    = {};     // arteKey -> índice do card do carrossel
   var aberta   = null;   // arteKey com o bloco de anotações aberto
   var rascunho = {};     // arteKey -> texto ainda não enviado
@@ -826,16 +917,18 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       '</article>';
     }).join("");
 
-    // devolve o rascunho (e o cursor) ao textarea depois de repintar
-    if(aberta){
-      var ta = grid.querySelector('.card[data-key="'+aberta+'"] textarea[data-msg]');
-      if(ta){
-        ta.value = rascunho[aberta] || "";
-        if(focado){
-          ta.focus();
-          ta.setSelectionRange(ta.value.length, ta.value.length);
-        }
-      }
+    devolverRascunho();
+  }
+
+  /* depois de repintar, devolve o texto não enviado (e o cursor) à caixa */
+  function devolverRascunho(){
+    if(!aberta) return;
+    var ta = document.querySelector('.card[data-key="'+aberta+'"] textarea[data-msg]');
+    if(!ta) return;
+    ta.value = rascunho[aberta] || "";
+    if(focado){
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
     }
   }
 
@@ -853,7 +946,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       var lista = artesDoLote();
       var r = remessaAtual();
       $("#titulo").innerHTML =
-        '<span>Criativos Estáticos</span><span class="sep">—</span>' +
+        '<span>Criativos em Imagem</span><span class="sep">—</span>' +
         '<span class="lote">' + esc(r.nome) + '</span>' +
         (r.drive || DRIVE
           ? '<a class="btn-drive" href="' + esc(r.drive || DRIVE) + '" target="_blank" rel="noopener noreferrer">' +
@@ -873,6 +966,28 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         tile("is-bad", doisDigitos(c.reprovado), "reprovadas") +
         tile("is-pub", doisDigitos(c.publicado), "publicadas") +
         tile("", doisDigitos(notasDoLote(lote).length), "anotações");
+    }else if(secao === "videos"){
+      var todos = [];
+      VIDEOS.forEach(function(g){ todos = todos.concat(g.videos); });
+      var c2 = {pendente:0,aprovado:0,ajuste:0,reprovado:0,publicado:0};
+      todos.forEach(function(v){ c2[st(chaveVideo(v))]++; });
+      var notasVideo = notas.filter(function(n){
+        return String(n.arteKey || "").indexOf("vd__") === 0;
+      }).length;
+
+      $("#titulo").innerHTML = '<span>Criativos em Vídeo</span>';
+      $("#subline").innerHTML =
+        '<span><b>' + todos.length + '</b> vídeos</span><span class="dot">/</span>' +
+        '<span><b>' + VIDEOS.length + '</b> tipos</span><span class="dot">/</span>' +
+        '<span>versão <b>Stories</b> · 9 : 16</span><span class="dot">/</span>' + live;
+
+      tally.innerHTML =
+        tile("", doisDigitos(c2.pendente), "pendentes") +
+        tile("is-ok", doisDigitos(c2.aprovado), "aprovados") +
+        tile("is-warn", doisDigitos(c2.ajuste), "ajustar") +
+        tile("is-bad", doisDigitos(c2.reprovado), "reprovados") +
+        tile("is-pub", doisDigitos(c2.publicado), "publicados") +
+        tile("", doisDigitos(notasVideo), "anotações");
     }else{
       var todas = [];
       FUNIS.forEach(function(f){ todas = todas.concat(f.paginas); });
@@ -1121,26 +1236,88 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     }
   }
 
+  /* Card de vídeo: o player vem do Drive por embed. A proporção é 9:16
+     porque só mostramos a versão stories. */
+  function cardVideo(v){
+    var chave = chaveVideo(v);
+    var e = st(chave);
+    var n = notasDe(chave).length;
+    var open = aberta === chave;
+
+    return '<article class="card video' + (open?" aberta":"") + '" data-key="'+chave+'" data-st="'+e+'">' +
+      '<div class="tela">' +
+        '<iframe src="https://drive.google.com/file/d/'+esc(v.drive)+'/preview" ' +
+          'allow="autoplay" title="'+esc(v.code)+' · '+esc(v.tipo)+'"></iframe>' +
+      '</div>' +
+      '<div class="barra">' +
+        '<span class="code">stories</span>' +
+        '<span class="pill '+(e!=="pendente"?e:"")+'"><i></i>'+LABEL[e]+'</span>' +
+      '</div>' +
+      '<div class="acoes">' +
+        '<button class="ab ok"   data-v="aprovado"  aria-pressed="'+(e==="aprovado")+'">Aprovar</button>' +
+        '<button class="ab warn" data-v="ajuste"    aria-pressed="'+(e==="ajuste")+'">Ajustar</button>' +
+        '<button class="ab bad"  data-v="reprovado" aria-pressed="'+(e==="reprovado")+'">Reprovar</button>' +
+        '<button class="ab pub"  data-v="publicado" aria-pressed="'+(e==="publicado")+'">Publicado</button>' +
+      '</div>' +
+      '<button class="abrir'+(n?" tem":"")+'" data-abrir aria-expanded="'+open+'">' +
+        '<span>✎ '+(n ? n + (n===1?" anotação":" anotações") : "Anotar")+'</span>' +
+        '<span class="seta">⌄</span>' +
+      '</button>' +
+      (open ? blocoNotas({key:chave, code:v.code}) : "") +
+    '</article>';
+  }
+
+  function renderVideos(){
+    var cai = function(v){
+      var chave = chaveVideo(v);
+      if(filtroV === "todas") return true;
+      if(filtroV === "comentadas") return notasDe(chave).length > 0;
+      return st(chave) === filtroV;
+    };
+
+    var html = VIDEOS.map(function(g){
+      var vis = g.videos.filter(cai);
+      if(!vis.length) return "";
+      var aprovados = g.videos.filter(function(v){ return st(chaveVideo(v)) === "aprovado"; }).length;
+      return '<section class="funil">' +
+        '<div class="funil-head">' +
+          '<h2>' + esc(g.tipo) + '</h2>' +
+          '<span class="meta">' + g.videos.length + ' vídeos · ' + aprovados + ' aprovados</span>' +
+        '</div>' +
+        '<div class="grid grid-video">' + vis.map(cardVideo).join("") + '</div>' +
+      '</section>';
+    }).join("");
+
+    $("#tipos").innerHTML = html ||
+      '<div class="vazio"><strong>Nenhum vídeo neste filtro</strong>' +
+      '<span>Volte para “Todos” para ver os ' + totalVideos() + ' criativos.</span></div>';
+
+    devolverRascunho();
+  }
+
+  function totalVideos(){
+    return VIDEOS.reduce(function(t,g){ return t + g.videos.length; }, 0);
+  }
+
   function renderSecoes(){
     Array.prototype.forEach.call(document.querySelectorAll(".sec"), function(b){
       b.setAttribute("aria-selected", String(b.dataset.s === secao));
     });
-    var ehCriativos = secao === "criativos";
-    // a barra inteira some, não só o conteúdo: senão a borda fica órfã
-    (tabs.parentElement || tabs).hidden = !ehCriativos;
-    $("#viewCriativos").hidden = !ehCriativos;
-    $("#viewPaginas").hidden = ehCriativos;
+    (tabs.parentElement || tabs).hidden = secao !== "criativos";
+    $("#viewCriativos").hidden = secao !== "criativos";
+    $("#viewVideos").hidden = secao !== "videos";
+    $("#viewPaginas").hidden = secao !== "paginas";
 
-    var totalArtes = REMESSAS.reduce(function(t,r){ return t + r.artes.length; }, 0);
-    var totalPags  = FUNIS.reduce(function(t,f){ return t + f.paginas.length; }, 0);
-    $("#qtCri").textContent = totalArtes;
-    $("#qtPag").textContent = totalPags;
+    $("#qtCri").textContent = REMESSAS.reduce(function(t,r){ return t + r.artes.length; }, 0);
+    $("#qtVid").textContent = totalVideos();
+    $("#qtPag").textContent = FUNIS.reduce(function(t,f){ return t + f.paginas.length; }, 0);
   }
 
   function renderAll(){
     renderSecoes();
     renderCabecalho();
     if(secao === "criativos"){ renderTabs(); renderGrid(); }
+    else if(secao === "videos"){ renderVideos(); }
     else{ renderPaginas(); }
   }
 
@@ -1186,60 +1363,91 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     renderGrid();
   });
 
-  grid.addEventListener("click", function(e){
-    var card = e.target.closest(".card");
-    if(!card) return;
-    var key = card.dataset.key, a = BY_KEY[key];
+  /* Os cartões de imagem e de vídeo têm os mesmos controles, então os
+     handlers são ligados às duas grades. */
+  function ligarCartoes(raiz){
+    raiz.addEventListener("click", function(e){
+      var card = e.target.closest(".card");
+      if(!card) return;
+      var key = card.dataset.key, a = BY_KEY[key];
 
-    var nav = e.target.closest("[data-nav]");
-    if(nav){
-      e.stopPropagation();
-      slide[key] = ((slide[key] || 0) + Number(nav.dataset.nav) + a.files.length) % a.files.length;
-      renderGrid(); return;
-    }
-    if(e.target.closest("[data-zoom]")){ abrirLb(key, slide[key] || 0); return; }
+      var nav = e.target.closest("[data-nav]");
+      if(nav && a){
+        e.stopPropagation();
+        slide[key] = ((slide[key] || 0) + Number(nav.dataset.nav) + a.files.length) % a.files.length;
+        renderGrid(); renderRail && renderRail();
+        return;
+      }
+      if(a && e.target.closest("[data-zoom]")){ abrirLb(key, slide[key] || 0); return; }
 
-    var dec = e.target.closest(".ab");
-    if(dec){ decidir(key, dec.dataset.v); return; }
+      var dec = e.target.closest(".ab");
+      if(dec){ decidir(key, dec.dataset.v); return; }
 
-    if(e.target.closest("[data-abrir]")){
-      var fechando = aberta === key;
-      aberta = fechando ? null : key;
-      focado = !fechando;          // abriu: o cursor já vai para a caixa
-      renderGrid();
-      return;
-    }
-    if(e.target.closest("[data-anotar]")){ enviarNota(key); return; }
+      if(e.target.closest("[data-abrir]")){
+        var fechando = aberta === key;
+        aberta = fechando ? null : key;
+        focado = !fechando;
+        repintarCartoes();
+        return;
+      }
+      if(e.target.closest("[data-anotar]")){ enviarNota(key); return; }
+    });
+
+    raiz.addEventListener("keydown", function(e){
+      var zoom = e.target.closest("[data-zoom]");
+      if(zoom && (e.key === "Enter" || e.key === " ")){
+        e.preventDefault();
+        var k = e.target.closest(".card").dataset.key;
+        abrirLb(k, slide[k] || 0);
+        return;
+      }
+      if(e.target.matches("textarea[data-msg]") && (e.metaKey || e.ctrlKey) && e.key === "Enter"){
+        e.preventDefault();
+        enviarNota(e.target.closest(".card").dataset.key);
+      }
+    });
+
+    raiz.addEventListener("input", function(e){
+      if(!e.target.matches("textarea[data-msg]")) return;
+      rascunho[e.target.closest(".card").dataset.key] = e.target.value;
+    });
+    raiz.addEventListener("focusin", function(e){
+      if(e.target.matches("textarea[data-msg]")) focado = true;
+    });
+    raiz.addEventListener("focusout", function(e){
+      if(e.target.matches("textarea[data-msg]")) focado = false;
+    });
+  }
+
+  ligarCartoes(grid);
+  ligarCartoes($("#tipos"));
+
+  /* repinta só a grade da seção aberta */
+  function repintarCartoes(){
+    if(secao === "videos") renderVideos(); else renderGrid();
+  }
+
+  $("#filtrosVideo").addEventListener("click", function(e){
+    var b = e.target.closest(".chip");
+    if(!b) return;
+    filtroV = b.dataset.fv;
+    Array.prototype.forEach.call($("#filtrosVideo").querySelectorAll(".chip"), function(c){
+      c.setAttribute("aria-pressed", String(c === b));
+    });
+    renderVideos();
   });
 
-  grid.addEventListener("keydown", function(e){
-    var zoom = e.target.closest("[data-zoom]");
-    if(zoom && (e.key === "Enter" || e.key === " ")){
-      e.preventDefault();
-      var k = e.target.closest(".card").dataset.key;
-      abrirLb(k, slide[k] || 0);
-      return;
-    }
-    if(e.target.matches("textarea[data-msg]") && (e.metaKey || e.ctrlKey) && e.key === "Enter"){
-      e.preventDefault();
-      enviarNota(e.target.closest(".card").dataset.key);
-    }
-  });
-
-  grid.addEventListener("input", function(e){
-    if(!e.target.matches("textarea[data-msg]")) return;
-    rascunho[e.target.closest(".card").dataset.key] = e.target.value;
-  });
-  grid.addEventListener("focusin", function(e){
-    if(e.target.matches("textarea[data-msg]")) focado = true;
-  });
-  grid.addEventListener("focusout", function(e){
-    if(e.target.matches("textarea[data-msg]")) focado = false;
-  });
+  /* a chave diz de onde o item é: arte de remessa, vídeo ou página */
+  function origemDaChave(key){
+    if(BY_KEY[key]) return BY_KEY[key].remessa;
+    if(String(key).indexOf("vd__") === 0) return "videos";
+    if(String(key).indexOf("pg__") === 0) return "paginas";
+    return null;
+  }
 
   function decidir(key, valor){
     var novo = (st(key) === valor) ? "pendente" : valor;
-    var reg = {status:novo, em:new Date().toISOString(), remessa:BY_KEY[key].remessa};
+    var reg = {status:novo, em:new Date().toISOString(), remessa:origemDaChave(key)};
     status[key] = reg;
     renderAll();
     gravarStatus(key, reg);
@@ -1250,7 +1458,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     if(!texto) return;
     var nota = {
       arteKey: key,
-      remessa: BY_KEY[key].remessa,
+      remessa: origemDaChave(key),
       texto: texto,
       criadoEm: new Date().toISOString()
     };
