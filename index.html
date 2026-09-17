@@ -1111,9 +1111,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   function doisDigitos(n){ return String(n).padStart(2,"0"); }
 
   function renderCabecalho(){
-    var live = '<span class="live" id="live"><span class="bulb"></span><span id="liveTxt">conectando</span></span>';
-    var estadoLive = $("#live") ? $("#live").className : "live off";
-    var textoLive  = $("#liveTxt") ? $("#liveTxt").textContent : "conectando";
+    var live = '<span class="live" id="live"><span class="bulb"></span><span id="liveTxt"></span></span>';
 
     if(secao === "criativos"){
       var lista = artesDoLote();
@@ -1180,8 +1178,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         notaTile(media(comDesktop, "desktop"), "méd. desktop");
     }
 
-    // o indicador é recriado junto com a subline: devolve o estado atual
-    if($("#live")){ $("#live").className = estadoLive; $("#liveTxt").textContent = textoLive; }
+    pintarLive();   // o indicador é recriado junto com a subline
 
     function media(lista, campo){
       if(!lista.length) return null;
@@ -1735,12 +1732,24 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     }catch(e){ status = {}; notas = []; }
   }
 
+  /* O indicador só existe depois que um produto é escolhido — na tela de
+     escolha não há cabeçalho. Guardar o estado e pintar quando houver onde
+     evita o erro que matava o boot inteiro (e, com ele, a busca dos dados). */
+  var estadoLive = {on:false, msg:"conectando"};
+
   function marcarLive(on, msg){
+    estadoLive = {on:on, msg: msg || (on ? "ao vivo" : "só neste navegador")};
+    pintarLive();
+  }
+
+  function pintarLive(){
     var el = $("#live");
-    el.className = "live " + (on ? "on" : "off");
-    $("#liveTxt").textContent = msg || (on ? "ao vivo" : "só neste navegador");
-    el.title = on ? "Status e anotações são compartilhados em tempo real."
-                  : (msg || "Sem conexão com o painel compartilhado.");
+    if(!el) return;
+    el.className = "live " + (estadoLive.on ? "on" : "off");
+    $("#liveTxt").textContent = estadoLive.msg;
+    el.title = estadoLive.on
+      ? "Status e anotações são compartilhados em tempo real."
+      : estadoLive.msg;
   }
 
   // ---------- gravação ----------

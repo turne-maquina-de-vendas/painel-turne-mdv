@@ -49,9 +49,12 @@ s = s.replace("""  function gravarStatus(key, reg){
   }""")
 
 # 3) falhou() era so do db
-i = s.index("  function falhou(oque, err){")
-j = s.index("  // ---------- gravação ----------")
-s = s[:i] + s[j:]
+# falhou() só existia na versão que usava o db do artifact; some se estiver lá
+_marca = "  function falhou(oque, err){"
+if _marca in s:
+    i = s.index(_marca)
+    j = s.index("  // ---------- gravação ----------")
+    s = s[:i] + s[j:]
 
 # 4) sincronismo + boot no lugar do bloco window.claude
 velho = s[s.index("  // ---------- boot ----------"):s.index("})();")]
