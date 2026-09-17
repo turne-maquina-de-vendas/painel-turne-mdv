@@ -86,6 +86,39 @@ button,input,textarea,select{font:inherit;color:inherit}
   color:var(--dim-2);
 }
 
+/* ---------- escolha do produto ---------- */
+.escolha{min-height:78vh;display:flex;align-items:center;justify-content:center;padding:60px var(--pad)}
+.escolha-in{width:100%;max-width:1040px;display:flex;flex-direction:column;gap:10px}
+.escolha-tit{
+  font-family:var(--disp);font-weight:600;letter-spacing:-.02em;
+  font-size:clamp(28px,4vw,42px);line-height:1.02;margin:0 0 26px;
+}
+.produtos{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+.produto{
+  position:relative;display:block;padding:0;cursor:pointer;text-align:left;
+  border:1px solid var(--line);border-radius:18px;overflow:hidden;
+  background:var(--surface);
+  transition:border-color .18s var(--ease),transform .18s var(--ease);
+}
+.produto:hover{border-color:var(--sage);transform:translateY(-3px)}
+.produto img{display:block;width:100%;aspect-ratio:5/4;object-fit:cover}
+.produto .faixa{
+  display:flex;align-items:center;gap:10px;
+  padding:15px 18px;border-top:1px solid var(--line);
+}
+.produto .faixa b{font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:-.01em}
+.produto .faixa .ir{
+  margin-left:auto;font-family:var(--ui);font-weight:600;
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim-2);
+}
+.produto:hover .faixa .ir{color:var(--gold)}
+
+.voltar{
+  border:none;background:transparent;cursor:pointer;padding:0;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.voltar:hover{color:var(--paper)}
+
 /* ---------- seções ---------- */
 .secoes{border-bottom:1px solid var(--line);background:var(--ink-2)}
 .secoes-in{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);display:flex;gap:4px}
@@ -519,7 +552,15 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
-<nav class="secoes" role="tablist" aria-label="Seções"><div class="secoes-in" id="secoes">
+<main class="escolha" id="escolha">
+  <div class="escolha-in">
+    <span class="eyebrow">Painel de aprovação</span>
+    <h1 class="escolha-tit">Escolha o produto</h1>
+    <div class="produtos" id="produtos"></div>
+  </div>
+</main>
+
+<nav class="secoes" role="tablist" aria-label="Seções" id="barraSecoes"><div class="secoes-in" id="secoes">
   <button class="sec" role="tab" data-s="criativos" aria-selected="true">Criativos em Imagem <span class="qt" id="qtCri">0</span></button>
   <button class="sec" role="tab" data-s="videos" aria-selected="false">Criativos em Vídeo <span class="qt" id="qtVid">0</span></button>
   <button class="sec" role="tab" data-s="paginas" aria-selected="false">Páginas <span class="qt" id="qtPag">0</span></button>
@@ -527,7 +568,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 
 <header class="top wrap">
   <div class="brand">
-    <span class="eyebrow">Turnê Máquina de Vendas</span>
+    <button class="eyebrow voltar" id="voltar" type="button">← <span id="nomeProduto">Turnê Máquina de Vendas</span></button>
     <h1 id="titulo"></h1>
     <div class="subline" id="subline"></div>
   </div>
@@ -589,11 +630,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 
   /* Cada remessa é um lote de entrega. A 02 é a que veio da pasta
      "2 demanda campina grande"; as outras ficam prontas para receber artes. */
-  /* Pasta no Drive das artes. Vale para todas as remessas; se alguma passar
-     a ter pasta própria, é só dar um campo `drive` a ela. */
-  var DRIVE = "https://drive.google.com/drive/folders/1REePm5VzbxJ2rLcN-3xsPBkw0y2smoU-?usp=share_link";
 
-  var REMESSAS = [
+  var REMESSAS_MDV = [
     {id:"r01", nome:"Remessa 01", artes:[
       {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/r3_ad01.jpg"]},
       {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/r3_ad02.jpg"]},
@@ -627,11 +665,67 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     {id:"r04", nome:"Remessa 04", artes:[]}
   ];
 
-  /* Criativos em vídeo, vindos da pasta do Drive. Só a versão stories.
-     O player é um embed do Drive: nada é baixado nem versionado aqui, e o
-     vídeo nunca fica desatualizado em relação ao que está na pasta. */
+  /* Cada produto tem seu próprio conjunto de criativos e páginas. O painel é
+     o mesmo; o que muda é de onde vêm os dados e o prefixo das chaves. */
+  /* Landing pages do RGV. Mantidas à mão: não há planilha para elas ainda. */
+  var FUNIS_RGV = [
+    {nome:"Método RGV", versao:"Landing pages", paginas:[
+      {id:"rgv-problema-x-solucao-v4", cidade:"Problema x Solução V4", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://metodorgv.com.br/problema-x-solucao-v4/"},
+      {id:"rgv-v31", cidade:"V31", data:"—", status:"", mobile:null, desktop:null,
+       url:"https://metodorgv.com.br/v31/"},
+      {id:"rgv-v30", cidade:"V30", data:"—", status:"", mobile:null, desktop:null,
+       url:"https://metodorgv.com.br/v30/"},
+      {id:"rgv-v30-v2", cidade:"V30 V2", data:"—", status:"", mobile:null, desktop:null,
+       url:"https://metodorgv.com.br/v30-v2/"}
+    ]}
+  ];
+
+  var PRODUTOS = {
+    mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
+          capa:"arts/produto-mdv.jpg",
+          drive:"https://drive.google.com/drive/folders/1REePm5VzbxJ2rLcN-3xsPBkw0y2smoU-?usp=share_link"},
+    /* as imagens do RGV ainda não têm pasta: o botão não aparece */
+    rgv: {id:"rgv", nome:"Método RGV 2.0", curto:"Método RGV",
+          capa:"arts/produto-rgv.jpg", drive:null}
+  };
+  var ORDEM_PRODUTOS = ["mdv", "rgv"];
+
+  var produto = null;                       // null = tela de escolha
+  var REMESSAS = [], VIDEOS = [], FUNIS = [];
+
+  /* prefixo do produto em toda chave gravada */
+  function px(chave){ return produto + ":" + chave; }
+
+  function carregarProduto(id){
+    produto = id;
+    var ehMdv = id === "mdv";
+    /* Hoje a Turnê tem imagens e páginas; o RGV tem vídeos e as landing
+       pages. As imagens do RGV entram quando chegarem. */
+    REMESSAS = ehMdv ? REMESSAS_MDV
+                     : [{id:"r01", nome:"Remessa 01", artes:[]}];
+    VIDEOS = ehMdv ? [] : VIDEOS_RGV;
+    FUNIS  = ehMdv ? FUNIS_MDV : FUNIS_RGV;
+    indexar();
+    lote = (REMESSAS[0] || {}).id || "r01";
+    secao = "criativos"; filtro = "todas"; filtroV = "todas";
+    aberta = null; focado = false;
+    rascunho = {}; slide = {};
+    /* limpa as grades: senão os cartões do produto anterior ficam no DOM,
+       invisíveis mas presentes */
+    ["#tipos", "#funis", "#grid"].forEach(function(sel){
+      var el = document.querySelector(sel);
+      if(el) el.innerHTML = "";
+    });
+    lsSet("mv_produto", id);
+  }
+
+  /* Criativos em vídeo do Método RGV — os arquivos no Drive são [RGV].
+     Só a versão stories. O player é um embed: nada é baixado nem versionado
+     aqui, e o vídeo nunca fica defasado em relação à pasta. */
   /* VIDEOS:inicio */
-  var VIDEOS = [
+  var VIDEOS_RGV = [
     {tipo:"AUTORIDADE", videos:[
       {id:"autoridade__ad01", code:"AD01", drive:"1y72oqPismYRLTjv9dPfbfymyEfL622p9"},
       {id:"autoridade__ad02", code:"AD02", drive:"1sLFki7lBLJTFVmrqV1xsbyULnt0F2HWI"},
@@ -688,27 +782,32 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   ];
   /* VIDEOS:fim */
 
-  var VIDEO_POR_ID = {};
-  VIDEOS.forEach(function(g){
-    g.videos.forEach(function(v){ v.tipo = g.tipo; VIDEO_POR_ID["vd__" + v.id] = v; });
-  });
-  function chaveVideo(v){ return "vd__" + v.id; }
+  /* As chaves levam o prefixo do produto (mdv:r01__ad01), para as aprovações
+     de um produto nunca vazarem para o outro. O índice é refeito a cada
+     troca de produto. */
+  var VIDEO_POR_ID = {}, BY_KEY = {};
 
-  /* chave global de cada arte: "r02__ad01" — é o id do doc de status
-     e o vínculo das anotações, para as remessas nunca se misturarem. */
-  var BY_KEY = {};
-  REMESSAS.forEach(function(r){
-    r.artes.forEach(function(a){
-      a.remessa = r.id;
-      a.key = r.id + "__" + a.id;
-      BY_KEY[a.key] = a;
+  function chaveVideo(v){ return px("vd__" + v.id); }
+  function chavePagina(p){ return px("pg__" + p.id); }
+
+  function indexar(){
+    VIDEO_POR_ID = {}; BY_KEY = {};
+    VIDEOS.forEach(function(g){
+      g.videos.forEach(function(v){ v.tipo = g.tipo; VIDEO_POR_ID[chaveVideo(v)] = v; });
     });
-  });
+    REMESSAS.forEach(function(r){
+      r.artes.forEach(function(a){
+        a.remessa = r.id;
+        a.key = px(r.id + "__" + a.id);
+        BY_KEY[a.key] = a;
+      });
+    });
+  }
 
   /* Páginas no ar, conforme a planilha "MDV - Outubro 2026".
      As notas são as do PageSpeed anotadas lá; célula vazia = ainda não medida. */
   /* FUNIS:inicio */
-  var FUNIS = [
+  var FUNIS_MDV = [
     {nome:"Rota 45", versao:"V1", paginas:[
       {id:"turne-mdv-campina-grande", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-campina-grande/"},
       {id:"turne-mdv-joao-pessoa", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joao-pessoa/"},
@@ -948,8 +1047,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       $("#titulo").innerHTML =
         '<span>Criativos em Imagem</span><span class="sep">—</span>' +
         '<span class="lote">' + esc(r.nome) + '</span>' +
-        (r.drive || DRIVE
-          ? '<a class="btn-drive" href="' + esc(r.drive || DRIVE) + '" target="_blank" rel="noopener noreferrer">' +
+        (r.drive || PRODUTOS[produto].drive
+          ? '<a class="btn-drive" href="' + esc(r.drive || PRODUTOS[produto].drive) + '" target="_blank" rel="noopener noreferrer">' +
             '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.2 3h7.6l5.2 9-3.8 6.6H7.4L3.6 12z"/></svg>' +
             'Acessar pasta do Drive</a>'
           : '');
@@ -1048,7 +1147,6 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     {v:"aprovado",  r:"Aprovado"},
     {v:"publicado", r:"Publicado"}
   ];
-  function chavePagina(p){ return "pg__" + p.id; }
   function etapaDe(p){
     var e = (status[chavePagina(p)] || {}).status;
     return ETAPAS.some(function(x){ return x.v === e; }) ? e : "aprovacao";
@@ -1313,7 +1411,33 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     $("#qtPag").textContent = FUNIS.reduce(function(t,f){ return t + f.paginas.length; }, 0);
   }
 
+  function renderEscolha(){
+    $("#produtos").innerHTML = ORDEM_PRODUTOS.map(function(id){
+      var p = PRODUTOS[id];
+      return '<button class="produto" data-produto="'+id+'">' +
+        '<img src="'+p.capa+'" alt="'+esc(p.nome)+'">' +
+        '<span class="faixa"><b>'+esc(p.nome)+'</b><span class="ir">abrir →</span></span>' +
+      '</button>';
+    }).join("");
+  }
+
+  /* alterna entre a tela de escolha e o painel do produto */
+  function renderModo(){
+    var escolhendo = !produto;
+    $("#escolha").hidden = !escolhendo;
+    ["#barraSecoes", ".top", "#viewCriativos", "#viewVideos", "#viewPaginas"].forEach(function(sel){
+      var el = document.querySelector(sel);
+      if(el) el.hidden = escolhendo;
+    });
+    if(!escolhendo){
+      (document.querySelector(".tabs") || {}).hidden = escolhendo;
+      $("#nomeProduto").textContent = PRODUTOS[produto].nome;
+    }
+  }
+
   function renderAll(){
+    renderModo();
+    if(!produto){ renderEscolha(); return; }
     renderSecoes();
     renderCabecalho();
     if(secao === "criativos"){ renderTabs(); renderGrid(); }
@@ -1322,6 +1446,21 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   }
 
   // ---------- interações ----------
+  $("#produtos").addEventListener("click", function(e){
+    var b = e.target.closest(".produto");
+    if(!b) return;
+    carregarProduto(b.dataset.produto);
+    renderAll();
+    window.scrollTo({top:0, behavior:"instant"});
+  });
+
+  $("#voltar").addEventListener("click", function(){
+    produto = null;
+    lsSet("mv_produto", "");
+    renderAll();
+    window.scrollTo({top:0, behavior:"instant"});
+  });
+
   $("#secoes").addEventListener("click", function(e){
     var b = e.target.closest(".sec");
     if(!b || b.dataset.s === secao) return;

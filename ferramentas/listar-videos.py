@@ -62,7 +62,7 @@ for tipo, fid in TIPOS:
 total = sum(len(g["videos"]) for g in grupos)
 print(f"  {'TOTAL':20} {total}", file=sys.stderr)
 
-L = ["  var VIDEOS = ["]
+L = ["  var VIDEOS_RGV = ["]
 for g in grupos:
     L.append("    {tipo:%s, videos:[" % json.dumps(g["tipo"], ensure_ascii=False))
     for v in g["videos"]:
