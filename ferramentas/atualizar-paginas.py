@@ -25,6 +25,17 @@ ROTULO = {"ROTA 45 V3 - PADRÃO": "V3 · Padrão", "ROTA 45 V1": "V1",
 # pela V4 e V5 — deixar as 11 paginas na tela so poluia a comparacao.
 OCULTAR = ("V3",)
 
+# Landing pages do Método RGV. Não há planilha para elas, então ficam aqui —
+# mas precisam entrar na lista de medição junto com as da Turnê, senão a
+# coluna de nota fica vazia para sempre.
+RGV = [
+    ("rgv-problema-x-solucao-v4", "Problema x Solução V4",
+     "https://metodorgv.com.br/problema-x-solucao-v4/"),
+    ("rgv-v31",    "V31",    "https://metodorgv.com.br/v31/"),
+    ("rgv-v30",    "V30",    "https://metodorgv.com.br/v30/"),
+    ("rgv-v30-v2", "V30 V2", "https://metodorgv.com.br/v30-v2/"),
+]
+
 
 def normal(t):
     """sem acento, sem pontuacao, minusculo — para casar cidade com slug"""
@@ -130,6 +141,7 @@ io.open(FONTE, "w", encoding="utf-8").write(antes + ini + bloco_js(dados) + "\n"
 
 lista = [{"id": p["id"], "url": p["url"], "cidade": p["cidade"], "versao": g["versao"]}
          for g in dados for p in g["paginas"]]
+lista += [{"id": i, "url": u, "cidade": c, "versao": "RGV"} for i, c, u in RGV]
 io.open(os.path.join(FUNCOES, "lista-paginas.js"), "w", encoding="utf-8").write(
     "// Gerado por ferramentas/atualizar-paginas.py a partir da planilha MDV - Outubro 2026.\n"
     "// Nao edite a mao: rode o script de novo.\n"
@@ -139,4 +151,5 @@ print(f"{sum(len(g['paginas']) for g in dados)} paginas · {len(dados)} funis")
 for g in dados:
     print(f"  {g['versao']}: {len(g['paginas'])}")
 print(f"ocultos do painel: {', '.join(OCULTAR)}")
+print(f"{len(lista)} páginas na medição automática (inclui {len(RGV)} do RGV)")
 print("\nagora rode: python3 ferramentas/gerar-index.py")

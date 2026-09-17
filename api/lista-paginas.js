@@ -180,5 +180,29 @@ export const PAGINAS = [
     "url": "https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v5/",
     "cidade": "Ribeirão Preto (SP)",
     "versao": "V5"
+  },
+  {
+    "id": "rgv-problema-x-solucao-v4",
+    "url": "https://metodorgv.com.br/problema-x-solucao-v4/",
+    "cidade": "Problema x Solução V4",
+    "versao": "RGV"
+  },
+  {
+    "id": "rgv-v31",
+    "url": "https://metodorgv.com.br/v31/",
+    "cidade": "V31",
+    "versao": "RGV"
+  },
+  {
+    "id": "rgv-v30",
+    "url": "https://metodorgv.com.br/v30/",
+    "cidade": "V30",
+    "versao": "RGV"
+  },
+  {
+    "id": "rgv-v30-v2",
+    "url": "https://metodorgv.com.br/v30-v2/",
+    "cidade": "V30 V2",
+    "versao": "RGV"
   }
 ];
