@@ -164,7 +164,7 @@ s = s.replace(velho, novo)
 assert "window.claude" not in s and "enfileirar({tipo:" in s and "esvaziar" in s, "transformacao incompleta"
 
 # 5) documento HTML completo (a versao artifact nao tem head)
-titulo = "<title>Remessa Campina Grande</title>"
+titulo = "<title>Painel de Criativos</title>"
 corpo = s.split(titulo, 1)[1]
 cabeca, resto = corpo.split("</style>", 1)
 # Arquivos de verdade em vez de data URI: vários navegadores ignoram SVG
@@ -181,7 +181,15 @@ doc = ("""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Painel de aprovacao das artes de feed - Turne Maquina de Vendas, Campina Grande.">
+<meta name="description" content="Aprovação de criativos e páginas da Turnê Máquina de Vendas e do Método RGV.">
+<meta property="og:title" content="Painel de Criativos">
+<meta property="og:description" content="Aprovação de criativos e páginas da Turnê Máquina de Vendas e do Método RGV.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://painelcriativos.vercel.app/">
+<meta property="og:image" content="https://painelcriativos.vercel.app/capa.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="color-scheme" content="dark">
 """ + favicon + "\n" + titulo + cabeca + "</style>\n</head>\n<body>\n"
 + resto.strip() + "\n</body>\n</html>\n")
