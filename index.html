@@ -442,7 +442,7 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 /* ---------- criativos em vídeo ---------- */
 .grid-video{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
 .card.video .tela{
-  position:relative;aspect-ratio:9/16;background:var(--ink-2);overflow:hidden;
+  position:relative;aspect-ratio:var(--video-prop,9/16);background:var(--ink-2);overflow:hidden;
 }
 .card.video .tela iframe{
   position:absolute;inset:0;width:100%;height:100%;border:0;
@@ -1052,13 +1052,16 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   var PRODUTOS = {
     mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
           capa:"arts/produto-mdv.jpg",
-          drive:"https://drive.google.com/drive/folders/1REePm5VzbxJ2rLcN-3xsPBkw0y2smoU-?usp=share_link"},
+          drive:"https://drive.google.com/drive/folders/1REePm5VzbxJ2rLcN-3xsPBkw0y2smoU-?usp=share_link",
+          formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     /* as imagens do RGV ainda não têm pasta: o botão não aparece */
     rgv: {id:"rgv", nome:"Método RGV 2.0", curto:"Método RGV",
-          capa:"arts/produto-rgv.jpg", drive:null},
+          capa:"arts/produto-rgv.jpg", drive:null,
+          formatoVideo:{nome:"Stories", proporcao:"9 : 16", css:"9/16"}},
     mqv: {id:"mqv", nome:"Máquina de Vendas Online", curto:"MQV Online",
           capa:"arts/produto-mqv-2.jpg",
-          drive:"https://drive.google.com/drive/folders/1c-FI-jTph2zsrGMFg20q1-QxcVeSSlJD?usp=share_link"}
+          drive:"https://drive.google.com/drive/folders/1c-FI-jTph2zsrGMFg20q1-QxcVeSSlJD?usp=share_link",
+          formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
   var ORDEM_PRODUTOS = ["mdv", "rgv", "mqv"];
 
@@ -1070,8 +1073,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 
   function carregarProduto(id){
     produto = id;
-    /* Cada produto traz o que já existe dele: a Turnê tem imagens e
-       páginas, o RGV tem os três, a MQV Online só imagens por enquanto. */
+    /* Cada produto traz o que já existe dele — os três hoje têm imagens,
+       vídeos e páginas. */
     var acervo = {
       mdv: {remessas: REMESSAS_MDV, videos: VIDEOS_MDV,  funis: FUNIS_MDV},
       rgv: {remessas: REMESSAS_RGV, videos: VIDEOS_RGV,  funis: FUNIS_RGV},
@@ -1080,6 +1083,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     REMESSAS = acervo.remessas;
     VIDEOS   = acervo.videos;
     FUNIS    = acervo.funis;
+    /* o card de vídeo herda a proporção do formato que o produto entrega */
+    document.documentElement.style.setProperty("--video-prop", fv().css);
     indexar();
     lote = (REMESSAS[0] || {}).id || "r01";
     secao = "criativos"; filtro = "todas"; filtroV = "todas";
@@ -1449,7 +1454,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       $("#subline").innerHTML =
         '<span><b>' + todos.length + '</b> vídeos</span><span class="dot">/</span>' +
         '<span><b>' + VIDEOS.length + '</b> tipos</span><span class="dot">/</span>' +
-        '<span>versão <b>Stories</b> · 9 : 16</span><span class="dot">/</span>' + live;
+        '<span>versão <b>' + fv().nome + '</b> · ' + fv().proporcao + '</span>' + '<span class="dot">/</span>' + live;
 
       tally.innerHTML =
         tile("", doisDigitos(c2.pendente), "pendentes") +
@@ -1698,8 +1703,15 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     }
   }
 
-  /* Card de vídeo: o player vem do Drive por embed. A proporção é 9:16
-     porque só mostramos a versão stories. */
+  /* Formato dos vídeos do produto aberto. A Turnê e a MQV Online mandam
+     feed (4:5); o RGV, stories (9:16). */
+  function fv(){
+    return (PRODUTOS[produto] || {}).formatoVideo
+        || {nome:"Stories", proporcao:"9 : 16", css:"9/16"};
+  }
+
+  /* Card de vídeo: o player vem do Drive por embed. A proporção sai do
+     formato que o produto entrega. */
   function cardVideo(v){
     var chave = chaveVideo(v);
     var e = st(chave);
