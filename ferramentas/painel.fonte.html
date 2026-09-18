@@ -873,6 +873,22 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     ]}
   ];
 
+  /* Landing pages da Máquina de Vendas Online. Como as do RGV, não saem de
+     planilha nenhuma — ficam aqui e na lista de medição do atualizar-paginas. */
+  var FUNIS_MQV = [
+    {nome:"MQV Online", versao:"Terceira edição", paginas:[
+      {id:"mqv-online-terceira-edicao-v3", cidade:"Terceira Edição V3", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://turnemaquinadevendas.com.br/lc/online-terceira-edicao-v3/"},
+      {id:"mqv-online-terceira-edicao-v2", cidade:"Terceira Edição V2", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://turnemaquinadevendas.com.br/lc/online-terceira-edicao-v2/"},
+      {id:"mqv-online-terceira-edicao", cidade:"Terceira Edição", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://turnemaquinadevendas.com.br/lc/online-terceira-edicao/"}
+    ]}
+  ];
+
   var PRODUTOS = {
     mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
           capa:"arts/produto-mdv.jpg",
@@ -899,7 +915,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     var acervo = {
       mdv: {remessas: REMESSAS_MDV, videos: [],          funis: FUNIS_MDV},
       rgv: {remessas: REMESSAS_RGV, videos: VIDEOS_RGV,  funis: FUNIS_RGV},
-      mqv: {remessas: REMESSAS_MQV, videos: [],          funis: []}
+      mqv: {remessas: REMESSAS_MQV, videos: [],          funis: FUNIS_MQV}
     }[id] || {remessas: [], videos: [], funis: []};
     REMESSAS = acervo.remessas;
     VIDEOS   = acervo.videos;
@@ -1018,28 +1034,28 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       {id:"turne-mdv-ribeirao-preto", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeirao-preto/"}
     ]},
     {nome:"Rota 45", versao:"V4", paginas:[
-      {id:"turne-mdv-campinagrande-v4", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v4/"},
-      {id:"turne-mdv-joaopessoa-v4", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v4/"},
-      {id:"turne-mdv-palmas-v4", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas-v4/"},
-      {id:"turne-mdv-vitoriadaconquista-v4", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista-v4/"},
-      {id:"turne-mdv-brasilia-v4", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-brasilia-v4/"},
-      {id:"turne-mdv-manaus-v4", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-manaus-v4/"},
-      {id:"turne-mdv-belem-v4", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-belem-v4/"},
-      {id:"turne-mdv-sinop-v4", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop-v4/"},
-      {id:"turne-mdv-cuiaba-v4", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v4/"},
-      {id:"turne-mdv-ribeiraopreto-v4", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:92, desktop:80, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v4/"}
+      {id:"turne-mdv-campinagrande-v4", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v4/"},
+      {id:"turne-mdv-joaopessoa-v4", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v4/"},
+      {id:"turne-mdv-palmas-v4", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas-v4/"},
+      {id:"turne-mdv-vitoriadaconquista-v4", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista-v4/"},
+      {id:"turne-mdv-brasilia-v4", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-brasilia-v4/"},
+      {id:"turne-mdv-manaus-v4", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-manaus-v4/"},
+      {id:"turne-mdv-belem-v4", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-belem-v4/"},
+      {id:"turne-mdv-sinop-v4", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop-v4/"},
+      {id:"turne-mdv-cuiaba-v4", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v4/"},
+      {id:"turne-mdv-ribeiraopreto-v4", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v4/"}
     ]},
     {nome:"Rota 45", versao:"V5", paginas:[
-      {id:"turne-mdv-campinagrande-v5", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:85, desktop:78, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v5/"},
-      {id:"turne-mdv-joaopessoa-v5", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v5/"},
-      {id:"turne-mdv-palmas-v5", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas-v5/"},
-      {id:"turne-mdv-vitoriadaconquista-v5", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista-v5/"},
-      {id:"turne-mdv-brasilia-v5", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-brasilia-v5/"},
-      {id:"turne-mdv-manaus-v5", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-manaus-v5/"},
-      {id:"turne-mdv-belem-v5", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-belem-v5/"},
-      {id:"turne-mdv-sinop-v5", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop-v5/"},
-      {id:"turne-mdv-cuiaba-v5", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v5/"},
-      {id:"turne-mdv-ribeiraopreto-v5", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:85, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v5/"}
+      {id:"turne-mdv-campinagrande-v5", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v5/"},
+      {id:"turne-mdv-joaopessoa-v5", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v5/"},
+      {id:"turne-mdv-palmas-v5", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas-v5/"},
+      {id:"turne-mdv-vitoriadaconquista-v5", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista-v5/"},
+      {id:"turne-mdv-brasilia-v5", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-brasilia-v5/"},
+      {id:"turne-mdv-manaus-v5", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-manaus-v5/"},
+      {id:"turne-mdv-belem-v5", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-belem-v5/"},
+      {id:"turne-mdv-sinop-v5", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop-v5/"},
+      {id:"turne-mdv-cuiaba-v5", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v5/"},
+      {id:"turne-mdv-ribeiraopreto-v5", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v5/"}
     ]}
   ];
   /* FUNIS:fim */

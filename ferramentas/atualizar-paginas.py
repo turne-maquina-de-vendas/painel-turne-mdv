@@ -37,6 +37,16 @@ RGV = [
     ("rgv-rmkt-v2", "RMKT V2", "https://metodorgv.com.br/rmkt-v2/"),
 ]
 
+# Landing pages da Maquina de Vendas Online — mesma historia do RGV.
+MQV = [
+    ("mqv-online-terceira-edicao-v3", "Terceira Edição V3",
+     "https://turnemaquinadevendas.com.br/lc/online-terceira-edicao-v3/"),
+    ("mqv-online-terceira-edicao-v2", "Terceira Edição V2",
+     "https://turnemaquinadevendas.com.br/lc/online-terceira-edicao-v2/"),
+    ("mqv-online-terceira-edicao", "Terceira Edição",
+     "https://turnemaquinadevendas.com.br/lc/online-terceira-edicao/"),
+]
+
 
 def normal(t):
     """sem acento, sem pontuacao, minusculo — para casar cidade com slug"""
@@ -143,6 +153,7 @@ io.open(FONTE, "w", encoding="utf-8").write(antes + ini + bloco_js(dados) + "\n"
 lista = [{"id": p["id"], "url": p["url"], "cidade": p["cidade"], "versao": g["versao"]}
          for g in dados for p in g["paginas"]]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "RGV"} for i, c, u in RGV]
+lista += [{"id": i, "url": u, "cidade": c, "versao": "MQV"} for i, c, u in MQV]
 io.open(os.path.join(FUNCOES, "lista-paginas.js"), "w", encoding="utf-8").write(
     "// Gerado por ferramentas/atualizar-paginas.py a partir da planilha MDV - Outubro 2026.\n"
     "// Nao edite a mao: rode o script de novo.\n"
@@ -152,5 +163,5 @@ print(f"{sum(len(g['paginas']) for g in dados)} paginas · {len(dados)} funis")
 for g in dados:
     print(f"  {g['versao']}: {len(g['paginas'])}")
 print(f"ocultos do painel: {', '.join(OCULTAR)}")
-print(f"{len(lista)} páginas na medição automática (inclui {len(RGV)} do RGV)")
+print(f"{len(lista)} páginas na medição automática (inclui {len(RGV)} do RGV e {len(MQV)} da MQV Online)")
 print("\nagora rode: python3 ferramentas/gerar-index.py")

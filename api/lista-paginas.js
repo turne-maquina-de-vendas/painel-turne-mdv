@@ -210,5 +210,23 @@ export const PAGINAS = [
     "url": "https://metodorgv.com.br/rmkt-v2/",
     "cidade": "RMKT V2",
     "versao": "RGV"
+  },
+  {
+    "id": "mqv-online-terceira-edicao-v3",
+    "url": "https://turnemaquinadevendas.com.br/lc/online-terceira-edicao-v3/",
+    "cidade": "Terceira Edição V3",
+    "versao": "MQV"
+  },
+  {
+    "id": "mqv-online-terceira-edicao-v2",
+    "url": "https://turnemaquinadevendas.com.br/lc/online-terceira-edicao-v2/",
+    "cidade": "Terceira Edição V2",
+    "versao": "MQV"
+  },
+  {
+    "id": "mqv-online-terceira-edicao",
+    "url": "https://turnemaquinadevendas.com.br/lc/online-terceira-edicao/",
+    "cidade": "Terceira Edição",
+    "versao": "MQV"
   }
 ];
