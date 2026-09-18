@@ -914,6 +914,29 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     ]}
   ];
 
+  /* Criativos em vídeo da Máquina de Vendas Online, versão feed.
+     Uma remessa só, sem divisão por tipo — o painel agrupa por "tipo",
+     então vai tudo num grupo. */
+  var VIDEOS_MQV = [
+    {tipo:"REMESSA 02", videos:[
+      {id:"remessa02__ad01", code:"AD01", drive:"1ahVbMA-SokgFhPXcZSpzP7-UN80aXdDc"},
+      {id:"remessa02__ad02", code:"AD02", drive:"1ZMA1kv2u5uLHjEEIwzryO70B_S616FTl"},
+      {id:"remessa02__ad03", code:"AD03", drive:"17wz6ycvxS3xQH1Dja8tlh0_V7gu4Le6Q"},
+      {id:"remessa02__ad04", code:"AD04", drive:"1Bz3iarkg8vUEZ_1ALGHRR9QohzvxGdxK"},
+      {id:"remessa02__ad05", code:"AD05", drive:"14uBszRDWln6j5xpTWP7J_75EB_fuQtDj"},
+      {id:"remessa02__ad06", code:"AD06", drive:"1BABZCNCckK2o5AdkDoGxkBK38m5M3iYx"},
+      {id:"remessa02__ad07", code:"AD07", drive:"13AEgbf4zcQZayOaOAeh2mkkExi_ORQGO"},
+      {id:"remessa02__ad08", code:"AD08", drive:"1OCb8J2QGzx8hEPn9tLGTBf95aHpftijv"},
+      {id:"remessa02__ad09", code:"AD09", drive:"1QruGIl5CGIJZW0w807187ZelKcPFuOuq"},
+      {id:"remessa02__ad10", code:"AD10", drive:"1zrHP6yAcVGNBdS3GJgw-PUUZxr0NCfTk"},
+      {id:"remessa02__ad11", code:"AD11", drive:"1nSkl4SOqbkoVA0du-jKCZkkktVfnaIB3"},
+      {id:"remessa02__ad12", code:"AD12", drive:"13gIbkHVMYV4PaCNIECt51LX5hR_qZKTt"},
+      {id:"remessa02__ad13", code:"AD13", drive:"1lucNbq0EvvQZH60U8DwgaOGiyNOQiVDK"},
+      {id:"remessa02__ad14", code:"AD14", drive:"18Jxb3PMbhQHCowQE_SEGERMZmEnhEavA"},
+      {id:"remessa02__ad15", code:"AD15", drive:"1FPye5ucVaWgwk9T_9dZ1IdQyXc8tm7D-"}
+    ]}
+  ];
+
   var PRODUTOS = {
     mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
           capa:"arts/produto-mdv.jpg",
@@ -940,7 +963,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     var acervo = {
       mdv: {remessas: REMESSAS_MDV, videos: [],          funis: FUNIS_MDV},
       rgv: {remessas: REMESSAS_RGV, videos: VIDEOS_RGV,  funis: FUNIS_RGV},
-      mqv: {remessas: REMESSAS_MQV, videos: [],          funis: FUNIS_MQV}
+      mqv: {remessas: REMESSAS_MQV, videos: VIDEOS_MQV,  funis: FUNIS_MQV}
     }[id] || {remessas: [], videos: [], funis: []};
     REMESSAS = acervo.remessas;
     VIDEOS   = acervo.videos;
