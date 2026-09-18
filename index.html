@@ -566,13 +566,6 @@ table.paginas .nota.ruim{color:var(--bad);border-color:var(--bad-line);backgroun
 .nota-badge.vazia,
 table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background:transparent;font-weight:400}
 
-.par-nota{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
-.agora{
-  font-family:var(--ui);font-weight:600;font-size:9px;
-  letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
-}
-.agora.boa{color:var(--ok)} .agora.media{color:var(--warn)} .agora.ruim{color:var(--bad)}
-
 /* Status da página é escolhido aqui, não vem da planilha: quem aprova
    mexe no painel, e a escolha fica no banco como as dos criativos. */
 .sel-status{
@@ -1233,12 +1226,11 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         campo: Boolean(m[qual].temCampo),
         local: m.origem === "local",   // Lighthouse rodado na mão, não o PageSpeed
         amostras: m[qual].amostras || null,
-        ultima: limitar(typeof m[qual].ultima === "number" ? m[qual].ultima : null),
         quando: m.medidoEm
       };
     }
     return {valor:limitar(p[qual]), deOnde:"planilha", campo:false, local:false,
-            amostras:null, ultima:null, quando:null};
+            amostras:null, quando:null};
   }
 
   function renderAutomacao(){
@@ -1257,8 +1249,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     }
     el.className = "automacao";
     el.innerHTML = '<b>Medição automática a cada 12 horas.</b> Cada página é medida ' +
-      '3 vezes em mobile e desktop, e vale a melhor, com teto de 95 — nota 100 ' +
-      'no laboratório é ilusória. Última rodada ' + desdeQuando(execucao.quando) +
+      '3 vezes em mobile e desktop, e vale a melhor das três — sem guardar ' +
+      'recorde: o número é o da rodada mais recente. Última ' + desdeQuando(execucao.quando) +
       ' · ' + execucao.medidas + ' páginas' +
       (execucao.comErro ? ' · <span class="ruim">' + execucao.comErro + ' falharam</span>' : '') + '.';
   }
@@ -1347,21 +1339,16 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       '</div>';
     }
 
-    /* mostra a maior nota já registrada; quando a última rodada deu menos,
-       o número atual aparece embaixo — senão uma queda real ficaria invisível */
+    /* A nota é a melhor das 3 medições da rodada mais recente. Sem recorde
+       histórico: com medição de 12 em 12 horas, guardar a maior de sempre
+       empurrava toda página para o teto e o painel virava uma fileira de 95. */
     function nota(n){
       if(n.valor == null) return '<span class="nota vazia" title="ainda não medida">—</span>';
-      var partes = [];
-      if(n.amostras && n.amostras.length > 1){
-        partes.push("última rodada: " + n.amostras.join(", "));
-      }
-      var caiu = typeof n.ultima === "number" && n.ultima < n.valor;
-      if(caiu) partes.push("maior já registrada: " + n.valor);
-      var selo = '<span class="nota ' + faixa(n.valor) + '"' +
-        (partes.length ? ' title="' + partes.join(" · ") + '"' : '') + '>' + n.valor + '</span>';
-      if(!caiu) return selo;
-      return '<span class="par-nota">' + selo +
-        '<span class="agora ' + faixa(n.ultima) + '" title="medição mais recente">agora ' + n.ultima + '</span></span>';
+      var dica = n.amostras && n.amostras.length > 1
+        ? "melhor de " + n.amostras.length + " medições: " + n.amostras.join(", ")
+        : "";
+      return '<span class="nota ' + faixa(n.valor) + '"' +
+        (dica ? ' title="' + dica + '"' : '') + '>' + n.valor + '</span>';
     }
 
     function seletor(p){

@@ -3,14 +3,14 @@ import { PAGINAS } from "./lista-paginas.js";
 
 /* Mede as páginas no PageSpeed Insights e grava no Postgres.
  *
- * TRÊS MEDIÇÕES POR FORMATO, E A MAIOR NOTA PREVALECE — inclusive sobre as
- * rodadas anteriores. A nota de laboratório do PSI oscila muito: a mesma
- * página deu 92, 83, 66 e 41 em execuções do mesmo dia. Guardar a maior evita
- * que um número ruim por acaso vire a verdade do painel.
+ * TRÊS MEDIÇÕES POR FORMATO, VALE A MELHOR DA RODADA. A nota do PSI oscila
+ * muito entre execuções da mesma página, então uma medição só não diz nada —
+ * três e a melhor delas filtra o azar sem inventar mérito.
  *
- * O preço disso é que uma página que piorou de verdade não apareceria. Por
- * isso o registro também guarda `ultima` (a melhor desta rodada) e as
- * amostras: o painel mostra a maior, mas deixa ver a medição atual ao lado.
+ * O que NÃO fazemos é guardar recorde histórico. Já fizemos: com medição de
+ * 12 em 12 horas, cada página acumulava dezenas de sorteios por mês e todas
+ * migravam para o teto. O painel virou uma fileira de 95 enquanto as
+ * medições reais estavam entre 54 e 91 — número bonito e inútil.
  *
  * CADA AMOSTRA É GRAVADA ASSIM QUE SAI, e a função para de começar trabalho
  * novo antes do limite de execução — assim um estouro nunca joga fora o que
@@ -94,11 +94,6 @@ async function medirPagina(p, chave, expira) {
     desktop: (ant && ant.desktop) || null,
     medidoEm: (ant && ant.medido_em) || null
   };
-  /* melhor nota já registrada, de qualquer rodada anterior */
-  const recorde = {
-    mobile: ((ant && ant.mobile) || {}).nota ?? null,
-    desktop: ((ant && ant.desktop) || {}).nota ?? null
-  };
   const rodada = { mobile: null, desktop: null };
 
   async function amostra(estrategia) {
@@ -112,12 +107,10 @@ async function medirPagina(p, chave, expira) {
     const amostras = ((atual && atual.amostras) || []).concat(r.nota);
     const melhorDaRodada = !atual || r.nota > (atual.ultima ?? atual.nota) ? r : atual;
     const desta = Math.min(TETO, melhorDaRodada.nota ?? r.nota);
-    const topo = Math.min(TETO, Math.max(desta, recorde[estrategia] ?? -1));
 
     rodada[estrategia] = {
-      ...r,                 // campo/temCampo vêm sempre da medição mais recente
-      nota: topo,           // a que o painel mostra
-      ultima: desta,        // a melhor desta rodada, para dar para comparar
+      ...r,            // campo/temCampo vêm sempre da medição mais recente
+      nota: desta,     // a melhor DESTA rodada — sem recorde histórico
       amostras
     };
     registro[estrategia] = rodada[estrategia];

@@ -40,13 +40,8 @@ const p = achadas[0];
 
 function juntar(antes, agora) {
   if (!Number.isFinite(agora)) return antes;           // não informado: não mexe
-  if (forcar) {
-    const { ultima, ...resto } = antes || {};
-    return { ...resto, nota: limitar(agora), amostras: [agora] };
-  }
-  const anterior = (antes || {}).nota;
-  const topo = Number.isFinite(anterior) ? Math.max(anterior, agora) : agora;
-  return { ...(antes || {}), nota: limitar(topo), ultima: limitar(agora), amostras: [agora] };
+  const { ultima, ...resto } = antes || {};
+  return { ...resto, nota: limitar(agora), amostras: [agora] };
 }
 
 const mob = juntar(p.mobile, novo.mobile);
