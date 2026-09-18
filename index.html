@@ -769,7 +769,9 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/rgv1_ad09.jpg"]},
       {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/rgv1_ad10.jpg"]}
     ]},
-    {id:"r02", nome:"Remessa 02", artes:[
+    {id:"r02", nome:"Remessa 02",
+     drive:"https://drive.google.com/drive/folders/144l_lE4PsPGuY08nKitVcJfQjzvhuWoZ?usp=share_link",
+     artes:[
       {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/rgv2_ad01.jpg"]},
       {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/rgv2_ad02.jpg"]},
       {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/rgv2_ad03.jpg"]},
@@ -798,7 +800,12 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       {id:"ad26",code:"AD26",tipo:"IMG",files:["arts/rgv2_ad26.jpg"]},
       {id:"ad27",code:"AD27",tipo:"IMG",files:["arts/rgv2_ad27.jpg"]},
       {id:"ad28",code:"AD28",tipo:"IMG",files:["arts/rgv2_ad28.jpg"]},
-      {id:"ad29",code:"AD29",tipo:"IMG",files:["arts/rgv2_ad29.jpg"]}
+      {id:"ad29",code:"AD29",tipo:"IMG",files:["arts/rgv2_ad29.jpg"]},
+      {id:"ad30",code:"AD30",tipo:"CAR",files:["arts/rgv2_ad30_c1.jpg","arts/rgv2_ad30_c2.jpg","arts/rgv2_ad30_c3.jpg","arts/rgv2_ad30_c4.jpg","arts/rgv2_ad30_c5.jpg"]},
+      {id:"ad31",code:"AD31",tipo:"CAR",files:["arts/rgv2_ad31_c1.jpg","arts/rgv2_ad31_c2.jpg","arts/rgv2_ad31_c3.jpg","arts/rgv2_ad31_c4.jpg","arts/rgv2_ad31_c5.jpg"]},
+      {id:"ad32",code:"AD32",tipo:"CAR",files:["arts/rgv2_ad32_c1.jpg","arts/rgv2_ad32_c2.jpg","arts/rgv2_ad32_c3.jpg","arts/rgv2_ad32_c4.jpg","arts/rgv2_ad32_c5.jpg"]},
+      {id:"ad33",code:"AD33",tipo:"CAR",files:["arts/rgv2_ad33_c1.jpg","arts/rgv2_ad33_c2.jpg","arts/rgv2_ad33_c3.jpg","arts/rgv2_ad33_c4.jpg","arts/rgv2_ad33_c5.jpg"]},
+      {id:"ad34",code:"AD34",tipo:"CAR",files:["arts/rgv2_ad34_c1.jpg","arts/rgv2_ad34_c2.jpg","arts/rgv2_ad34_c3.jpg","arts/rgv2_ad34_c4.jpg","arts/rgv2_ad34_c5.jpg"]}
     ]},
   ];
 
@@ -1207,7 +1214,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         '</div>' +
 
         '<div class="barra">' +
-          '<span class="code">'+(car?"4 cards · feed":"feed")+'</span>' +
+          '<span class="code">'+(car?a.files.length+" cards · feed":"feed")+'</span>' +
           '<span class="pill '+(s!=="pendente"?s:"")+'"><i></i>'+LABEL[s]+'</span>' +
         '</div>' +
 
