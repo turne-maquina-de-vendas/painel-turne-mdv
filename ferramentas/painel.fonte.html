@@ -918,6 +918,116 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     ]}
   ];
 
+  /* Criativos em vídeo da Turnê, versão feed. O Drive separa por leva e
+     depois por cidade; aqui o grupo é a cidade (a "2" no fim é a 2ª leva). */
+  var VIDEOS_MDV = [
+    {tipo:"BARREIRAS", videos:[
+      {id:"barreiras__ad01", code:"AD01", drive:"1nZUn388yURbHpkVwWmMOZejosSHh_T72"},
+      {id:"barreiras__ad02", code:"AD02", drive:"1ksBqov43PoETD-C9QA7Z9UPFoRNXIT93"},
+      {id:"barreiras__ad03", code:"AD03", drive:"1uJfN1PBd8v8nhcEdeoCiWAmn0jTrPXtS"},
+      {id:"barreiras__ad04", code:"AD04", drive:"1ARPnHxnjbFl3zIIj6SXwH2wVlNsAK7xj"},
+      {id:"barreiras__ad05", code:"AD05", drive:"1-K1aYVUpkbqBekB_jBjyEVfFzVSvIzFW"}
+    ]},
+    {tipo:"BELEM", videos:[
+      {id:"belem__ad01", code:"AD01", drive:"1x3I-DIQeOS5e-u4vpKZBW3U0gMlwMcPb"},
+      {id:"belem__ad02", code:"AD02", drive:"19fY98Pq9r24vrHsRwMV9bVOeNACHqYrb"},
+      {id:"belem__ad03", code:"AD03", drive:"1tBu3JY20udX99QfiKMFwCD-G9DEZBWQ7"},
+      {id:"belem__ad04", code:"AD04", drive:"110xnEyCb7IPBl2QKQgSATdK1p89qxBad"},
+      {id:"belem__ad05", code:"AD05", drive:"15RdPQHG6liaghGSbffU51_1lhctSBfCx"}
+    ]},
+    {tipo:"BRASILIA", videos:[
+      {id:"brasilia__ad01", code:"AD01", drive:"1OcIRV8rGt02737mFJAgUn84YjFWRO5FC"},
+      {id:"brasilia__ad02", code:"AD02", drive:"12KJ2V76Dci2zjbLQca1dH_rdP4m0NING"},
+      {id:"brasilia__ad03", code:"AD03", drive:"1UWN7Gy9pO-vI_zaFDzRkQeme72xB1a1a"},
+      {id:"brasilia__ad04", code:"AD04", drive:"1tZjSr7R0XE_s1nqgpKtAbj3p8D0YxCE8"},
+      {id:"brasilia__ad05", code:"AD05", drive:"1Xx65__WAryKIiRsZaeV7UxUdooNCy-fx"}
+    ]},
+    {tipo:"CAMPINA GRANDE", videos:[
+      {id:"campinagrande__ad01", code:"AD01", drive:"1M10H7r2ox5jq-9KUgKCiuPAWW-LvI8g2"},
+      {id:"campinagrande__ad02", code:"AD02", drive:"1zCT37TGVUMyMGhBK9cFVdDBYs859r9gd"},
+      {id:"campinagrande__ad03", code:"AD03", drive:"1JhiMC_xOjKWI-fosE14z8RG5Ie67-FvL"},
+      {id:"campinagrande__ad04", code:"AD04", drive:"1w3823OqFuBDK1vW39uzJ0I1eVN-DY5lK"},
+      {id:"campinagrande__ad05", code:"AD05", drive:"1rpfEYy4zAvYQMZThsG3xd3KPuoyAViNK"}
+    ]},
+    {tipo:"CUIABA", videos:[
+      {id:"cuiaba__ad01", code:"AD01", drive:"1CkRGhhEXsVip75FVDDRJ3pzFUrmE-vk9"},
+      {id:"cuiaba__ad02", code:"AD02", drive:"18Ot-88jd0mej5rQt8hCA0uokTa2pnpuu"},
+      {id:"cuiaba__ad03", code:"AD03", drive:"1qDd1Suiljb9GGAHu8-DIT_r-pNga65SL"},
+      {id:"cuiaba__ad04", code:"AD04", drive:"1PH9q-YQ1HjLqMH-Jrh5F335OE8fTTuTt"},
+      {id:"cuiaba__ad05", code:"AD05", drive:"1NGGXSyK1EVNgYcG99huRvZQjmIuQ3294"}
+    ]},
+    {tipo:"JOÃO PESSOA", videos:[
+      {id:"joaopessoa__ad01", code:"AD01", drive:"1jEh5jiMo_qodOVIzhU8u7z26WDpsGGep"},
+      {id:"joaopessoa__ad02", code:"AD02", drive:"1Nn-M9ssfrziubH-LOZbPsUpBkg_NTpa3"},
+      {id:"joaopessoa__ad03", code:"AD03", drive:"1-8fHosItqWJdC8NrCwJgQCzDYWIgL54D"},
+      {id:"joaopessoa__ad04", code:"AD04", drive:"1ZhHsFZOn78qEoZxsbhLC66QzlPOdRNWo"},
+      {id:"joaopessoa__ad05", code:"AD05", drive:"12XJ167fYtkU6xw026sm4rA_cKmcUb0dc"}
+    ]},
+    {tipo:"MANAUS", videos:[
+      {id:"manaus__ad01", code:"AD01", drive:"1ESqGMig-vFPsifZTXAlLIAMTSZdyhTol"},
+      {id:"manaus__ad02", code:"AD02", drive:"1PV0J7zwOwIVi4IDs_cHLjKMeTbwmfu00"},
+      {id:"manaus__ad03", code:"AD03", drive:"14FrzQSZ0uE0Y2hzoQa_96ITwAlQBNDvJ"},
+      {id:"manaus__ad04", code:"AD04", drive:"115BVMXdm6e5PwJYcqDhA7Aow8KaBnTXt"},
+      {id:"manaus__ad05", code:"AD05", drive:"1INcjSqukYKFwxB5Ng6HlmvzRd3yUdqg1"}
+    ]},
+    {tipo:"PALMAS", videos:[
+      {id:"palmas__ad01", code:"AD01", drive:"1krvBtTLLb4BgXuw94O_yA6yUlEYeQcXp"},
+      {id:"palmas__ad02", code:"AD02", drive:"1o_R93vZwqYP1JrchUlpjZL9pzv91-cii"},
+      {id:"palmas__ad03", code:"AD03", drive:"1lGSQPcWc-nWn96Deq4H61pSLXrGcUCEj"},
+      {id:"palmas__ad04", code:"AD04", drive:"1SnxqxR63JqOVC8pNN0YUxDwqHArjUi2E"},
+      {id:"palmas__ad05", code:"AD05", drive:"1NtalPOsLjnxv877Rk85698z4Dk1BRd4I"}
+    ]},
+    {tipo:"RIBEIRÃO PRETO", videos:[
+      {id:"ribeiraopreto__ad01", code:"AD01", drive:"1B4LUraz3tZdGHwSI_6rpLs1AZdSCKJ5F"},
+      {id:"ribeiraopreto__ad02", code:"AD02", drive:"164bn3rgd47NHmBFdBRDCBo04itt_LlV3"},
+      {id:"ribeiraopreto__ad03", code:"AD03", drive:"1gmXnWevdGIgFK1U-b9770RLvJluwPwLv"},
+      {id:"ribeiraopreto__ad04", code:"AD04", drive:"1w4zSRxjpCMM7CJKkWPqtH1eD_0UowqzU"},
+      {id:"ribeiraopreto__ad05", code:"AD05", drive:"1LFgWM0x_JMYuBYVCB2HW24OHQUoVQC6Y"}
+    ]},
+    {tipo:"SINOP", videos:[
+      {id:"sinop__ad01", code:"AD01", drive:"19Oqh-7IIEg8eJAV2nkMnus_gMoAPLAlB"},
+      {id:"sinop__ad02", code:"AD02", drive:"1d94qkSQ2HwFRzzyp5qpTUwHplndYLYjG"},
+      {id:"sinop__ad03", code:"AD03", drive:"1fy55w3up7fcwiRNQWOHIGXhbTXDbzX2I"},
+      {id:"sinop__ad04", code:"AD04", drive:"1OTBwkC9d-tgEgbQVnnMWWL0I6CZ8LtZy"},
+      {id:"sinop__ad05", code:"AD05", drive:"1le0R9uXS_tqGlj8fDcydRdbWPEXmT9Wd"}
+    ]},
+    {tipo:"VITORIA DA CONQUISTA", videos:[
+      {id:"vitoriadaconquista__ad01", code:"AD01", drive:"1QQstlcmx1n55z9ApnGiCj0CpcqVYS8hg"},
+      {id:"vitoriadaconquista__ad02", code:"AD02", drive:"1ByZGSgo3g6yxaJCpP-Aw18mUbRi9f4YY"},
+      {id:"vitoriadaconquista__ad03", code:"AD03", drive:"1gosfLgcphXsrenOfFxD4Z6r--s46gLnI"},
+      {id:"vitoriadaconquista__ad04", code:"AD04", drive:"1aixWkdbA4K3OOWGn3ENNdDKOoPN-m3pP"},
+      {id:"vitoriadaconquista__ad05", code:"AD05", drive:"1EXDjsc19eIV4m5zNmIh0lFWM88t7mjro"}
+    ]},
+    {tipo:"CAMPINA GRANDE 2", videos:[
+      {id:"campinagrande2__ad01", code:"AD01", drive:"1JRlurvATMRRsMoGr7cmQaQ8PEuZyrw1Q"},
+      {id:"campinagrande2__ad02", code:"AD02", drive:"1my5ANMq7lN5IO9Yux-8-dxfVNz0XOyLy"},
+      {id:"campinagrande2__ad03", code:"AD03", drive:"1_4KEPle5RYfpGqnHI6sBIlZ7PH40__bX"},
+      {id:"campinagrande2__ad04", code:"AD04", drive:"1y6F_9T7kFy7zueNnzrULt4DoQPbjaeRL"},
+      {id:"campinagrande2__ad05", code:"AD05", drive:"1PfOd1sJs-JiIRzdjVjnMQBdnO0pRr3MR"}
+    ]},
+    {tipo:"JOÃO PESSOA 2", videos:[
+      {id:"joaopessoa2__ad01", code:"AD01", drive:"1JopX7bVs82ABDebDf6aVaGYP1kWicTUP"},
+      {id:"joaopessoa2__ad02", code:"AD02", drive:"1UXoCpgN6D30xaGTe8ZGdtoIo_7QKZIp5"},
+      {id:"joaopessoa2__ad03", code:"AD03", drive:"1q5t8bQklLjcVU27XcTzlsdUVe3-Xy6TO"},
+      {id:"joaopessoa2__ad04", code:"AD04", drive:"1ixKL5Rs2XG3nOGXNLE2nfzK43fJanofv"},
+      {id:"joaopessoa2__ad05", code:"AD05", drive:"1epiuf4P3pzT3V1Y7OJuSy8rq8WPBdgQO"}
+    ]},
+    {tipo:"PALMAS 2", videos:[
+      {id:"palmas2__ad01", code:"AD01", drive:"1CBV02Mzqja9gEWJusq1SZyanB5PrL5mF"},
+      {id:"palmas2__ad02", code:"AD02", drive:"1zrN6yX-Rt4ra0u4tr_HirxIyNkggBabG"},
+      {id:"palmas2__ad03", code:"AD03", drive:"1_aDrMZoBfIMAfu8p7_6jpaasHUSwSrdL"},
+      {id:"palmas2__ad04", code:"AD04", drive:"1al7u7BnLc3e1EDSb370gk8r00bhQEG_A"},
+      {id:"palmas2__ad05", code:"AD05", drive:"16_GgQtJyFO0EJ9ppbGHD3SO-x1S3mdOC"}
+    ]},
+    {tipo:"VITORIA DA CONQUISTA 2", videos:[
+      {id:"vitoriadaconquista2__ad01", code:"AD01", drive:"1tqSm0eUXGu4ja6X1p42lr58HOPUXLNIN"},
+      {id:"vitoriadaconquista2__ad02", code:"AD02", drive:"1HUKT1COCSolCHJkD9qJFbFVJXVDFapSA"},
+      {id:"vitoriadaconquista2__ad03", code:"AD03", drive:"1HS0Xyx9nbnNnFBQieQNGVgsHbRNts8KO"},
+      {id:"vitoriadaconquista2__ad04", code:"AD04", drive:"1fKz9mfbG4vxZi4BR2_kwOti613GsMTY8"},
+      {id:"vitoriadaconquista2__ad05", code:"AD05", drive:"19fLs0F0XEHGP6QSODN5x7CS2M5XQ6xK-"}
+    ]}
+  ];
+
   var PRODUTOS = {
     mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
           capa:"arts/produto-mdv.jpg",
@@ -942,7 +1052,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     /* Cada produto traz o que já existe dele: a Turnê tem imagens e
        páginas, o RGV tem os três, a MQV Online só imagens por enquanto. */
     var acervo = {
-      mdv: {remessas: REMESSAS_MDV, videos: [],          funis: FUNIS_MDV},
+      mdv: {remessas: REMESSAS_MDV, videos: VIDEOS_MDV,  funis: FUNIS_MDV},
       rgv: {remessas: REMESSAS_RGV, videos: VIDEOS_RGV,  funis: FUNIS_RGV},
       mqv: {remessas: REMESSAS_MQV, videos: VIDEOS_MQV,  funis: FUNIS_MQV}
     }[id] || {remessas: [], videos: [], funis: []};
