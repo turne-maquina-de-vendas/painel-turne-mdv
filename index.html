@@ -747,6 +747,47 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     {id:"r04", nome:"Remessa 04", artes:[]}
   ];
 
+  /* Estáticos do RGV, versão feed. */
+  var REMESSAS_RGV = [
+    {id:"r01", nome:"Remessa 01", artes:[
+      {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/rgv1_ad01.jpg"]},
+      {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/rgv1_ad02.jpg"]},
+      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/rgv1_ad03.jpg"]},
+      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/rgv1_ad04.jpg"]},
+      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/rgv1_ad05.jpg"]},
+      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/rgv1_ad06.jpg"]},
+      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/rgv1_ad07.jpg"]},
+      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/rgv1_ad08.jpg"]},
+      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/rgv1_ad09.jpg"]},
+      {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/rgv1_ad10.jpg"]}
+    ]},
+    {id:"r02", nome:"Remessa 02", artes:[
+      {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/rgv2_ad01.jpg"]},
+      {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/rgv2_ad02.jpg"]},
+      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/rgv2_ad03.jpg"]},
+      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/rgv2_ad04.jpg"]},
+      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/rgv2_ad05.jpg"]},
+      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/rgv2_ad06.jpg"]},
+      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/rgv2_ad07.jpg"]},
+      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/rgv2_ad08.jpg"]},
+      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/rgv2_ad09.jpg"]},
+      {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/rgv2_ad10.jpg"]},
+      {id:"ad11",code:"AD11",tipo:"IMG",files:["arts/rgv2_ad11.jpg"]},
+      {id:"ad12",code:"AD12",tipo:"IMG",files:["arts/rgv2_ad12.jpg"]},
+      {id:"ad13",code:"AD13",tipo:"IMG",files:["arts/rgv2_ad13.jpg"]},
+      {id:"ad14",code:"AD14",tipo:"IMG",files:["arts/rgv2_ad14.jpg"]},
+      {id:"ad15",code:"AD15",tipo:"IMG",files:["arts/rgv2_ad15.jpg"]},
+      {id:"ad16",code:"AD16",tipo:"IMG",files:["arts/rgv2_ad16.jpg"]},
+      {id:"ad17",code:"AD17",tipo:"IMG",files:["arts/rgv2_ad17.jpg"]},
+      {id:"ad18",code:"AD18",tipo:"IMG",files:["arts/rgv2_ad18.jpg"]},
+      {id:"ad19",code:"AD19",tipo:"IMG",files:["arts/rgv2_ad19.jpg"]},
+      {id:"ad20",code:"AD20",tipo:"IMG",files:["arts/rgv2_ad20.jpg"]},
+      {id:"ad22",code:"AD22",tipo:"IMG",files:["arts/rgv2_ad22.jpg"]},
+      {id:"ad24",code:"AD24",tipo:"IMG",files:["arts/rgv2_ad24.jpg"]},
+      {id:"ad29",code:"AD29",tipo:"IMG",files:["arts/rgv2_ad29.jpg"]}
+    ]},
+  ];
+
   /* Cada produto tem seu próprio conjunto de criativos e páginas. O painel é
      o mesmo; o que muda é de onde vêm os dados e o prefixo das chaves. */
   /* Landing pages do RGV. Mantidas à mão: não há planilha para elas ainda. */
@@ -787,8 +828,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     var ehMdv = id === "mdv";
     /* Hoje a Turnê tem imagens e páginas; o RGV tem vídeos e as landing
        pages. As imagens do RGV entram quando chegarem. */
-    REMESSAS = ehMdv ? REMESSAS_MDV
-                     : [{id:"r01", nome:"Remessa 01", artes:[]}];
+    REMESSAS = ehMdv ? REMESSAS_MDV : REMESSAS_RGV;
     VIDEOS = ehMdv ? [] : VIDEOS_RGV;
     FUNIS  = ehMdv ? FUNIS_MDV : FUNIS_RGV;
     indexar();
