@@ -204,5 +204,11 @@ export const PAGINAS = [
     "url": "https://metodorgv.com.br/v30-v2/",
     "cidade": "V30 V2",
     "versao": "RGV"
+  },
+  {
+    "id": "rgv-rmkt-v2",
+    "url": "https://metodorgv.com.br/rmkt-v2/",
+    "cidade": "RMKT V2",
+    "versao": "RGV"
   }
 ];

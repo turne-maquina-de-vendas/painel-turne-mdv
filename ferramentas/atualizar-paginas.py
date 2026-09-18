@@ -34,6 +34,7 @@ RGV = [
     ("rgv-v31",    "V31",    "https://metodorgv.com.br/v31/"),
     ("rgv-v30",    "V30",    "https://metodorgv.com.br/v30/"),
     ("rgv-v30-v2", "V30 V2", "https://metodorgv.com.br/v30-v2/"),
+    ("rgv-rmkt-v2", "RMKT V2", "https://metodorgv.com.br/rmkt-v2/"),
 ]
 
 
