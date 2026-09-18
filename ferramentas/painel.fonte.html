@@ -1079,7 +1079,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   }
 
   /* Criativos em vídeo do Método RGV — os arquivos no Drive são [RGV].
-     Só a versão stories. O player é um embed: nada é baixado nem versionado
+     Uma versão só por AD. O player é um embed: nada é baixado nem versionado
      aqui, e o vídeo nunca fica defasado em relação à pasta. */
   /* VIDEOS:inicio */
   var VIDEOS_RGV = [
@@ -1711,7 +1711,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
             '<span class="play"></span>' +
           '</div>') +
       '<div class="barra">' +
-        '<span class="code">stories</span>' +
+        '<span class="code">' + fv().nome.toLowerCase() + '</span>' +
         '<span class="pill '+(e!=="pendente"?e:"")+'"><i></i>'+LABEL[e]+'</span>' +
       '</div>' +
       '<div class="acoes">' +
