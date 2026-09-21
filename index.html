@@ -1098,7 +1098,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 
   /* Landing pages do Meteórico: duas cidades, cada uma com frio e RMKT. */
   var FUNIS_MET = [
-    {nome:"Ribeirão Preto", versao:"Ribeirão Preto · Público frio", paginas:[
+    {nome:"Meteórico", versao:"Ribeirão Preto · Público frio", paginas:[
       {id:"met-ribeirao-preto", cidade:"V1", data:"—",
        status:"", mobile:null, desktop:null,
        url:"https://turnemaquinadevendas.com.br/met-ribeirao-preto/"},
@@ -1106,7 +1106,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
        status:"", mobile:null, desktop:null,
        url:"https://turnemaquinadevendas.com.br/met-ribeirao-preto-v2/"}
     ]},
-    {nome:"Ribeirão Preto", versao:"Ribeirão Preto · Público quente · RMKT", paginas:[
+    {nome:"Meteórico", versao:"Ribeirão Preto · Público quente · RMKT", paginas:[
       {id:"met-ribeirao-preto-v3", cidade:"V3", data:"—",
        status:"", mobile:null, desktop:null,
        url:"https://turnemaquinadevendas.com.br/met-ribeirao-preto-v3/"},
@@ -1114,7 +1114,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
        status:"", mobile:null, desktop:null,
        url:"https://turnemaquinadevendas.com.br/met-ribeirao-preto-v4/"}
     ]},
-    {nome:"Cuiabá", versao:"Cuiabá · Público frio", paginas:[
+    {nome:"Meteórico", versao:"Cuiabá · Público frio", paginas:[
       {id:"met-cuiaba", cidade:"V1", data:"—",
        status:"", mobile:null, desktop:null,
        url:"https://turnemaquinadevendas.com.br/met-cuiaba/"},
@@ -1122,7 +1122,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
        status:"", mobile:null, desktop:null,
        url:"https://turnemaquinadevendas.com.br/met-cuiaba-v2/"}
     ]},
-    {nome:"Cuiabá", versao:"Cuiabá · Público quente · RMKT", paginas:[
+    {nome:"Meteórico", versao:"Cuiabá · Público quente · RMKT", paginas:[
       {id:"met-cuiaba-v3", cidade:"V3", data:"—",
        status:"", mobile:null, desktop:null,
        url:"https://turnemaquinadevendas.com.br/met-cuiaba-v3/"},
@@ -1360,7 +1360,15 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 
   function st(key){ return (status[key] && status[key].status) || "pendente"; }
   function notasDe(key){ return notas.filter(function(n){ return n.arteKey === key; }); }
-  function notasDoLote(id){ return notas.filter(function(n){ return n.remessa === id; }); }
+  /* A anotação guarda a remessa crua ("r01"), que se repete entre produtos —
+     quem diz o produto é a arteKey, que vem prefixada. Sem esse filtro, o
+     contador do lote somava anotação de produto alheio. */
+  function notasDoLote(id){
+    var pre = produto + ":";
+    return notas.filter(function(n){
+      return n.remessa === id && String(n.arteKey || "").indexOf(pre) === 0;
+    });
+  }
 
   function esc(s){
     return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
@@ -1536,7 +1544,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       var c2 = {pendente:0,aprovado:0,ajuste:0,reprovado:0,publicado:0};
       todos.forEach(function(v){ c2[st(chaveVideo(v))]++; });
       var notasVideo = notas.filter(function(n){
-        return String(n.arteKey || "").indexOf("vd__") === 0;
+        return String(n.arteKey || "").indexOf(produto + ":vd__") === 0;
       }).length;
 
       $("#titulo").innerHTML = '<span>Criativos em Vídeo</span>';
