@@ -1811,6 +1811,10 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
             'aria-label="Reproduzir '+esc(v.code)+' · '+esc(v.tipo)+'">' +
             '<img src="https://drive.google.com/thumbnail?id='+esc(v.drive)+'&sz=w400" ' +
               'alt="Primeiro quadro de '+esc(v.code)+'" loading="lazy">' +
+            /* o Drive leva um tempo para gerar o quadro de capa de um vídeo
+               recém-subido, e até lá manda um retângulo branco. Sem o código
+               na frente, os cartões ficam indistinguíveis. */
+            '<div class="tagline"><span class="tag">'+esc(v.code)+'</span></div>' +
             '<span class="play"></span>' +
           '</div>') +
       '<div class="barra">' +
