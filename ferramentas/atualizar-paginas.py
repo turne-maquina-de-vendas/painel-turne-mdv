@@ -47,6 +47,26 @@ MQV = [
      "https://turnemaquinadevendas.com.br/lc/online-terceira-edicao/"),
 ]
 
+# Landing pages do Meteorico (duas cidades, frio e RMKT).
+MET = [
+    ("met-ribeirao-preto", "Ribeirão Preto V1",
+     "https://turnemaquinadevendas.com.br/met-ribeirao-preto/"),
+    ("met-ribeirao-preto-v2", "Ribeirão Preto V2",
+     "https://turnemaquinadevendas.com.br/met-ribeirao-preto-v2/"),
+    ("met-ribeirao-preto-v3", "Ribeirão Preto V3",
+     "https://turnemaquinadevendas.com.br/met-ribeirao-preto-v3/"),
+    ("met-ribeirao-preto-v4", "Ribeirão Preto V4",
+     "https://turnemaquinadevendas.com.br/met-ribeirao-preto-v4/"),
+    ("met-cuiaba", "Cuiabá V1",
+     "https://turnemaquinadevendas.com.br/met-cuiaba/"),
+    ("met-cuiaba-v2", "Cuiabá V2",
+     "https://turnemaquinadevendas.com.br/met-cuiaba-v2/"),
+    ("met-cuiaba-v3", "Cuiabá V3",
+     "https://turnemaquinadevendas.com.br/met-cuiaba-v3/"),
+    ("met-cuiaba-v4", "Cuiabá V4",
+     "https://turnemaquinadevendas.com.br/met-cuiaba-v4/"),
+]
+
 
 def normal(t):
     """sem acento, sem pontuacao, minusculo — para casar cidade com slug"""
@@ -154,6 +174,7 @@ lista = [{"id": p["id"], "url": p["url"], "cidade": p["cidade"], "versao": g["ve
          for g in dados for p in g["paginas"]]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "RGV"} for i, c, u in RGV]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "MQV"} for i, c, u in MQV]
+lista += [{"id": i, "url": u, "cidade": c, "versao": "MET"} for i, c, u in MET]
 io.open(os.path.join(FUNCOES, "lista-paginas.js"), "w", encoding="utf-8").write(
     "// Gerado por ferramentas/atualizar-paginas.py a partir da planilha MDV - Outubro 2026.\n"
     "// Nao edite a mao: rode o script de novo.\n"
@@ -163,5 +184,5 @@ print(f"{sum(len(g['paginas']) for g in dados)} paginas · {len(dados)} funis")
 for g in dados:
     print(f"  {g['versao']}: {len(g['paginas'])}")
 print(f"ocultos do painel: {', '.join(OCULTAR)}")
-print(f"{len(lista)} páginas na medição automática (inclui {len(RGV)} do RGV e {len(MQV)} da MQV Online)")
+print(f"{len(lista)} páginas na medição automática (inclui {len(RGV)} do RGV, {len(MQV)} da MQV Online e {len(MET)} do Meteorico)")
 print("\nagora rode: python3 ferramentas/gerar-index.py")

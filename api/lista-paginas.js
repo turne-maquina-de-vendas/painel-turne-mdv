@@ -228,5 +228,53 @@ export const PAGINAS = [
     "url": "https://turnemaquinadevendas.com.br/lc/online-terceira-edicao/",
     "cidade": "Terceira Edição",
     "versao": "MQV"
+  },
+  {
+    "id": "met-ribeirao-preto",
+    "url": "https://turnemaquinadevendas.com.br/met-ribeirao-preto/",
+    "cidade": "Ribeirão Preto V1",
+    "versao": "MET"
+  },
+  {
+    "id": "met-ribeirao-preto-v2",
+    "url": "https://turnemaquinadevendas.com.br/met-ribeirao-preto-v2/",
+    "cidade": "Ribeirão Preto V2",
+    "versao": "MET"
+  },
+  {
+    "id": "met-ribeirao-preto-v3",
+    "url": "https://turnemaquinadevendas.com.br/met-ribeirao-preto-v3/",
+    "cidade": "Ribeirão Preto V3",
+    "versao": "MET"
+  },
+  {
+    "id": "met-ribeirao-preto-v4",
+    "url": "https://turnemaquinadevendas.com.br/met-ribeirao-preto-v4/",
+    "cidade": "Ribeirão Preto V4",
+    "versao": "MET"
+  },
+  {
+    "id": "met-cuiaba",
+    "url": "https://turnemaquinadevendas.com.br/met-cuiaba/",
+    "cidade": "Cuiabá V1",
+    "versao": "MET"
+  },
+  {
+    "id": "met-cuiaba-v2",
+    "url": "https://turnemaquinadevendas.com.br/met-cuiaba-v2/",
+    "cidade": "Cuiabá V2",
+    "versao": "MET"
+  },
+  {
+    "id": "met-cuiaba-v3",
+    "url": "https://turnemaquinadevendas.com.br/met-cuiaba-v3/",
+    "cidade": "Cuiabá V3",
+    "versao": "MET"
+  },
+  {
+    "id": "met-cuiaba-v4",
+    "url": "https://turnemaquinadevendas.com.br/met-cuiaba-v4/",
+    "cidade": "Cuiabá V4",
+    "versao": "MET"
   }
 ];

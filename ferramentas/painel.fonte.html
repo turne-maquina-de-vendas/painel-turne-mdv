@@ -1038,6 +1038,79 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     ]}
   ];
 
+  /* Estáticos do Meteórico, versão feed. Uma remessa só, com as duas
+     cidades juntas — o código do cartão diz de qual cidade a arte é. */
+  var REMESSAS_MET = [
+    {id:"r01", nome:"Remessa 01",
+     drive:"https://drive.google.com/drive/folders/1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i?usp=share_link",
+     artes:[
+      {id:"cba_ad01",code:"CBA AD01",tipo:"IMG",files:["arts/met1_cba_ad01.jpg"]},
+      {id:"cba_ad02",code:"CBA AD02",tipo:"IMG",files:["arts/met1_cba_ad02.jpg"]},
+      {id:"cba_ad03",code:"CBA AD03",tipo:"IMG",files:["arts/met1_cba_ad03.jpg"]},
+      {id:"cba_ad04",code:"CBA AD04",tipo:"IMG",files:["arts/met1_cba_ad04.jpg"]},
+      {id:"cba_ad05",code:"CBA AD05",tipo:"IMG",files:["arts/met1_cba_ad05.jpg"]},
+      {id:"cba_ad06",code:"CBA AD06",tipo:"IMG",files:["arts/met1_cba_ad06.jpg"]},
+      {id:"cba_ad07",code:"CBA AD07",tipo:"IMG",files:["arts/met1_cba_ad07.jpg"]},
+      {id:"cba_ad08",code:"CBA AD08",tipo:"IMG",files:["arts/met1_cba_ad08.jpg"]},
+      {id:"cba_ad09",code:"CBA AD09",tipo:"IMG",files:["arts/met1_cba_ad09.jpg"]},
+      {id:"cba_ad10",code:"CBA AD10",tipo:"IMG",files:["arts/met1_cba_ad10.jpg"]},
+      {id:"cba_ad11",code:"CBA AD11",tipo:"IMG",files:["arts/met1_cba_ad11.jpg"]},
+      {id:"cba_ad12",code:"CBA AD12",tipo:"IMG",files:["arts/met1_cba_ad12.jpg"]},
+      {id:"cba_ad13",code:"CBA AD13",tipo:"IMG",files:["arts/met1_cba_ad13.jpg"]},
+      {id:"cba_ad14",code:"CBA AD14",tipo:"IMG",files:["arts/met1_cba_ad14.jpg"]},
+      {id:"rp_ad01",code:"RP AD01",tipo:"IMG",files:["arts/met1_rp_ad01.jpg"]},
+      {id:"rp_ad02",code:"RP AD02",tipo:"IMG",files:["arts/met1_rp_ad02.jpg"]},
+      {id:"rp_ad03",code:"RP AD03",tipo:"IMG",files:["arts/met1_rp_ad03.jpg"]},
+      {id:"rp_ad04",code:"RP AD04",tipo:"IMG",files:["arts/met1_rp_ad04.jpg"]},
+      {id:"rp_ad05",code:"RP AD05",tipo:"IMG",files:["arts/met1_rp_ad05.jpg"]},
+      {id:"rp_ad06",code:"RP AD06",tipo:"IMG",files:["arts/met1_rp_ad06.jpg"]},
+      {id:"rp_ad07",code:"RP AD07",tipo:"IMG",files:["arts/met1_rp_ad07.jpg"]},
+      {id:"rp_ad08",code:"RP AD08",tipo:"IMG",files:["arts/met1_rp_ad08.jpg"]},
+      {id:"rp_ad09",code:"RP AD09",tipo:"IMG",files:["arts/met1_rp_ad09.jpg"]},
+      {id:"rp_ad10",code:"RP AD10",tipo:"IMG",files:["arts/met1_rp_ad10.jpg"]},
+      {id:"rp_ad11",code:"RP AD11",tipo:"IMG",files:["arts/met1_rp_ad11.jpg"]},
+      {id:"rp_ad12",code:"RP AD12",tipo:"IMG",files:["arts/met1_rp_ad12.jpg"]},
+      {id:"rp_ad13",code:"RP AD13",tipo:"IMG",files:["arts/met1_rp_ad13.jpg"]},
+      {id:"rp_ad14",code:"RP AD14",tipo:"IMG",files:["arts/met1_rp_ad14.jpg"]}
+    ]}
+  ];
+
+  /* Landing pages do Meteórico: duas cidades, cada uma com frio e RMKT. */
+  var FUNIS_MET = [
+    {nome:"Ribeirão Preto", versao:"Ribeirão Preto · Público frio", paginas:[
+      {id:"met-ribeirao-preto", cidade:"V1", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://turnemaquinadevendas.com.br/met-ribeirao-preto/"},
+      {id:"met-ribeirao-preto-v2", cidade:"V2", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://turnemaquinadevendas.com.br/met-ribeirao-preto-v2/"}
+    ]},
+    {nome:"Ribeirão Preto", versao:"Ribeirão Preto · Público quente · RMKT", paginas:[
+      {id:"met-ribeirao-preto-v3", cidade:"V3", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://turnemaquinadevendas.com.br/met-ribeirao-preto-v3/"},
+      {id:"met-ribeirao-preto-v4", cidade:"V4", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://turnemaquinadevendas.com.br/met-ribeirao-preto-v4/"}
+    ]},
+    {nome:"Cuiabá", versao:"Cuiabá · Público frio", paginas:[
+      {id:"met-cuiaba", cidade:"V1", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://turnemaquinadevendas.com.br/met-cuiaba/"},
+      {id:"met-cuiaba-v2", cidade:"V2", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://turnemaquinadevendas.com.br/met-cuiaba-v2/"}
+    ]},
+    {nome:"Cuiabá", versao:"Cuiabá · Público quente · RMKT", paginas:[
+      {id:"met-cuiaba-v3", cidade:"V3", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://turnemaquinadevendas.com.br/met-cuiaba-v3/"},
+      {id:"met-cuiaba-v4", cidade:"V4", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://turnemaquinadevendas.com.br/met-cuiaba-v4/"}
+    ]}
+  ];
+
   var PRODUTOS = {
     mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
           capa:"arts/produto-mdv.jpg",
@@ -1050,9 +1123,14 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     mqv: {id:"mqv", nome:"Máquina de Vendas Online", curto:"MQV Online",
           capa:"arts/produto-mqv-2.jpg",
           drive:"https://drive.google.com/drive/folders/1c-FI-jTph2zsrGMFg20q1-QxcVeSSlJD?usp=share_link",
+          formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
+    /* o Meteórico ainda não tem vídeo; a capa é provisória, recortada de um AD */
+    met: {id:"met", nome:"Meteórico MQV", curto:"Meteórico",
+          capa:"arts/produto-met.jpg",
+          drive:"https://drive.google.com/drive/folders/1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i?usp=share_link",
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
-  var ORDEM_PRODUTOS = ["mdv", "rgv", "mqv"];
+  var ORDEM_PRODUTOS = ["mdv", "rgv", "mqv", "met"];
 
   var produto = null;                       // null = tela de escolha
   var REMESSAS = [], VIDEOS = [], FUNIS = [];
@@ -1067,7 +1145,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     var acervo = {
       mdv: {remessas: REMESSAS_MDV, videos: VIDEOS_MDV,  funis: FUNIS_MDV},
       rgv: {remessas: REMESSAS_RGV, videos: VIDEOS_RGV,  funis: FUNIS_RGV},
-      mqv: {remessas: REMESSAS_MQV, videos: VIDEOS_MQV,  funis: FUNIS_MQV}
+      mqv: {remessas: REMESSAS_MQV, videos: VIDEOS_MQV,  funis: FUNIS_MQV},
+      met: {remessas: REMESSAS_MET, videos: [],          funis: FUNIS_MET}
     }[id] || {remessas: [], videos: [], funis: []};
     REMESSAS = acervo.remessas;
     VIDEOS   = acervo.videos;
