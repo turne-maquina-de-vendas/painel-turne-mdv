@@ -1097,6 +1097,27 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     ]}
   ];
 
+  /* Criativos em vídeo do Meteórico, versão feed. O Drive separa por
+     cidade dentro da remessa 1. */
+  var VIDEOS_MET = [
+    {tipo:"Cuiabá · Remessa 01", videos:[
+      {id:"cba__ad01", code:"AD01", drive:"19e49728IebNNCwkR81nGjqazQWSspdNv"},
+      {id:"cba__ad02", code:"AD02", drive:"1fZ7XzefKtVzvJLIAmKrEDHrQvSCntMhF"},
+      {id:"cba__ad03", code:"AD03", drive:"1wgi8A9OvWw5mBP2MwZNcx7Af0lmmEwzy"},
+      {id:"cba__ad04", code:"AD04", drive:"1UbYAWSoZkJ5Pf8H7F9dPXEj-N1qhk6mo"},
+      {id:"cba__ad05", code:"AD05", drive:"1_TA8pYR90KBlMxCqw3Xp4TPbhKjQ6GF7"},
+      {id:"cba__ad06", code:"AD06", drive:"1Phg8Bx0HTrAvO_r7cdAOALwabejO8XfL"}
+    ]},
+    {tipo:"Ribeirão Preto · Remessa 01", videos:[
+      {id:"rp__ad01", code:"AD01", drive:"18B8YG-Wy698WYGYInBD79q33mB3V1hgL"},
+      {id:"rp__ad02", code:"AD02", drive:"1n-N_tskNcmtIZk3MTNEmhv7mPySn2YDe"},
+      {id:"rp__ad03", code:"AD03", drive:"1lhoc9G278GrNkQ4OcJ6giUYAx-xGWolV"},
+      {id:"rp__ad04", code:"AD04", drive:"1aW6N-502dhcRzM8VQ2Y4DnT0q0PFFly4"},
+      {id:"rp__ad05", code:"AD05", drive:"1c-2cWQPVwxe2yZCTVMcKN_ovJ6G2eYlm"},
+      {id:"rp__ad06", code:"AD06", drive:"1ZryoIPVOduqcFpavyuFGVuUNtsdokDCM"}
+    ]}
+  ];
+
   var PRODUTOS = {
     mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
           capa:"arts/produto-mdv.jpg",
@@ -1110,7 +1131,6 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           capa:"arts/produto-mqv-2.jpg",
           drive:"https://drive.google.com/drive/folders/1c-FI-jTph2zsrGMFg20q1-QxcVeSSlJD?usp=share_link",
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
-    /* o Meteórico ainda não tem vídeo */
     met: {id:"met", nome:"Meteórico MQV", curto:"Meteórico",
           capa:"arts/produto-met-2.jpg",
           drive:"https://drive.google.com/drive/folders/1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i?usp=share_link",
@@ -1132,7 +1152,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       mdv: {remessas: REMESSAS_MDV, videos: VIDEOS_MDV,  funis: FUNIS_MDV},
       rgv: {remessas: REMESSAS_RGV, videos: VIDEOS_RGV,  funis: FUNIS_RGV},
       mqv: {remessas: REMESSAS_MQV, videos: VIDEOS_MQV,  funis: FUNIS_MQV},
-      met: {remessas: REMESSAS_MET, videos: [],          funis: FUNIS_MET}
+      met: {remessas: REMESSAS_MET, videos: VIDEOS_MET,  funis: FUNIS_MET}
     }[id] || {remessas: [], videos: [], funis: []};
     REMESSAS = acervo.remessas;
     VIDEOS   = acervo.videos;
