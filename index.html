@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-produto="">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -107,6 +107,75 @@
   --bad-bg:rgba(255,138,102,.13);
   --bad-line:rgba(255,138,102,.36);
 }
+
+/* Tema da tela inicial, tirado da metodorgv.com.br/v30: preto, branco e
+   vermelho. Na home data-produto fica vazio — ao abrir um produto, o tema
+   dele assume. As variáveis abaixo são as da própria página (--black,
+   --panel, --red, --gray-mid) nos nomes do painel; a tipografia é a mesma
+   dos dois lados, Bricolage Grotesque com Rethink Sans. */
+[data-produto=""]{
+  --ink:#0D0D0D;         /* --black */
+  --ink-2:#0A0A0A;
+  --surface:#1A1A1A;     /* --panel */
+  --surface-2:#202020;
+  --surface-3:#2A2A2A;
+
+  --line:rgba(255,255,255,.14);
+  --line-soft:rgba(255,255,255,.07);
+  --paper:#FFFFFF;       /* --white */
+  --dim:rgba(255,255,255,.66);
+  --dim-2:rgba(255,255,255,.42);
+
+  --gold:#FE0026;        /* --red: o acento da v30 */
+  --gold-dim:rgba(254,0,38,.32);
+  --sage:#AEAEAE;        /* --gray-mid */
+  --no-acento:#FFFFFF;
+}
+
+/* Marca do grupo no alto da home. Some junto com a tela de escolha. */
+.topo-home{
+  display:flex;align-items:center;
+  padding:26px var(--pad) 0;
+}
+.topo-home img{height:30px;width:auto;display:block}
+@media (max-width:640px){ .topo-home img{height:24px} }
+
+/* Tema do Black Friday 10X, tirado da lp.grupor1.com/black10x: preto, ouro
+   e vermelho. As variáveis abaixo são as da própria página (--black,
+   --panel, --gold, --red...) traduzidas para os nomes do painel. O par
+   tipográfico é o mesmo — a LP também carrega Bricolage Grotesque com
+   Rethink Sans —, então só a paleta troca. */
+[data-produto="b10x"]{
+  --ink:#0D0D0D;         /* --black  */
+  --ink-2:#141414;       /* --panel-2 */
+  --surface:#1A1A1A;     /* --panel  */
+  --surface-2:#202020;
+  --surface-3:#2A2A2A;
+
+  --line:rgba(255,255,255,.14);
+  --line-soft:rgba(255,255,255,.07);
+  --paper:#FFFFFF;       /* --white */
+  --dim:rgba(255,255,255,.66);
+  --dim-2:rgba(255,255,255,.42);
+
+  --gold:#E9B166;        /* --gold */
+  --gold-dim:rgba(233,177,102,.34);
+  --sage:#AEAEAE;        /* --gray-mid */
+  --no-acento:#1A1205;   /* --gold-ink: o texto que a LP põe sobre o ouro */
+
+  /* o vermelho da LP é o tom de recusa; o verde dela vira o de aprovação */
+  --ok:#2FA84F;          /* --green */
+  --ok-bg:rgba(47,168,79,.14);
+  --ok-line:rgba(47,168,79,.36);
+  --bad:#FE0026;         /* --red */
+  --bad-bg:rgba(254,0,38,.13);
+  --bad-line:rgba(254,0,38,.38);
+
+  /* o degradê dourado é a assinatura da LP: fica no botão principal */
+  --grad-gold:linear-gradient(100deg,#DCA35A 0%,#F6D599 48%,#D9993F 100%);
+}
+[data-produto="b10x"] .home:hover,
+[data-produto="b10x"] .btn-drive:hover{background:var(--grad-gold);border-color:#D9993F}
 
 *{box-sizing:border-box}
 [hidden]{display:none !important}
@@ -626,6 +695,10 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 </style>
 </head>
 <body>
+<header class="topo-home" id="topoHome">
+  <img src="arts/logo-r1.png" alt="Grupo R1" width="520" height="146">
+</header>
+
 <main class="escolha" id="escolha">
   <div class="escolha-in">
     <span class="eyebrow">Painel de aprovação</span>
@@ -1943,6 +2016,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     var escolhendo = !produto;
     document.documentElement.setAttribute("data-produto", produto || "");
     $("#escolha").hidden = !escolhendo;
+    $("#topoHome").hidden = !escolhendo;
     ["#barraSecoes", ".top", "#viewCriativos", "#viewVideos", "#viewPaginas"].forEach(function(sel){
       var el = document.querySelector(sel);
       if(el) el.hidden = escolhendo;

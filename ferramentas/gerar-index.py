@@ -176,7 +176,7 @@ favicon = (
     '<link rel="apple-touch-icon" href="/apple-touch-icon.png">')
 
 doc = ("""<!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-produto="">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
