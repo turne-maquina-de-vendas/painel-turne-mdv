@@ -524,9 +524,10 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 }
 .home:hover{color:var(--no-acento);background:var(--gold);border-color:var(--gold)}
 
-/* Link para um documento do produto (termo de abertura, briefing...). Fica
-   colado no Home, com o mesmo formato, mas em contorno de acento para
-   destoar do botão de navegação. */
+/* Links do produto: dashboard de métricas, termo de abertura, o que vier.
+   Ficam colados no Home, com o mesmo formato, mas em contorno de acento
+   para destoar do botão de navegação. */
+.links-prod{display:inline-flex;align-items:center}
 .doc-prod{
   align-self:center;
   display:inline-flex;align-items:center;gap:8px;
@@ -745,7 +746,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   <button class="sec" role="tab" data-s="videos" aria-selected="false">Criativos em Vídeo <span class="qt" id="qtVid">0</span></button>
   <button class="sec" role="tab" data-s="paginas" aria-selected="false">Páginas <span class="qt" id="qtPag">0</span></button>
   <button class="home" id="home" type="button">⌂ Home</button>
-  <a class="doc-prod" id="docProduto" target="_blank" rel="noopener noreferrer" hidden></a>
+  <span class="links-prod" id="linksProduto"></span>
 </div></nav>
 
 <header class="top wrap">
@@ -1265,23 +1266,27 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
           capa:"arts/produto-mdv.jpg",
           drive:"https://drive.google.com/drive/folders/1REePm5VzbxJ2rLcN-3xsPBkw0y2smoU-?usp=share_link",
+          links:[{nome:"Dashboard de métricas", url:"https://maquina-mkt.equipe.grupor1.com"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     /* as imagens do RGV ainda não têm pasta: o botão não aparece */
     rgv: {id:"rgv", nome:"Método RGV 2.0", curto:"Método RGV",
           capa:"arts/produto-rgv.jpg", drive:null,
+          links:[{nome:"Dashboard de métricas", url:"https://rgv-mkt.equipe.grupor1.com"}],
           formatoVideo:{nome:"Stories", proporcao:"9 : 16", css:"9/16"}},
     /* evento de 21/09: já aconteceu, o painel fica como histórico */
     mqv: {id:"mqv", nome:"Máquina de Vendas Online", curto:"MQV Online", entregue:true,
           capa:"arts/produto-mqv-2.jpg",
           drive:"https://drive.google.com/drive/folders/1c-FI-jTph2zsrGMFg20q1-QxcVeSSlJD?usp=share_link",
+          links:[{nome:"Dashboard de métricas", url:"https://maquina-vendas-online-set-26.lovable.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     met: {id:"met", nome:"Meteórico MQV", curto:"Meteórico",
           capa:"arts/produto-met-2.jpg",
           drive:"https://drive.google.com/drive/folders/1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i?usp=share_link",
+          links:[{nome:"Dashboard de métricas", url:"https://meteorico-set-26.lovable.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     b10x: {id:"b10x", nome:"Black Friday 10X", curto:"Black 10X",
           capa:"arts/produto-b10x.jpg", drive:null,
-          doc:{nome:"Termo de Abertura", url:"https://black10xtap.netlify.app"},
+          links:[{nome:"Termo de Abertura", url:"https://black10xtap.netlify.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
   var ORDEM_PRODUTOS = ["mdv", "rgv", "met", "b10x", "mqv"];  // entregues por último
@@ -2061,10 +2066,11 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     if(!escolhendo){
       (document.querySelector(".tabs") || {}).hidden = escolhendo;
       $("#nomeProduto").textContent = PRODUTOS[produto].nome;
-      /* só os produtos que têm documento mostram o botão */
-      var doc = PRODUTOS[produto].doc, el = $("#docProduto");
-      el.hidden = !doc;
-      if(doc){ el.href = doc.url; el.textContent = doc.nome; }
+      /* cada produto traz os links que tem; quem não tem nenhum fica sem */
+      $("#linksProduto").innerHTML = (PRODUTOS[produto].links || []).map(function(l){
+        return '<a class="doc-prod" href="'+esc(l.url)+'" target="_blank" ' +
+               'rel="noopener noreferrer">'+esc(l.nome)+'</a>';
+      }).join("");
     }
   }
 
