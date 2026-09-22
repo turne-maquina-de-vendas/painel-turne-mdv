@@ -508,6 +508,23 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 }
 .home:hover{color:var(--no-acento);background:var(--gold);border-color:var(--gold)}
 
+/* Link para um documento do produto (termo de abertura, briefing...). Fica
+   colado no Home, com o mesmo formato, mas em contorno de acento para
+   destoar do botão de navegação. */
+.doc-prod{
+  align-self:center;
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--ui);font-weight:700;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);text-decoration:none;
+  border:1px solid var(--gold-dim);border-radius:999px;
+  padding:9px 18px;background:transparent;margin-left:14px;
+  transition:color .16s var(--ease),border-color .16s var(--ease),background .16s var(--ease);
+}
+.doc-prod:hover{color:var(--no-acento);background:var(--gold);border-color:var(--gold)}
+.doc-prod[hidden]{display:none !important}
+@media (max-width:720px){ .doc-prod{margin-left:8px;padding:9px 12px} }
+
 /* ---------- criativos em vídeo ---------- */
 .grid-video{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
 .card.video .tela{
@@ -712,6 +729,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   <button class="sec" role="tab" data-s="videos" aria-selected="false">Criativos em Vídeo <span class="qt" id="qtVid">0</span></button>
   <button class="sec" role="tab" data-s="paginas" aria-selected="false">Páginas <span class="qt" id="qtPag">0</span></button>
   <button class="home" id="home" type="button">⌂ Home</button>
+  <a class="doc-prod" id="docProduto" target="_blank" rel="noopener noreferrer" hidden></a>
 </div></nav>
 
 <header class="top wrap">
@@ -1246,6 +1264,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     b10x: {id:"b10x", nome:"Black Friday 10X", curto:"Black 10X",
           capa:"arts/produto-b10x.jpg", drive:null,
+          doc:{nome:"Termo de Abertura", url:"https://black10xtap.netlify.app"},
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
   var ORDEM_PRODUTOS = ["mdv", "rgv", "mqv", "met", "b10x"];
@@ -2024,6 +2043,10 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     if(!escolhendo){
       (document.querySelector(".tabs") || {}).hidden = escolhendo;
       $("#nomeProduto").textContent = PRODUTOS[produto].nome;
+      /* só os produtos que têm documento mostram o botão */
+      var doc = PRODUTOS[produto].doc, el = $("#docProduto");
+      el.hidden = !doc;
+      if(doc){ el.href = doc.url; el.textContent = doc.nome; }
     }
   }
 
