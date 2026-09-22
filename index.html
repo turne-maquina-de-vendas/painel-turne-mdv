@@ -477,14 +477,18 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 .shot img{width:100%;height:100%;object-fit:cover;display:block}
 
 .tagline{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:6px;pointer-events:none}
+/* A etiqueta fica por cima da arte, não do fundo do painel: a pílula é
+   sempre escura com texto claro, em tema claro ou escuro. Herdar a cor do
+   texto do tema deixava preto sobre preto no Instagram. */
 .tag{
   font-family:var(--ui);font-weight:600;
-  font-size:10px;letter-spacing:.08em;
-  background:rgba(8,17,3,.82);backdrop-filter:blur(6px);
-  border:1px solid rgba(245,246,240,.12);
+  font-size:10px;letter-spacing:.08em;color:#FFFFFF;
+  background:rgba(8,12,4,.82);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.16);
   padding:4px 8px;border-radius:6px;
 }
 .tag.car{color:var(--gold);border-color:var(--gold-dim)}
+[data-produto="insta"] .tag.car{color:#FF6B80}  /* o vermelho puro some no escuro da pílula */
 
 .navarrow{
   position:absolute;top:50%;transform:translateY(-50%);
