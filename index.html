@@ -1139,6 +1139,15 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     ]}
   ];
 
+  /* Black Friday 10X. Produto recém-aberto: a remessa já existe para a aba
+     não nascer vazia, e recebe as artes quando elas vierem. */
+  var REMESSAS_B10X = [
+    {id:"r01", nome:"Remessa 01", artes:[]}
+  ];
+
+  var FUNIS_B10X = [];
+
+
   var PRODUTOS = {
     mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
           capa:"arts/produto-mdv.jpg",
@@ -1155,9 +1164,12 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     met: {id:"met", nome:"Meteórico MQV", curto:"Meteórico",
           capa:"arts/produto-met-2.jpg",
           drive:"https://drive.google.com/drive/folders/1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i?usp=share_link",
+          formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
+    b10x: {id:"b10x", nome:"Black Friday 10X", curto:"Black 10X",
+          capa:"arts/produto-b10x.jpg", drive:null,
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
-  var ORDEM_PRODUTOS = ["mdv", "rgv", "mqv", "met"];
+  var ORDEM_PRODUTOS = ["mdv", "rgv", "mqv", "met", "b10x"];
 
   var produto = null;                       // null = tela de escolha
   var REMESSAS = [], VIDEOS = [], FUNIS = [];
@@ -1173,7 +1185,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       mdv: {remessas: REMESSAS_MDV, videos: VIDEOS_MDV,  funis: FUNIS_MDV},
       rgv: {remessas: REMESSAS_RGV, videos: VIDEOS_RGV,  funis: FUNIS_RGV},
       mqv: {remessas: REMESSAS_MQV, videos: VIDEOS_MQV,  funis: FUNIS_MQV},
-      met: {remessas: REMESSAS_MET, videos: VIDEOS_MET,  funis: FUNIS_MET}
+      met: {remessas: REMESSAS_MET, videos: VIDEOS_MET,  funis: FUNIS_MET},
+      b10x:{remessas: REMESSAS_B10X, videos: [],         funis: FUNIS_B10X}
     }[id] || {remessas: [], videos: [], funis: []};
     REMESSAS = acervo.remessas;
     VIDEOS   = acervo.videos;
@@ -1369,6 +1382,11 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   /* A anotação guarda a remessa crua ("r01"), que se repete entre produtos —
      quem diz o produto é a arteKey, que vem prefixada. Sem esse filtro, o
      contador do lote somava anotação de produto alheio. */
+  function pastaDoLote(){
+    var r = remessaAtual() || {};
+    return r.drive || (PRODUTOS[produto] || {}).drive || "";
+  }
+
   function notasDoLote(id){
     var pre = produto + ":";
     return notas.filter(function(n){
@@ -1440,7 +1458,10 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         '<strong>' + esc(remessaAtual().nome) + ' ainda não tem artes</strong>' +
         '<span>Quando as artes chegarem, elas entram aqui do mesmo jeito: versão feed, ' +
         'status e anotações próprios. A aba guarda a aprovação separada das outras remessas.</span>' +
-        '<code>Downloads / demanda campina grande</code>' +
+        /* antes era um caminho fixo do Downloads, que nada dizia em produto
+           novo. Agora aponta a pasta de onde as artes vêm, quando existe. */
+        (pastaDoLote() ? '<a class="btn-drive" href="' + esc(pastaDoLote()) +
+          '" target="_blank" rel="noopener noreferrer">Acessar pasta do Drive</a>' : '') +
       '</div>';
       return;
     }
