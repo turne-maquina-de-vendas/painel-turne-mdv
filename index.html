@@ -254,13 +254,15 @@ button,input,textarea,select{font:inherit;color:inherit}
 
 /* ---------- seções ---------- */
 .secoes{border-bottom:1px solid var(--line);background:var(--ink-2)}
-.secoes-in{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);display:flex;gap:4px}
+.secoes-in{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);display:flex;gap:4px;
+  overflow-x:auto;scrollbar-width:none}
+.secoes-in::-webkit-scrollbar{display:none}
 .sec{
   position:relative;padding:15px 4px 14px;margin-right:26px;
   border:none;background:transparent;cursor:pointer;
   font-family:var(--ui);font-weight:600;
   font-size:11px;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--dim-2);
+  color:var(--dim-2);white-space:nowrap;flex:0 0 auto;
   border-bottom:2px solid transparent;margin-bottom:-1px;
   display:flex;align-items:center;gap:9px;
   transition:color .16s var(--ease);
@@ -518,7 +520,7 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
   font-family:var(--ui);font-weight:700;
   font-size:11px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--dim);cursor:pointer;
-  border:1px solid var(--line);border-radius:999px;
+  border:1px solid var(--line);border-radius:999px;white-space:nowrap;flex:0 0 auto;
   padding:9px 18px;background:transparent;
   transition:color .16s var(--ease),border-color .16s var(--ease),background .16s var(--ease);
 }
@@ -527,14 +529,14 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 /* Links do produto: dashboard de métricas, termo de abertura, o que vier.
    Ficam colados no Home, com o mesmo formato, mas em contorno de acento
    para destoar do botão de navegação. */
-.links-prod{display:inline-flex;align-items:center}
+.links-prod{display:inline-flex;align-items:center;flex:0 0 auto}
 .doc-prod{
   align-self:center;
   display:inline-flex;align-items:center;gap:8px;
   font-family:var(--ui);font-weight:700;
   font-size:11px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--gold);text-decoration:none;
-  border:1px solid var(--gold-dim);border-radius:999px;
+  border:1px solid var(--gold-dim);border-radius:999px;white-space:nowrap;flex:0 0 auto;
   padding:9px 18px;background:transparent;margin-left:14px;
   transition:color .16s var(--ease),border-color .16s var(--ease),background .16s var(--ease);
 }
