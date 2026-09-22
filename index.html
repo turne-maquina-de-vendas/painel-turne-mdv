@@ -267,6 +267,20 @@ button,input,textarea,select{font:inherit;color:inherit}
   display:flex;align-items:center;gap:9px;
   transition:color .16s var(--ease);
 }
+/* Seta de voltar, primeira coisa da barra. O botão Home faz o mesmo, mas
+   fica na ponta direita e some da vista quando a barra rola em tela
+   estreita — aqui a saída está sempre onde o olho procura. */
+.voltar-prod{
+  flex:0 0 auto;align-self:center;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;margin:0 16px 0 0;
+  border:1px solid var(--line);border-radius:999px;
+  background:transparent;color:var(--dim);cursor:pointer;
+  font-size:15px;line-height:1;
+  transition:color .16s var(--ease),border-color .16s var(--ease),background .16s var(--ease);
+}
+.voltar-prod:hover{color:var(--no-acento);background:var(--gold);border-color:var(--gold)}
+
 .sec:hover{color:var(--paper)}
 .sec[aria-selected="true"]{color:var(--paper);border-bottom-color:var(--gold)}
 .sec .qt{
@@ -744,6 +758,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 </main>
 
 <nav class="secoes" role="tablist" aria-label="Seções" id="barraSecoes"><div class="secoes-in" id="secoes">
+  <button class="voltar-prod" id="voltarProduto" type="button"
+          title="Voltar para os produtos" aria-label="Voltar para os produtos">←</button>
   <button class="sec" role="tab" data-s="criativos" aria-selected="true">Criativos em Imagem <span class="qt" id="qtCri">0</span></button>
   <button class="sec" role="tab" data-s="videos" aria-selected="false">Criativos em Vídeo <span class="qt" id="qtVid">0</span></button>
   <button class="sec" role="tab" data-s="paginas" aria-selected="false">Páginas <span class="qt" id="qtPag">0</span></button>
@@ -2095,12 +2111,14 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     window.scrollTo({top:0, behavior:"instant"});
   });
 
-  $("#home").addEventListener("click", function(){
+  function voltarAosProdutos(){
     produto = null;
     lsSet("mv_produto", "");
     renderAll();
     window.scrollTo({top:0, behavior:"instant"});
-  });
+  }
+  $("#home").addEventListener("click", voltarAosProdutos);
+  $("#voltarProduto").addEventListener("click", voltarAosProdutos);
 
   $("#secoes").addEventListener("click", function(e){
     var b = e.target.closest(".sec");
