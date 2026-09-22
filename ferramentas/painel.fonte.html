@@ -64,7 +64,7 @@
 /* Tema do Método RGV, tirado da própria landing page: vermelho, preto e
    branco. O par tipográfico é o mesmo — a página do RGV também usa
    Bricolage Grotesque com Rethink Sans —, então só a paleta troca. */
-[data-produto="rgv"]{
+:root[data-produto="rgv"]{
   --ink:#0D0D0D;
   --ink-2:#080808;
   --surface:#1A1A1A;
@@ -93,7 +93,7 @@
    off-white com tinta preta, e o feed que se aprova aqui também é claro.
    As variáveis da página (--off-white, --preto, --vermelho, --azul-caneta,
    --amarelo, --cinza) viraram os nomes do painel. */
-[data-produto="insta"]{
+:root[data-produto="insta"]{
   color-scheme:light;
   --ink:#F2F1EE;         /* --off-white */
   --ink-2:#EAE8E3;
@@ -133,7 +133,7 @@
    dele assume. As variáveis abaixo são as da própria página (--black,
    --panel, --red, --gray-mid) nos nomes do painel; a tipografia é a mesma
    dos dois lados, Bricolage Grotesque com Rethink Sans. */
-[data-produto=""]{
+:root[data-produto=""]{
   --ink:#0D0D0D;         /* --black */
   --ink-2:#0A0A0A;
   --surface:#1A1A1A;     /* --panel */
@@ -165,7 +165,7 @@
    --panel, --gold, --red...) traduzidas para os nomes do painel. O par
    tipográfico é o mesmo — a LP também carrega Bricolage Grotesque com
    Rethink Sans —, então só a paleta troca. */
-[data-produto="b10x"]{
+:root[data-produto="b10x"]{
   --ink:#0D0D0D;         /* --black  */
   --ink-2:#141414;       /* --panel-2 */
   --surface:#1A1A1A;     /* --panel  */
@@ -194,8 +194,8 @@
   /* o degradê dourado é a assinatura da LP: fica no botão principal */
   --grad-gold:linear-gradient(100deg,#DCA35A 0%,#F6D599 48%,#D9993F 100%);
 }
-[data-produto="b10x"] .home:hover,
-[data-produto="b10x"] .btn-drive:hover{background:var(--grad-gold);border-color:#D9993F}
+:root[data-produto="b10x"] .home:hover,
+:root[data-produto="b10x"] .btn-drive:hover{background:var(--grad-gold);border-color:#D9993F}
 
 *{box-sizing:border-box}
 [hidden]{display:none !important}
@@ -468,7 +468,7 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
   padding:4px 8px;border-radius:6px;
 }
 .tag.car{color:var(--gold);border-color:var(--gold-dim)}
-[data-produto="insta"] .tag.car{color:#FF6B80}  /* o vermelho puro some no escuro da pílula */
+:root[data-produto="insta"] .tag.car{color:#FF6B80}  /* o vermelho puro some no escuro da pílula */
 
 .navarrow{
   position:absolute;top:50%;transform:translateY(-50%);
