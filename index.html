@@ -1271,6 +1271,13 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     {id:"r01", nome:"Remessa 01", artes:[]}
   ];
 
+  /* Instagram do Ricardo. Produto recém-aberto, como o Black nasceu. */
+  var REMESSAS_INSTA = [
+    {id:"r01", nome:"Remessa 01", artes:[]}
+  ];
+
+  var FUNIS_INSTA = [];
+
   var FUNIS_B10X = [
     {nome:"Black Friday 10X", versao:"Landing pages", paginas:[
       {id:"black10x", cidade:"LP Black 10X", data:"—",
@@ -1302,12 +1309,15 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           drive:"https://drive.google.com/drive/folders/1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i?usp=share_link",
           links:[{nome:"Dashboard de métricas", url:"https://meteorico-set-26.lovable.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
+    insta: {id:"insta", nome:"Instagram Ricardo", curto:"Instagram",
+          capa:"arts/produto-insta.jpg", drive:null,
+          formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     b10x: {id:"b10x", nome:"Black Friday 10X", curto:"Black 10X",
           capa:"arts/produto-b10x.jpg", drive:null,
           links:[{nome:"Termo de Abertura", url:"https://black10xtap.netlify.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
-  var ORDEM_PRODUTOS = ["mdv", "rgv", "met", "b10x", "mqv"];  // entregues por último
+  var ORDEM_PRODUTOS = ["mdv", "rgv", "met", "b10x", "insta", "mqv"];  // entregues por último
 
   var produto = null;                       // null = tela de escolha
   var REMESSAS = [], VIDEOS = [], FUNIS = [];
@@ -1324,7 +1334,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       rgv: {remessas: REMESSAS_RGV, videos: VIDEOS_RGV,  funis: FUNIS_RGV},
       mqv: {remessas: REMESSAS_MQV, videos: VIDEOS_MQV,  funis: FUNIS_MQV},
       met: {remessas: REMESSAS_MET, videos: VIDEOS_MET,  funis: FUNIS_MET},
-      b10x:{remessas: REMESSAS_B10X, videos: [],         funis: FUNIS_B10X}
+      b10x:{remessas: REMESSAS_B10X, videos: [],         funis: FUNIS_B10X},
+      insta:{remessas: REMESSAS_INSTA, videos: [],        funis: FUNIS_INSTA}
     }[id] || {remessas: [], videos: [], funis: []};
     REMESSAS = acervo.remessas;
     VIDEOS   = acervo.videos;

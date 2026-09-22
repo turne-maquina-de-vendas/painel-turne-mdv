@@ -201,7 +201,7 @@ print("index.html regenerado em", OUT)
 # referencia. Já quebrou uma vez — atualizar-paginas.py voltou a emitir
 # `var FUNIS` e o clique no produto morria com ReferenceError.
 import re as _re
-_esperados = ["REMESSAS_MDV", "REMESSAS_RGV", "REMESSAS_MQV", "REMESSAS_MET", "REMESSAS_B10X", "FUNIS_MDV", "FUNIS_RGV", "FUNIS_MQV", "FUNIS_MET", "FUNIS_B10X", "VIDEOS_MDV", "VIDEOS_RGV", "VIDEOS_MQV", "VIDEOS_MET", "PRODUTOS"]
+_esperados = ["REMESSAS_MDV", "REMESSAS_RGV", "REMESSAS_MQV", "REMESSAS_MET", "REMESSAS_B10X", "REMESSAS_INSTA", "FUNIS_MDV", "FUNIS_RGV", "FUNIS_MQV", "FUNIS_MET", "FUNIS_B10X", "FUNIS_INSTA", "VIDEOS_MDV", "VIDEOS_RGV", "VIDEOS_MQV", "VIDEOS_MET", "PRODUTOS"]
 _faltando = [n for n in _esperados
              if not _re.search(r"\bvar\s+" + n + r"\b", doc) and (n + " = {") not in doc]
 if _faltando:
