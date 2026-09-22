@@ -88,6 +88,46 @@
   --bad-line:rgba(255,138,102,.36);
 }
 
+/* Tema do Instagram do Ricardo, tirado do brandbook em
+   ricardonunesbrand.netlify.app. É o único claro do painel: o brandbook é
+   off-white com tinta preta, e o feed que se aprova aqui também é claro.
+   As variáveis da página (--off-white, --preto, --vermelho, --azul-caneta,
+   --amarelo, --cinza) viraram os nomes do painel. */
+[data-produto="insta"]{
+  color-scheme:light;
+  --ink:#F2F1EE;         /* --off-white */
+  --ink-2:#EAE8E3;
+  --surface:#FFFFFF;
+  --surface-2:#F7F6F3;
+  --surface-3:#EDEBE6;
+
+  --line:rgba(17,17,17,.15);
+  --line-soft:rgba(17,17,17,.07);
+  --paper:#111111;       /* --preto */
+  --dim:rgba(17,17,17,.62);
+  --dim-2:rgba(17,17,17,.42);
+
+  --gold:#FE0026;        /* --vermelho: o acento do brandbook */
+  --gold-dim:rgba(254,0,38,.30);
+  --sage:#888888;        /* --cinza */
+  --no-acento:#FFFFFF;
+
+  /* o acento já é vermelho e o fundo é claro: os estados precisam de tons
+     que leiam sobre papel e não se confundam com ele */
+  --ok:#15803D;
+  --ok-bg:rgba(21,128,61,.10);
+  --ok-line:rgba(21,128,61,.30);
+  --warn:#A16207;        /* o --amarelo do brandbook, escurecido para texto */
+  --warn-bg:rgba(255,213,79,.28);
+  --warn-line:rgba(161,98,7,.32);
+  --bad:#C2410C;
+  --bad-bg:rgba(194,65,12,.10);
+  --bad-line:rgba(194,65,12,.32);
+  --pub:#1F3A5F;         /* --azul-caneta */
+  --pub-bg:rgba(31,58,95,.10);
+  --pub-line:rgba(31,58,95,.32);
+}
+
 /* Tema da tela inicial, tirado da metodorgv.com.br/v30: preto, branco e
    vermelho. Na home data-produto fica vazio — ao abrir um produto, o tema
    dele assume. As variáveis abaixo são as da própria página (--black,
@@ -740,7 +780,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   <button class="voltar-prod" id="voltarProduto" type="button"
           title="Voltar para os produtos" aria-label="Voltar para os produtos">←</button>
   <button class="sec" role="tab" data-s="criativos" aria-selected="true">Criativos em Imagem <span class="qt" id="qtCri">0</span></button>
-  <button class="sec" role="tab" data-s="videos" aria-selected="false">Criativos em Vídeo <span class="qt" id="qtVid">0</span></button>
+  <button class="sec" role="tab" data-s="videos" aria-selected="false"><span id="rotVid">Criativos em Vídeo</span> <span class="qt" id="qtVid">0</span></button>
   <button class="sec" role="tab" data-s="paginas" aria-selected="false">Páginas <span class="qt" id="qtPag">0</span></button>
   <button class="home" id="home" type="button">⌂ Home</button>
   <span class="links-prod" id="linksProduto"></span>
@@ -1251,8 +1291,24 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   ];
 
   /* Instagram do Ricardo. Produto recém-aberto, como o Black nasceu. */
+  /* No Instagram não há remessa: o que separa é o formato. Cada aba é um
+     formato, e os reels ficam na seção de vídeo. */
   var REMESSAS_INSTA = [
-    {id:"r01", nome:"Remessa 01", artes:[]}
+    {id:"carrossel", nome:"Carrosséis",
+     drive:"https://drive.google.com/drive/folders/1GsGZp5vypoC1A4jCjqwPihMBp5ybar_b?usp=sharing",
+     artes:[
+      {id:"2027",code:"2027",tipo:"CAR",files:["arts/insta_car_2027_c1.jpg","arts/insta_car_2027_c2.jpg","arts/insta_car_2027_c3.jpg","arts/insta_car_2027_c4.jpg","arts/insta_car_2027_c5.jpg","arts/insta_car_2027_c6.jpg","arts/insta_car_2027_c7.jpg","arts/insta_car_2027_c8.jpg","arts/insta_car_2027_c9.jpg"]},
+      {id:"afila",code:"AFila",tipo:"CAR",files:["arts/insta_car_afila_c1.jpg","arts/insta_car_afila_c2.jpg","arts/insta_car_afila_c3.jpg","arts/insta_car_afila_c4.jpg","arts/insta_car_afila_c5.jpg","arts/insta_car_afila_c6.jpg"]},
+      {id:"agronegocio",code:"Agronegócio",tipo:"CAR",files:["arts/insta_car_agronegocio_c1.jpg","arts/insta_car_agronegocio_c2.jpg","arts/insta_car_agronegocio_c3.jpg","arts/insta_car_agronegocio_c4.jpg","arts/insta_car_agronegocio_c5.jpg","arts/insta_car_agronegocio_c6.jpg"]},
+      {id:"caixavazio",code:"CAIXAVAZIO",tipo:"CAR",files:["arts/insta_car_caixavazio_c1.jpg","arts/insta_car_caixavazio_c2.jpg","arts/insta_car_caixavazio_c3.jpg","arts/insta_car_caixavazio_c4.jpg","arts/insta_car_caixavazio_c5.jpg","arts/insta_car_caixavazio_c6.jpg","arts/insta_car_caixavazio_c7.jpg","arts/insta_car_caixavazio_c8.jpg"]},
+      {id:"combustivel",code:"Combustível",tipo:"CAR",files:["arts/insta_car_combustivel_c1.jpg","arts/insta_car_combustivel_c2.jpg","arts/insta_car_combustivel_c3.jpg","arts/insta_car_combustivel_c4.jpg","arts/insta_car_combustivel_c5.jpg","arts/insta_car_combustivel_c6.jpg"]},
+      {id:"espaco",code:"Espaço",tipo:"CAR",files:["arts/insta_car_espaco_c1.jpg","arts/insta_car_espaco_c2.jpg","arts/insta_car_espaco_c3.jpg","arts/insta_car_espaco_c4.jpg","arts/insta_car_espaco_c5.jpg","arts/insta_car_espaco_c6.jpg"]},
+      {id:"habibs",code:"Habibs",tipo:"CAR",files:["arts/insta_car_habibs_c1.jpg","arts/insta_car_habibs_c2.jpg","arts/insta_car_habibs_c3.jpg","arts/insta_car_habibs_c4.jpg","arts/insta_car_habibs_c5.jpg","arts/insta_car_habibs_c6.jpg"]},
+      {id:"ia",code:"IA",tipo:"CAR",files:["arts/insta_car_ia_c1.jpg","arts/insta_car_ia_c2.jpg","arts/insta_car_ia_c3.jpg","arts/insta_car_ia_c4.jpg","arts/insta_car_ia_c5.jpg","arts/insta_car_ia_c6.jpg","arts/insta_car_ia_c7.jpg","arts/insta_car_ia_c8.jpg"]},
+      {id:"marabraz",code:"Marabraz",tipo:"CAR",files:["arts/insta_car_marabraz_c1.jpg","arts/insta_car_marabraz_c2.jpg","arts/insta_car_marabraz_c3.jpg","arts/insta_car_marabraz_c4.jpg","arts/insta_car_marabraz_c5.jpg","arts/insta_car_marabraz_c6.jpg"]},
+      {id:"socio",code:"Sócio",tipo:"CAR",files:["arts/insta_car_socio_c1.jpg","arts/insta_car_socio_c2.jpg","arts/insta_car_socio_c3.jpg","arts/insta_car_socio_c4.jpg","arts/insta_car_socio_c5.jpg","arts/insta_car_socio_c6.jpg","arts/insta_car_socio_c7.jpg","arts/insta_car_socio_c8.jpg"]}
+    ]},
+    {id:"estatico", nome:"Estáticos", artes:[]}
   ];
 
   var FUNIS_INSTA = [];
@@ -1290,6 +1346,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     insta: {id:"insta", nome:"Instagram Ricardo", curto:"Instagram",
           capa:"arts/produto-insta.jpg", drive:null,
+          rotuloVideo:"Reels",
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     b10x: {id:"b10x", nome:"Black Friday 10X", curto:"Black 10X",
           capa:"arts/produto-b10x.jpg", drive:null,
@@ -1703,7 +1760,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         return String(n.arteKey || "").indexOf(produto + ":vd__") === 0;
       }).length;
 
-      $("#titulo").innerHTML = '<span>Criativos em Vídeo</span>';
+      $("#titulo").innerHTML = '<span>' + esc(rotuloVideo()) + '</span>';
       $("#subline").innerHTML =
         '<span><b>' + todos.length + '</b> vídeos</span><span class="dot">/</span>' +
         '<span><b>' + VIDEOS.length + '</b> tipos</span><span class="dot">/</span>' +
@@ -1958,6 +2015,11 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 
   /* Formato dos vídeos do produto aberto. A Turnê e a MQV Online mandam
      feed (4:5); o RGV, stories (9:16). */
+  /* No Instagram o vídeo se chama reels; nos outros, criativo em vídeo. */
+  function rotuloVideo(){
+    return (PRODUTOS[produto] || {}).rotuloVideo || "Criativos em Vídeo";
+  }
+
   function fv(){
     return (PRODUTOS[produto] || {}).formatoVideo
         || {nome:"Stories", proporcao:"9 : 16", css:"9/16"};
@@ -2075,6 +2137,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     if(!escolhendo){
       (document.querySelector(".tabs") || {}).hidden = escolhendo;
       $("#nomeProduto").textContent = PRODUTOS[produto].nome;
+      $("#rotVid").textContent = rotuloVideo();
       /* cada produto traz os links que tem; quem não tem nenhum fica sem */
       $("#linksProduto").innerHTML = (PRODUTOS[produto].links || []).map(function(l){
         return '<a class="doc-prod" href="'+esc(l.url)+'" target="_blank" ' +
