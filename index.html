@@ -230,6 +230,22 @@ button,input,textarea,select{font:inherit;color:inherit}
 }
 .produto:hover .faixa .ir{color:var(--gold)}
 
+/* Produto já entregue: o evento passou. A capa perde força para não
+   competir com o que ainda está em aprovação, mas o cartão continua
+   clicável — o histórico de aprovações segue lá dentro. */
+.produto.entregue img{opacity:.38;filter:saturate(.75)}
+.produto.entregue:hover img{opacity:.6}
+.produto.entregue .faixa b{color:var(--dim)}
+.selo-entregue{
+  position:absolute;top:12px;left:12px;
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--ui);font-weight:700;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);background:rgba(0,0,0,.62);
+  border:1px solid var(--line);border-radius:999px;
+  padding:6px 11px;backdrop-filter:blur(4px);
+}
+
 .voltar{
   border:none;background:transparent;cursor:pointer;padding:0;
   display:inline-flex;align-items:center;gap:7px;
@@ -1254,7 +1270,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     rgv: {id:"rgv", nome:"Método RGV 2.0", curto:"Método RGV",
           capa:"arts/produto-rgv.jpg", drive:null,
           formatoVideo:{nome:"Stories", proporcao:"9 : 16", css:"9/16"}},
-    mqv: {id:"mqv", nome:"Máquina de Vendas Online", curto:"MQV Online",
+    /* evento de 21/09: já aconteceu, o painel fica como histórico */
+    mqv: {id:"mqv", nome:"Máquina de Vendas Online", curto:"MQV Online", entregue:true,
           capa:"arts/produto-mqv-2.jpg",
           drive:"https://drive.google.com/drive/folders/1c-FI-jTph2zsrGMFg20q1-QxcVeSSlJD?usp=share_link",
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
@@ -1267,7 +1284,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           doc:{nome:"Termo de Abertura", url:"https://black10xtap.netlify.app"},
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
-  var ORDEM_PRODUTOS = ["mdv", "rgv", "mqv", "met", "b10x"];
+  var ORDEM_PRODUTOS = ["mdv", "rgv", "met", "b10x", "mqv"];  // entregues por último
 
   var produto = null;                       // null = tela de escolha
   var REMESSAS = [], VIDEOS = [], FUNIS = [];
@@ -2023,8 +2040,9 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   function renderEscolha(){
     $("#produtos").innerHTML = ORDEM_PRODUTOS.map(function(id){
       var p = PRODUTOS[id];
-      return '<button class="produto" data-produto="'+id+'">' +
+      return '<button class="produto'+(p.entregue?" entregue":"")+'" data-produto="'+id+'">' +
         '<img src="'+p.capa+'" alt="'+esc(p.nome)+'">' +
+        (p.entregue ? '<span class="selo-entregue">🔒 Entregue</span>' : '') +
         '<span class="faixa"><b>'+esc(p.nome)+'</b><span class="ir">abrir →</span></span>' +
       '</button>';
     }).join("");
