@@ -67,6 +67,11 @@ MET = [
      "https://turnemaquinadevendas.com.br/met-cuiaba-v4/"),
 ]
 
+# Landing pages do Black Friday 10X.
+B10X = [
+    ("black10x", "LP Black 10X", "https://lp.grupor1.com/black10x/"),
+]
+
 
 def normal(t):
     """sem acento, sem pontuacao, minusculo — para casar cidade com slug"""
@@ -175,6 +180,7 @@ lista = [{"id": p["id"], "url": p["url"], "cidade": p["cidade"], "versao": g["ve
 lista += [{"id": i, "url": u, "cidade": c, "versao": "RGV"} for i, c, u in RGV]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "MQV"} for i, c, u in MQV]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "MET"} for i, c, u in MET]
+lista += [{"id": i, "url": u, "cidade": c, "versao": "B10X"} for i, c, u in B10X]
 io.open(os.path.join(FUNCOES, "lista-paginas.js"), "w", encoding="utf-8").write(
     "// Gerado por ferramentas/atualizar-paginas.py a partir da planilha MDV - Outubro 2026.\n"
     "// Nao edite a mao: rode o script de novo.\n"
@@ -184,5 +190,5 @@ print(f"{sum(len(g['paginas']) for g in dados)} paginas · {len(dados)} funis")
 for g in dados:
     print(f"  {g['versao']}: {len(g['paginas'])}")
 print(f"ocultos do painel: {', '.join(OCULTAR)}")
-print(f"{len(lista)} páginas na medição automática (inclui {len(RGV)} do RGV, {len(MQV)} da MQV Online e {len(MET)} do Meteorico)")
+print(f"{len(lista)} páginas na medição automática (inclui {len(RGV)} do RGV, {len(MQV)} da MQV Online e {len(MET)} do Meteorico, {len(B10X)} do Black 10X)")
 print("\nagora rode: python3 ferramentas/gerar-index.py")

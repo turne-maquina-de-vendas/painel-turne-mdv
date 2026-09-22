@@ -276,5 +276,11 @@ export const PAGINAS = [
     "url": "https://turnemaquinadevendas.com.br/met-cuiaba-v4/",
     "cidade": "Cuiabá V4",
     "versao": "MET"
+  },
+  {
+    "id": "black10x",
+    "url": "https://lp.grupor1.com/black10x/",
+    "cidade": "LP Black 10X",
+    "versao": "B10X"
   }
 ];
