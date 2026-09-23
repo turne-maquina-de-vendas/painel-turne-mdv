@@ -526,6 +526,24 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 a.postado:hover{color:var(--gold)}
 .postado.nao{opacity:.55}
 
+/* Aviso de fila curta: quando sobram poucas peças por postar, a produção
+   precisa saber antes de acabar, não depois. */
+.alerta-fila{
+  display:flex;align-items:center;gap:12px;
+  margin:0 0 18px;padding:13px 18px;
+  border:1px solid var(--warn-line);border-radius:var(--r);
+  background:var(--warn-bg);
+}
+.alerta-fila b{
+  font-family:var(--ui);font-weight:700;
+  font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--warn);
+}
+.alerta-fila span{font-size:13px;color:var(--dim)}
+.alerta-fila .sino{font-size:15px;line-height:1}
+@media (max-width:640px){
+  .alerta-fila{flex-direction:column;align-items:flex-start;gap:6px}
+}
+
 .acoes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:12px 11px 0}
 .ab{
   padding:9px 1px;border-radius:var(--r-sm);cursor:pointer;
@@ -835,6 +853,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 <nav class="tabs" role="tablist" aria-label="Remessas"><div class="tabs-in" id="tabs"></div></nav>
 
 <main class="board" id="viewCriativos">
+  <div id="alertaFila"></div>
   <div class="filters" id="filters">
     <button class="chip" data-f="todas" aria-pressed="true">Todas</button>
     <button class="chip" data-f="pendente" aria-pressed="false">Pendentes</button>
@@ -1588,6 +1607,35 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   }
   function artesDoLote(){ return remessaAtual().artes; }
 
+  /* Quantas peças do lote ainda esperam ir ao ar. Reprovada não vai, e
+     publicada já foi: nenhuma das duas conta na fila. */
+  function filaPorPostar(){
+    return artesDoLote().filter(function(a){
+      var e = st(a.key);
+      return e !== "publicado" && e !== "reprovado";
+    }).length;
+  }
+
+  var LIMITE_FILA = 4;   // com isso ou menos, a produção precisa ser avisada
+
+  function renderAlertaFila(){
+    var caixa = $("#alertaFila");
+    if(!caixa) return;
+    var r = remessaAtual() || {};
+    if(!(PRODUTOS[produto] || {}).rastreiaPostagem || !artesDoLote().length){
+      caixa.innerHTML = ""; return;
+    }
+    var n = filaPorPostar();
+    if(n > LIMITE_FILA){ caixa.innerHTML = ""; return; }
+    caixa.innerHTML =
+      '<div class="alerta-fila">' +
+        '<span class="sino">🔔</span>' +
+        '<b>Produzir mais ' + esc(r.nome) + '</b>' +
+        '<span>' + (n ? "só " + n + (n === 1 ? " peça" : " peças") + " por postar"
+                      : "nenhuma peça por postar") + ' nesta aba.</span>' +
+      '</div>';
+  }
+
   function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
   function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
 
@@ -2200,7 +2248,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     if(!produto){ renderEscolha(); return; }
     renderSecoes();
     renderCabecalho();
-    if(secao === "criativos"){ renderTabs(); renderGrid(); }
+    if(secao === "criativos"){ renderTabs(); renderAlertaFila(); renderGrid(); }
     else if(secao === "videos"){ renderVideos(); }
     else{ renderPaginas(); }
   }
