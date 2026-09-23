@@ -516,6 +516,16 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 .pill.reprovado{color:var(--bad);border-color:var(--bad-line);background:var(--bad-bg)}
 .pill.publicado{color:var(--pub);border-color:var(--pub-line);background:var(--pub-bg)}
 
+/* Data em que a peça foi ao ar, colhida do próprio Instagram. Vira link
+   para o post; sem data, fica só a marca de que ainda não foi. */
+.postado{
+  font-family:var(--ui);font-weight:600;
+  font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim-2);text-decoration:none;margin-left:8px;white-space:nowrap;
+}
+a.postado:hover{color:var(--gold)}
+.postado.nao{opacity:.55}
+
 .acoes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:12px 11px 0}
 .ab{
   padding:9px 1px;border-radius:var(--r-sm);cursor:pointer;
@@ -1324,15 +1334,15 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     {id:"carrossel", nome:"Carrosséis",
      drive:"https://drive.google.com/drive/folders/1GsGZp5vypoC1A4jCjqwPihMBp5ybar_b?usp=sharing",
      artes:[
-      {id:"2027",code:"2027",tipo:"CAR",files:["arts/insta_car_2027_c1.jpg","arts/insta_car_2027_c2.jpg","arts/insta_car_2027_c3.jpg","arts/insta_car_2027_c4.jpg","arts/insta_car_2027_c5.jpg","arts/insta_car_2027_c6.jpg","arts/insta_car_2027_c7.jpg","arts/insta_car_2027_c8.jpg","arts/insta_car_2027_c9.jpg"]},
-      {id:"afila",code:"AFila",tipo:"CAR",files:["arts/insta_car_afila_c1.jpg","arts/insta_car_afila_c2.jpg","arts/insta_car_afila_c3.jpg","arts/insta_car_afila_c4.jpg","arts/insta_car_afila_c5.jpg","arts/insta_car_afila_c6.jpg"]},
-      {id:"agronegocio",code:"Agronegócio",tipo:"CAR",files:["arts/insta_car_agronegocio_c1.jpg","arts/insta_car_agronegocio_c2.jpg","arts/insta_car_agronegocio_c3.jpg","arts/insta_car_agronegocio_c4.jpg","arts/insta_car_agronegocio_c5.jpg","arts/insta_car_agronegocio_c6.jpg"]},
+      {id:"2027",code:"2027",tipo:"CAR",files:["arts/insta_car_2027_c1.jpg","arts/insta_car_2027_c2.jpg","arts/insta_car_2027_c3.jpg","arts/insta_car_2027_c4.jpg","arts/insta_car_2027_c5.jpg","arts/insta_car_2027_c6.jpg","arts/insta_car_2027_c7.jpg","arts/insta_car_2027_c8.jpg","arts/insta_car_2027_c9.jpg"],postado:{em:"2026-09-23T00:03:01Z",url:"https://www.instagram.com/p/Ddm-kJ-Da-Z/"}},
+      {id:"afila",code:"AFila",tipo:"CAR",files:["arts/insta_car_afila_c1.jpg","arts/insta_car_afila_c2.jpg","arts/insta_car_afila_c3.jpg","arts/insta_car_afila_c4.jpg","arts/insta_car_afila_c5.jpg","arts/insta_car_afila_c6.jpg"],postado:{em:"2026-09-15T23:03:17Z",url:"https://www.instagram.com/p/DdU2KuOjZfs/"}},
+      {id:"agronegocio",code:"Agronegócio",tipo:"CAR",files:["arts/insta_car_agronegocio_c1.jpg","arts/insta_car_agronegocio_c2.jpg","arts/insta_car_agronegocio_c3.jpg","arts/insta_car_agronegocio_c4.jpg","arts/insta_car_agronegocio_c5.jpg","arts/insta_car_agronegocio_c6.jpg"],postado:{em:"2026-09-20T00:04:13Z",url:"https://www.instagram.com/p/DdfQUWdDf-n/"}},
       {id:"caixavazio",code:"CAIXAVAZIO",tipo:"CAR",files:["arts/insta_car_caixavazio_c1.jpg","arts/insta_car_caixavazio_c2.jpg","arts/insta_car_caixavazio_c3.jpg","arts/insta_car_caixavazio_c4.jpg","arts/insta_car_caixavazio_c5.jpg","arts/insta_car_caixavazio_c6.jpg","arts/insta_car_caixavazio_c7.jpg","arts/insta_car_caixavazio_c8.jpg"]},
       {id:"combustivel",code:"Combustível",tipo:"CAR",files:["arts/insta_car_combustivel_c1.jpg","arts/insta_car_combustivel_c2.jpg","arts/insta_car_combustivel_c3.jpg","arts/insta_car_combustivel_c4.jpg","arts/insta_car_combustivel_c5.jpg","arts/insta_car_combustivel_c6.jpg"]},
-      {id:"espaco",code:"Espaço",tipo:"CAR",files:["arts/insta_car_espaco_c1.jpg","arts/insta_car_espaco_c2.jpg","arts/insta_car_espaco_c3.jpg","arts/insta_car_espaco_c4.jpg","arts/insta_car_espaco_c5.jpg","arts/insta_car_espaco_c6.jpg"]},
-      {id:"habibs",code:"Habibs",tipo:"CAR",files:["arts/insta_car_habibs_c1.jpg","arts/insta_car_habibs_c2.jpg","arts/insta_car_habibs_c3.jpg","arts/insta_car_habibs_c4.jpg","arts/insta_car_habibs_c5.jpg","arts/insta_car_habibs_c6.jpg"]},
+      {id:"espaco",code:"Espaço",tipo:"CAR",files:["arts/insta_car_espaco_c1.jpg","arts/insta_car_espaco_c2.jpg","arts/insta_car_espaco_c3.jpg","arts/insta_car_espaco_c4.jpg","arts/insta_car_espaco_c5.jpg","arts/insta_car_espaco_c6.jpg"],postado:{em:"2026-09-20T21:19:09Z",url:"https://www.instagram.com/p/DdhiOR4G2Vb/"}},
+      {id:"habibs",code:"Habibs",tipo:"CAR",files:["arts/insta_car_habibs_c1.jpg","arts/insta_car_habibs_c2.jpg","arts/insta_car_habibs_c3.jpg","arts/insta_car_habibs_c4.jpg","arts/insta_car_habibs_c5.jpg","arts/insta_car_habibs_c6.jpg"],postado:{em:"2026-09-16T21:00:51Z",url:"https://www.instagram.com/p/DdXM8vHGwba/"}},
       {id:"ia",code:"IA",tipo:"CAR",files:["arts/insta_car_ia_c1.jpg","arts/insta_car_ia_c2.jpg","arts/insta_car_ia_c3.jpg","arts/insta_car_ia_c4.jpg","arts/insta_car_ia_c5.jpg","arts/insta_car_ia_c6.jpg","arts/insta_car_ia_c7.jpg","arts/insta_car_ia_c8.jpg"]},
-      {id:"marabraz",code:"Marabraz",tipo:"CAR",files:["arts/insta_car_marabraz_c1.jpg","arts/insta_car_marabraz_c2.jpg","arts/insta_car_marabraz_c3.jpg","arts/insta_car_marabraz_c4.jpg","arts/insta_car_marabraz_c5.jpg","arts/insta_car_marabraz_c6.jpg"]},
+      {id:"marabraz",code:"Marabraz",tipo:"CAR",files:["arts/insta_car_marabraz_c1.jpg","arts/insta_car_marabraz_c2.jpg","arts/insta_car_marabraz_c3.jpg","arts/insta_car_marabraz_c4.jpg","arts/insta_car_marabraz_c5.jpg","arts/insta_car_marabraz_c6.jpg"],postado:{em:"2026-09-18T13:29:55Z",url:"https://www.instagram.com/p/Ddbi7xbEego/"}},
       {id:"socio",code:"Sócio",tipo:"CAR",files:["arts/insta_car_socio_c1.jpg","arts/insta_car_socio_c2.jpg","arts/insta_car_socio_c3.jpg","arts/insta_car_socio_c4.jpg","arts/insta_car_socio_c5.jpg","arts/insta_car_socio_c6.jpg","arts/insta_car_socio_c7.jpg","arts/insta_car_socio_c8.jpg"]}
     ]},
     {id:"estatico", nome:"Estáticos", artes:[]}
@@ -1373,7 +1383,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     insta: {id:"insta", nome:"Instagram Ricardo", curto:"Instagram",
           capa:"arts/produto-insta-2.jpg", drive:null,
-          rotuloVideo:"Reels",
+          rotuloVideo:"Reels", rastreiaPostagem:true,
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     b10x: {id:"b10x", nome:"Black Friday 10X", curto:"Black 10X",
           capa:"arts/produto-b10x.jpg", drive:null,
@@ -1599,6 +1609,20 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     return r.drive || (PRODUTOS[produto] || {}).drive || "";
   }
 
+  /* "postado em" na barra do cartão. A data vem do Instagram, então leva
+     para o post; quando a peça ainda não foi ao ar, diz isso. */
+  function selo(a){
+    /* só onde a postagem é acompanhada: nos outros produtos a arte vira
+       anúncio, não post, e "não postado" não quer dizer nada */
+    if(!a.postado) return (PRODUTOS[produto] || {}).rastreiaPostagem
+      ? '<span class="postado nao">· não postado</span>' : "";
+    var d = new Date(a.postado.em);
+    var dia = d.toLocaleDateString("pt-BR", {day:"2-digit", month:"2-digit",
+                                             timeZone:"America/Sao_Paulo"});
+    return '<a class="postado" href="'+esc(a.postado.url)+'" target="_blank" ' +
+           'rel="noopener noreferrer" title="Ver no Instagram">· postado '+dia+'</a>';
+  }
+
   function notasDoLote(id){
     var pre = produto + ":";
     return notas.filter(function(n){
@@ -1710,7 +1734,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         '</div>' +
 
         '<div class="barra">' +
-          '<span class="code">'+(car?a.files.length+" cards · feed":"feed")+'</span>' +
+          '<span class="code">'+(car?a.files.length+" cards · feed":"feed")+selo(a)+'</span>' +
           '<span class="pill '+(s!=="pendente"?s:"")+'"><i></i>'+LABEL[s]+'</span>' +
         '</div>' +
 
