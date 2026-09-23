@@ -1612,10 +1612,9 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   /* "postado em" na barra do cartão. A data vem do Instagram, então leva
      para o post; quando a peça ainda não foi ao ar, diz isso. */
   function selo(a){
-    /* só onde a postagem é acompanhada: nos outros produtos a arte vira
-       anúncio, não post, e "não postado" não quer dizer nada */
-    if(!a.postado) return (PRODUTOS[produto] || {}).rastreiaPostagem
-      ? '<span class="postado nao">· não postado</span>' : "";
+    /* sem data não quer dizer que não foi ao ar: quer dizer que eu não
+       achei o post. Então a barra não afirma nada — fica só sem o selo. */
+    if(!a.postado) return "";
     var d = new Date(a.postado.em);
     var dia = d.toLocaleDateString("pt-BR", {day:"2-digit", month:"2-digit",
                                              timeZone:"America/Sao_Paulo"});
