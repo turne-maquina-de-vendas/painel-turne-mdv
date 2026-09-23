@@ -1388,6 +1388,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     /* as imagens do RGV ainda não têm pasta: o botão não aparece */
     rgv: {id:"rgv", nome:"Método RGV 2.0", curto:"Método RGV",
           capa:"arts/produto-rgv.jpg", drive:null,
+          driveVideos:"https://drive.google.com/drive/folders/1mhwJd0IgSt0hESPFP-cOIbVBdGZgElGy?usp=sharing",
           links:[{nome:"Dashboard de métricas", url:"https://rgv-mkt.equipe.grupor1.com"}],
           formatoVideo:{nome:"Stories", proporcao:"9 : 16", css:"9/16"}},
     /* evento de 21/09: já aconteceu, o painel fica como histórico */
@@ -1825,17 +1826,21 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   function renderCabecalho(){
     var live = '<span class="live" id="live"><span class="bulb"></span><span id="liveTxt"></span></span>';
 
+    function botaoDrive(url){
+      return url
+        ? '<a class="btn-drive" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' +
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.2 3h7.6l5.2 9-3.8 6.6H7.4L3.6 12z"/></svg>' +
+          'Acessar pasta do Drive</a>'
+        : '';
+    }
+
     if(secao === "criativos"){
       var lista = artesDoLote();
       var r = remessaAtual();
       $("#titulo").innerHTML =
         '<span>Criativos em Imagem</span><span class="sep">—</span>' +
         '<span class="lote">' + esc(r.nome) + '</span>' +
-        (r.drive || PRODUTOS[produto].drive
-          ? '<a class="btn-drive" href="' + esc(r.drive || PRODUTOS[produto].drive) + '" target="_blank" rel="noopener noreferrer">' +
-            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.2 3h7.6l5.2 9-3.8 6.6H7.4L3.6 12z"/></svg>' +
-            'Acessar pasta do Drive</a>'
-          : '');
+        botaoDrive(r.drive || PRODUTOS[produto].drive);
       $("#subline").innerHTML =
         '<span><b>' + lista.length + '</b> artes</span><span class="dot">/</span>' +
         '<span>versão <b>Feed</b> · 1080 × 1350</span><span class="dot">/</span>' + live;
@@ -1858,7 +1863,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         return String(n.arteKey || "").indexOf(produto + ":vd__") === 0;
       }).length;
 
-      $("#titulo").innerHTML = '<span>' + esc(rotuloVideo()) + '</span>';
+      $("#titulo").innerHTML = '<span>' + esc(rotuloVideo()) + '</span>' +
+        botaoDrive((PRODUTOS[produto] || {}).driveVideos);
       $("#subline").innerHTML =
         '<span><b>' + todos.length + '</b> vídeos</span><span class="dot">/</span>' +
         '<span><b>' + VIDEOS.length + '</b> tipos</span><span class="dot">/</span>' +
