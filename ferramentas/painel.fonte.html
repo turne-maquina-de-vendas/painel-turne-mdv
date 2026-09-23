@@ -259,6 +259,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 .planilhas{
   display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;
 }
+.planilhas.topo{margin:0 0 24px}
 .btn-planilha{
   display:inline-flex;align-items:center;gap:9px;
   font-family:var(--ui);font-weight:700;
@@ -823,8 +824,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   <div class="escolha-in">
     <span class="eyebrow">Painel de aprovação</span>
     <h1 class="escolha-tit">Escolha o produto</h1>
-    <div class="produtos" id="produtos"></div>
-    <div class="planilhas">
+    <div class="planilhas topo">
       <a class="btn-planilha" target="_blank" rel="noopener noreferrer"
          href="https://docs.google.com/spreadsheets/d/1bPMJRKLmnAuUEJ41YeOOXT4_1MHXRZiSPsfgzLtwVOw/edit?usp=sharing">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h9l5 5v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm8 1.5V9h4.5L13 4.5zM7.5 12h9v1.6h-9V12zm0 3.2h9v1.6h-9v-1.6z"/></svg>Acessar planilha de criativos</a>
@@ -832,6 +832,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
          href="https://docs.google.com/spreadsheets/d/1IisavtxiR2zbolDmhcivWmMXx3zVuVGNB6TO-S8DN3g/edit?usp=sharing">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h9l5 5v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm8 1.5V9h4.5L13 4.5zM7.5 12h9v1.6h-9V12zm0 3.2h9v1.6h-9v-1.6z"/></svg>Acessar planilha de LPs</a>
     </div>
+    <div class="produtos" id="produtos"></div>
   </div>
 </main>
 
