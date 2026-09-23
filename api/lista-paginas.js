@@ -280,7 +280,19 @@ export const PAGINAS = [
   {
     "id": "black10x",
     "url": "https://lp.grupor1.com/black10x/",
-    "cidade": "LP Black 10X",
+    "cidade": "V1",
+    "versao": "B10X"
+  },
+  {
+    "id": "black10x-v2",
+    "url": "https://lp.grupor1.com/black10x-v2/",
+    "cidade": "V2",
+    "versao": "B10X"
+  },
+  {
+    "id": "black10x-v3",
+    "url": "https://lp.grupor1.com/black10x-v3/",
+    "cidade": "V3",
     "versao": "B10X"
   }
 ];

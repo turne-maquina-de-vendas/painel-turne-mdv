@@ -69,7 +69,9 @@ MET = [
 
 # Landing pages do Black Friday 10X.
 B10X = [
-    ("black10x", "LP Black 10X", "https://lp.grupor1.com/black10x/"),
+    ("black10x",    "V1", "https://lp.grupor1.com/black10x/"),
+    ("black10x-v2", "V2", "https://lp.grupor1.com/black10x-v2/"),
+    ("black10x-v3", "V3", "https://lp.grupor1.com/black10x-v3/"),
 ]
 
 
