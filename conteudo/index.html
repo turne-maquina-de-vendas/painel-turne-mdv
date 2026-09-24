@@ -1257,8 +1257,10 @@ tr.ouro td:first-child{box-shadow:inset 3px 0 0 var(--ouro)}
     {id:"1f3wtInXkRhL6u7vt_9JG-RtHaixuKOmj", num:"06", nome:"Proibido Perder Venda",
      termos:["vend","comercial","negociaç","negociac"]},
     {id:"1EkzZNzuDLFnsLx3xVZAgP21E2fhEXKSw", num:"07", nome:"Depoimentos",
+     caminhos:["DEPOIMENTOS 🥇🥇🥇"],
      termos:["depoiment","caso de sucesso","história de","historia de"]},
     {id:"1wdwYVhyrGPcocAtd35SEyOPImP2vf6bz", num:"08", nome:"Palestrantes",
+     caminhos:["[FD] PALESTRAS"],
      termos:["palestr","evento","congresso"]},
     {id:"1CXJy-bhZipEaUdhx_oVP7yk_886MZFFf", num:"09", nome:"De Frente com Ricardo",
      termos:["de frente","entrevist","bate-papo","bate papo"]},
@@ -1992,8 +1994,19 @@ tr.ouro td:first-child{box-shadow:inset 3px 0 0 var(--ouro)}
     opts($("f_status"),STATUS); opts($("f_nota"),NOTAS); opts($("f_prod"),[""].concat(PRODUTOS));
     montaRedes();
     var dt=$("l_tema"); TEMAS.forEach(function(v){ var o=document.createElement("option"); o.value=v; dt.appendChild(o); });
-    fetch("acervo.json?v=2",{cache:"force-cache"}).then(function(r){ return r.json(); })
+    /* o acervo vem do banco, que o Apps Script mantém em dia; o arquivo
+       estático fica de rede de segurança se a API estiver fora */
+    function doArquivo(){
+      return fetch("acervo.json?v=3",{cache:"force-cache"}).then(function(r){ return r.json(); });
+    }
+    fetch("/api/acervo")
+      .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      /* lista vazia conta como falha: o banco pode estar recém-criado e o
+         arquivo estático tem o acervo inteiro */
+      .then(function(j){ return (Array.isArray(j) && j.length) ? j : doArquivo(); })
+      .catch(doArquivo)
       .then(function(j){
+        if(!Array.isArray(j)) throw new Error("acervo inválido");
         acervo=j; prontoDados=true;
         var c={}; acervo.forEach(function(a){ var n=nivel2(a.p); if(n) c[n]=(c[n]||0)+1; });
         var sel=$("acPasta");
