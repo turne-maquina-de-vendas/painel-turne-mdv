@@ -28,6 +28,10 @@
     {
       "path": "/api/medir?parte=7",
       "schedule": "48 5,17 * * *"
+    },
+    {
+      "path": "/api/videos?varrer=1",
+      "schedule": "5 * * * *"
     }
   ],
   "headers": [

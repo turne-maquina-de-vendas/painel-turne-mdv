@@ -1482,15 +1482,37 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   /* prefixo do produto em toda chave gravada */
   function px(chave){ return produto + ":" + chave; }
 
+  /* O que o Drive tem agora, varrido pelo cron e guardado no banco. Chega
+     depois do primeiro desenho; enquanto não chega, valem as listas do HTML.
+     Assim um vídeo novo aparece sem ninguém rodar script nem publicar. */
+  var ACERVO = {};
+
+  function videosDoProduto(id){
+    var doDrive = (ACERVO[id] || {}).grupos;
+    if(doDrive && doDrive.length) return doDrive;
+    return {mdv:VIDEOS_MDV, rgv:VIDEOS_RGV, mqv:VIDEOS_MQV, met:VIDEOS_MET}[id] || [];
+  }
+
+  function buscarAcervo(){
+    return fetch("/api/videos", {cache:"no-store"})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(a){
+        if(!a) return;
+        ACERVO = a;
+        if(produto){ VIDEOS = videosDoProduto(produto); indexar(); recompor(); }
+      })
+      .catch(function(){ /* sem rede: segue com o que está no HTML */ });
+  }
+
   function carregarProduto(id){
     produto = id;
     /* Cada produto traz o que já existe dele — os três hoje têm imagens,
        vídeos e páginas. */
     var acervo = {
-      mdv: {remessas: REMESSAS_MDV, videos: VIDEOS_MDV,  funis: FUNIS_MDV},
-      rgv: {remessas: REMESSAS_RGV, videos: VIDEOS_RGV,  funis: FUNIS_RGV},
-      mqv: {remessas: REMESSAS_MQV, videos: VIDEOS_MQV,  funis: FUNIS_MQV},
-      met: {remessas: REMESSAS_MET, videos: VIDEOS_MET,  funis: FUNIS_MET},
+      mdv: {remessas: REMESSAS_MDV, videos: videosDoProduto("mdv"), funis: FUNIS_MDV},
+      rgv: {remessas: REMESSAS_RGV, videos: videosDoProduto("rgv"), funis: FUNIS_RGV},
+      mqv: {remessas: REMESSAS_MQV, videos: videosDoProduto("mqv"), funis: FUNIS_MQV},
+      met: {remessas: REMESSAS_MET, videos: videosDoProduto("met"), funis: FUNIS_MET},
       b10x:{remessas: REMESSAS_B10X, videos: [],         funis: FUNIS_B10X},
       insta:{remessas: REMESSAS_INSTA, videos: [],        funis: FUNIS_INSTA}
     }[id] || {remessas: [], videos: [], funis: []};

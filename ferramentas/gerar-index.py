@@ -153,6 +153,8 @@ novo = """  // ---------- sincronismo com o servidor ----------
   recompor();
   marcarLive(false, "conectando");
   buscar();
+  buscarAcervo();                       // vídeos que o Drive tem agora
+  setInterval(buscarAcervo, 10 * 60000);
 
   setInterval(function(){ if(!document.hidden) buscar(); }, 4000);
   document.addEventListener("visibilitychange", function(){ if(!document.hidden) buscar(); });
