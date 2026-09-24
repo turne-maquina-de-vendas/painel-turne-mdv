@@ -71,6 +71,47 @@ await sql`create table if not exists execucoes (
   quando timestamptz not null default now()
 )`;
 
+/* ---- Central de Conteúdo ---------------------------------------------
+   Acervo decupado e fila de edição. Uma linha por trecho, pelo mesmo
+   motivo das anotações: dois mineradores marcando ao mesmo tempo não
+   podem se sobrescrever. */
+
+await sql`create table if not exists conteudo_videos (
+  id        text primary key,
+  link      text not null,
+  nome      text not null,
+  tema      text,
+  duracao   text,
+  obs       text,
+  criado_em timestamptz not null default now()
+)`;
+
+await sql`create table if not exists conteudo_cortes (
+  id            text primary key,
+  bruto_id      text not null,
+  bruto_nome    text,
+  bruto_link    text,
+  tc_in         text,
+  tc_out        text,
+  duracao       integer,
+  headline      text,
+  minutado_por  text,
+  editoria      text,
+  produto       text,
+  obs           text,
+  responsavel   text,
+  rede          text,
+  status        text,
+  link_editado  text,
+  nota          text,
+  desempenho    text,
+  data_post     text,
+  criado_em     timestamptz not null default now(),
+  atualizado_em timestamptz not null default now()
+)`;
+await sql`create index if not exists conteudo_cortes_bruto  on conteudo_cortes (bruto_id)`;
+await sql`create index if not exists conteudo_cortes_status on conteudo_cortes (status)`;
+
 const t = await sql`select table_name from information_schema.tables
                     where table_schema='public' order by table_name`;
 console.log("tabelas:", t.map((r) => r.table_name).join(", "));

@@ -48,6 +48,24 @@
           "value": "no-cache"
         }
       ]
+    },
+    {
+      "source": "/conteudo/acervo.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    },
+    {
+      "source": "/conteudo/index.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
     }
   ]
 }
