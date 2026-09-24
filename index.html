@@ -2024,6 +2024,22 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         : '';
     }
 
+    if(secao === "controle"){
+      var todas = linhasDoControle();
+      var comCopy = todas.filter(function(l){ return (guardadas(l.chave).copy || "").trim(); }).length;
+      var comData = todas.filter(function(l){ return (guardadas(l.chave).entrega || "").trim(); }).length;
+      $("#titulo").innerHTML = '<span>Controle de Criativos</span>';
+      $("#subline").innerHTML =
+        '<span><b>' + todas.length + '</b> criativos</span><span class="dot">/</span>' +
+        '<span>estático <b>' + RESPONSAVEL.arte + '</b> · vídeo <b>' + RESPONSAVEL.video + '</b></span>' +
+        '<span class="dot">/</span>' + live;
+      tally.innerHTML =
+        tile("", doisDigitos(todas.length), "criativos") +
+        tile("", doisDigitos(comData), "com entrega") +
+        tile("", doisDigitos(comCopy), "com copy");
+      return;
+    }
+
     if(secao === "criativos"){
       var lista = artesDoLote();
       var r = remessaAtual();
@@ -2397,6 +2413,37 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
      e esses ficam no banco, chaveados pela linha. */
   var RESPONSAVEL = {arte:"Lucas", video:"Fernando"};
 
+  /* O nome da pasta no Drive nem sempre é o código do painel: os estáticos
+     do Black estão em "01", os carrosséis em "Carrossel-Ricardo-IA". Casa
+     pelo nome, depois pelos dígitos, depois pelo fim do nome. */
+  function acharNoMapa(mapa, code){
+    if(!mapa) return null;
+    if(mapa[code]) return mapa[code];
+    var so = function(t){ return String(t).replace(/\D+/g, ""); };
+    var chato = function(t){
+      return String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+             .toLowerCase().replace(/[^a-z0-9]+/g, "");
+    };
+    var alvoNum = so(code), alvoTxt = chato(code), achado = null;
+    Object.keys(mapa).forEach(function(k){
+      if(achado) return;
+      if(alvoNum && so(k) === alvoNum && chato(k).replace(/\d+/g,"") === chato(code).replace(/\d+/g,"")) achado = mapa[k];
+    });
+    if(achado) return achado;
+    Object.keys(mapa).forEach(function(k){
+      if(achado) return;
+      var kk = chato(k);
+      if(kk === alvoTxt || kk.slice(-alvoTxt.length) === alvoTxt) achado = mapa[k];
+    });
+    if(achado) return achado;
+    /* último caso: só o número bate (AD01 x 01) */
+    Object.keys(mapa).forEach(function(k){
+      if(achado || !alvoNum) return;
+      if(so(k) === alvoNum) achado = mapa[k];
+    });
+    return achado;
+  }
+
   function pastaDoAd(tipo, grupo, code){
     var a = ACERVO[produto] || {};
     if(tipo === "video"){
@@ -2404,8 +2451,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       var v = g && g.videos.filter(function(x){ return x.code === code; })[0];
       return v && v.pasta;
     }
-    var mapa = (a.artes || {})[grupo];
-    return mapa && mapa[code];
+    return acharNoMapa((a.artes || {})[grupo], code);
   }
 
   function linhasDoControle(){
