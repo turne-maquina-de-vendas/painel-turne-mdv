@@ -16,7 +16,7 @@ import { neon } from "@neondatabase/serverless";
 
 const sql = neon(process.env.DATABASE_URL);
 
-export const config = { maxDuration: 60 };
+export const config = { maxDuration: 300 };
 
 /* Cada produto aponta para a pasta raiz dos vídeos dele e diz qual versão
    entra no painel. A estrutura varia — uns têm leva/cidade, outros só
@@ -30,7 +30,7 @@ const PASTAS = {
 };
 
 const PROFUNDIDADE = 4;        // raiz → leva → cidade → AD já é o pior caso
-const TEMPO_LIMITE = 45000;    // abaixo do maxDuration, para responder sempre
+const TEMPO_LIMITE = 240000;   // abaixo do maxDuration, para responder sempre
 
 function responder(res, corpo, status = 200) {
   res.status(status);
@@ -63,6 +63,16 @@ async function listar(pai, chave) {
   if (!r.ok) throw new Error(`Drive ${r.status}`);
   const d = await r.json();
   return d.files || [];
+}
+
+async function nomeDe(id, chave) {
+  const u = new URL("https://www.googleapis.com/drive/v3/files/" + id);
+  u.searchParams.set("fields", "name");
+  u.searchParams.set("supportsAllDrives", "true");
+  u.searchParams.set("key", chave);
+  const r = await fetch(u, { cache: "no-store" });
+  if (!r.ok) throw new Error(`Drive ${r.status}`);
+  return (await r.json()).name || "";
 }
 
 const ePasta = (f) => f.mimeType === "application/vnd.google-apps.folder";
@@ -101,9 +111,11 @@ async function varrerPasta(id, nome, chave, versao, nivel, grupos, expira) {
 
   /* as subpastas são ADs se elas próprias não têm subpastas */
   const filhas = [];
-  for (const p of pastas) {
+  for (let i = 0; i < pastas.length; i += 8) {
     if (Date.now() > expira) return;
-    filhas.push({ pasta: p, itens: await listar(p.id, chave) });
+    const lote = pastas.slice(i, i + 8);
+    const itens = await Promise.all(lote.map((p) => listar(p.id, chave)));
+    lote.forEach((p, k) => filhas.push({ pasta: p, itens: itens[k] }));
   }
   const saoAds = filhas.every((f) => !f.itens.some(ePasta) && f.itens.some(eVideo));
 
@@ -133,8 +145,9 @@ async function varrer(chave, expira) {
     if (Date.now() > expira) { saida[produto] = { erro: "tempo esgotado" }; continue; }
     try {
       const grupos = [];
-      await varrerPasta(cfg.id, "", chave, cfg.versao, 0, grupos, expira);
-      /* a raiz entra com nome vazio; os grupos reais vêm dos níveis de baixo */
+      /* a raiz precisa do nome de verdade: na MQV Online os ADs ficam direto
+         nela, e o grupo passa a ser ela mesma */
+      await varrerPasta(cfg.id, await nomeDe(cfg.id, chave), chave, cfg.versao, 0, grupos, expira);
       saida[produto] = { grupos: grupos.filter((g) => g.tipo) };
     } catch (e) {
       saida[produto] = { erro: String(e.message).slice(0, 140) };
