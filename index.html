@@ -1440,6 +1440,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       {id:"familia",code:"Família",tipo:"CAR",files:["arts/insta_car_familia_c1.jpg","arts/insta_car_familia_c2.jpg","arts/insta_car_familia_c3.jpg","arts/insta_car_familia_c4.jpg","arts/insta_car_familia_c5.jpg","arts/insta_car_familia_c6.jpg","arts/insta_car_familia_c7.jpg","arts/insta_car_familia_c8.jpg","arts/insta_car_familia_c9.jpg"]},
       {id:"habibs",code:"Habibs",tipo:"CAR",files:["arts/insta_car_habibs_c1.jpg","arts/insta_car_habibs_c2.jpg","arts/insta_car_habibs_c3.jpg","arts/insta_car_habibs_c4.jpg","arts/insta_car_habibs_c5.jpg","arts/insta_car_habibs_c6.jpg"],postado:{em:"2026-09-16T21:00:51Z",url:"https://www.instagram.com/p/DdXM8vHGwba/"}},
       {id:"ia",code:"IA",tipo:"CAR",files:["arts/insta_car_ia_c1.jpg","arts/insta_car_ia_c2.jpg","arts/insta_car_ia_c3.jpg","arts/insta_car_ia_c4.jpg","arts/insta_car_ia_c5.jpg","arts/insta_car_ia_c6.jpg","arts/insta_car_ia_c7.jpg","arts/insta_car_ia_c8.jpg"]},
+      {id:"legado",code:"Legado",tipo:"CAR",files:["arts/insta_car_legado_c1.jpg","arts/insta_car_legado_c2.jpg","arts/insta_car_legado_c3.jpg","arts/insta_car_legado_c4.jpg","arts/insta_car_legado_c5.jpg","arts/insta_car_legado_c6.jpg","arts/insta_car_legado_c7.jpg","arts/insta_car_legado_c8.jpg"]},
       {id:"marabraz",code:"Marabraz",tipo:"CAR",files:["arts/insta_car_marabraz_c1.jpg","arts/insta_car_marabraz_c2.jpg","arts/insta_car_marabraz_c3.jpg","arts/insta_car_marabraz_c4.jpg","arts/insta_car_marabraz_c5.jpg","arts/insta_car_marabraz_c6.jpg"],postado:{em:"2026-09-18T13:29:55Z",url:"https://www.instagram.com/p/Ddbi7xbEego/"}},
       {id:"socio",code:"Sócio",tipo:"CAR",files:["arts/insta_car_socio_c1.jpg","arts/insta_car_socio_c2.jpg","arts/insta_car_socio_c3.jpg","arts/insta_car_socio_c4.jpg","arts/insta_car_socio_c5.jpg","arts/insta_car_socio_c6.jpg","arts/insta_car_socio_c7.jpg","arts/insta_car_socio_c8.jpg"]}
     ]},
@@ -1508,10 +1509,31 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
      Assim um vídeo novo aparece sem ninguém rodar script nem publicar. */
   var ACERVO = {};
 
+  /* O Drive só acrescenta: o que já está no painel permanece como está,
+     com a chave que já tem — e portanto com a aprovação que já recebeu.
+     Uma varredura incompleta não pode fazer vídeo sumir da tela. */
   function videosDoProduto(id){
-    var doDrive = (ACERVO[id] || {}).grupos;
-    if(doDrive && doDrive.length) return doDrive;
-    return {mdv:VIDEOS_MDV, rgv:VIDEOS_RGV, mqv:VIDEOS_MQV, met:VIDEOS_MET}[id] || [];
+    var base = {mdv:VIDEOS_MDV, rgv:VIDEOS_RGV, mqv:VIDEOS_MQV, met:VIDEOS_MET}[id] || [];
+    var doDrive = (ACERVO[id] || {}).grupos || [];
+    if(!doDrive.length) return base;
+
+    var saida = base.map(function(g){ return {tipo:g.tipo, videos:g.videos.slice()}; });
+    var porTipo = {}, jaTem = {};
+    saida.forEach(function(g){
+      porTipo[g.tipo] = g;
+      g.videos.forEach(function(v){ jaTem[v.drive] = true; });
+    });
+
+    doDrive.forEach(function(g){
+      var alvo = porTipo[g.tipo];
+      if(!alvo){ alvo = {tipo:g.tipo, videos:[]}; porTipo[g.tipo] = alvo; saida.push(alvo); }
+      g.videos.forEach(function(v){
+        if(jaTem[v.drive]) return;      // mesmo arquivo: fica o que já estava
+        jaTem[v.drive] = true;
+        alvo.videos.push(v);
+      });
+    });
+    return saida;
   }
 
   function buscarAcervo(){
