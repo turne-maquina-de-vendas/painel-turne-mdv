@@ -103,6 +103,9 @@ async function montarBanco() {
     criado_em     timestamptz not null default now(),
     atualizado_em timestamptz not null default now()
   )`;
+  /* coluna nova entra por alter: create table if not exists não mexe em
+     tabela que já existe */
+  await sql`alter table conteudo_cortes add column if not exists ouro boolean not null default false`;
   await sql`create index if not exists conteudo_cortes_bruto  on conteudo_cortes (bruto_id)`;
   await sql`create index if not exists conteudo_cortes_status on conteudo_cortes (status)`;
   await sql`create table if not exists config (
@@ -169,6 +172,7 @@ async function montar() {
       nota: r.nota || "",
       desempenho: r.desempenho || "",
       dataPost: r.data_post || "",
+      ouro: !!r.ouro,
       criadoEm: r.criado_em
     })),
     videos: videos.map((r) => ({
@@ -189,7 +193,7 @@ async function gravarCorte(d) {
     insert into conteudo_cortes (
       id, bruto_id, bruto_nome, bruto_link, tc_in, tc_out, duracao,
       headline, minutado_por, editoria, produto, obs, responsavel, rede,
-      status, link_editado, nota, desempenho, data_post
+      status, link_editado, nota, desempenho, data_post, ouro
     ) values (
       ${corta(d.id, 40)}, ${corta(d.brutoId, 80)}, ${corta(d.brutoNome, 300)},
       ${corta(d.brutoLink, 500)}, ${corta(d.tcIn, 12)}, ${corta(d.tcOut, 12)},
@@ -197,7 +201,7 @@ async function gravarCorte(d) {
       ${corta(d.editoria, 80)}, ${corta(d.produto, 60)}, ${corta(d.obs, 1000)},
       ${corta(d.responsavel, 80)}, ${corta(d.rede, 120)}, ${corta(d.status, 20)},
       ${corta(d.linkEditado, 500)}, ${corta(d.nota, 20)}, ${corta(d.desempenho, 200)},
-      ${corta(d.dataPost, 12)}
+      ${corta(d.dataPost, 12)}, ${!!d.ouro}
     )
     on conflict (id) do update set
       bruto_id = excluded.bruto_id, bruto_nome = excluded.bruto_nome,
@@ -209,7 +213,7 @@ async function gravarCorte(d) {
       rede = excluded.rede, status = excluded.status,
       link_editado = excluded.link_editado, nota = excluded.nota,
       desempenho = excluded.desempenho, data_post = excluded.data_post,
-      atualizado_em = now()`;
+      ouro = excluded.ouro, atualizado_em = now()`;
 }
 
 async function gravarVideo(d) {
