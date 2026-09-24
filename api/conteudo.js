@@ -12,7 +12,22 @@ import { neon } from "@neondatabase/serverless";
  * documento só, que é como isto rodava no Netlify Blobs antes.
  */
 
-const sql = neon(process.env.DATABASE_URL);
+/* A conexão é preguiçosa de propósito: criar o cliente no topo do módulo
+   faz a função morrer com FUNCTION_INVOCATION_FAILED quando a variável de
+   ambiente ainda não chegou, e o erro que sobra não diz nada. Assim o
+   problema volta como JSON legível. */
+let _sql = null;
+function conectar() {
+  if (_sql) return _sql;
+  const url = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  if (!url) {
+    const e = new Error("DATABASE_URL não está definida nas variáveis de ambiente do projeto");
+    e.semBanco = true;
+    throw e;
+  }
+  _sql = neon(url);
+  return _sql;
+}
 
 /* As tabelas nascem sozinhas na primeira chamada, e os dados que ficaram
    no Netlify entram junto — assim subir isto é só fazer o deploy, sem
@@ -27,6 +42,7 @@ function preparar() {
 }
 
 async function montarBanco() {
+  const sql = conectar();
   await sql`create table if not exists conteudo_videos (
     id        text primary key,
     link      text not null,
@@ -98,6 +114,7 @@ function responder(res, corpo, status = 200) {
 }
 
 async function montar() {
+  const sql = conectar();
   const [cortes, videos] = await Promise.all([
     sql`select * from conteudo_cortes order by criado_em asc limit 5000`,
     sql`select * from conteudo_videos order by criado_em desc limit 2000`
@@ -139,6 +156,7 @@ async function montar() {
 }
 
 async function gravarCorte(d) {
+  const sql = conectar();
   await sql`
     insert into conteudo_cortes (
       id, bruto_id, bruto_nome, bruto_link, tc_in, tc_out, duracao,
@@ -167,6 +185,7 @@ async function gravarCorte(d) {
 }
 
 async function gravarVideo(d) {
+  const sql = conectar();
   await sql`
     insert into conteudo_videos (id, link, nome, tema, duracao, obs)
     values (${corta(d.id, 40)}, ${corta(d.link, 500)}, ${corta(d.nome, 300)},
@@ -188,6 +207,7 @@ export default async function handler(req, res) {
 
       if (body.op === "del") {
         if (!body.id) return responder(res, { erro: "sem id" }, 400);
+        const sql = conectar();
         if (videos) {
           /* apagar o vídeo leva os trechos dele junto */
           await sql`delete from conteudo_cortes where bruto_id = ${body.id}`;
@@ -212,6 +232,9 @@ export default async function handler(req, res) {
     return responder(res, { erro: "método não suportado" }, 405);
   } catch (e) {
     console.error("[conteudo]", e);
-    return responder(res, { erro: "falha no banco" }, 500);
+    return responder(res, {
+      erro: e.semBanco ? "sem banco configurado" : "falha no banco",
+      detalhe: String(e && e.message || e).slice(0, 300)
+    }, 500);
   }
 }
