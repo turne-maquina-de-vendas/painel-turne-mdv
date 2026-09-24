@@ -17,14 +17,42 @@ import { neon } from "@neondatabase/serverless";
    ambiente ainda não chegou, e o erro que sobra não diz nada. Assim o
    problema volta como JSON legível. */
 let _sql = null;
+
+/* A integração do Neon na Vercel prefixa a variável com o nome do banco —
+   aqui ela chegou como centralconteudo_DATABASE_URL, não DATABASE_URL.
+   Então em vez de exigir um nome exato, procuramos qualquer variável que
+   termine em DATABASE_URL ou POSTGRES_URL, ignorando as versões sem
+   pooler (função serverless abre conexão a cada chamada; sem o pooler o
+   limite do Neon estoura). */
+function acharUrl() {
+  const env = process.env;
+  /* Vale a que TEM valor, não a que tem o nome certo: aqui existiam as
+     duas, e a DATABASE_URL sem prefixo estava vazia. */
+  const vale = (k) => typeof env[k] === "string" && /^postgres(ql)?:\/\//.test(env[k].trim());
+  for (const k of ["DATABASE_URL", "POSTGRES_URL"]) if (vale(k)) return { nome: k, url: env[k].trim() };
+
+  /* Sem pooler a função serverless estoura o limite de conexões do Neon,
+     então as UNPOOLED ficam por último. */
+  const semPooler = /(UNPOOLED|NON_POOLING|NO_SSL|PRISMA|JDBC)/i;
+  const todas = Object.keys(env).filter((k) => /(DATABASE_URL|POSTGRES_URL)/.test(k) && vale(k));
+  const boas = todas.filter((k) => !semPooler.test(k));
+  const k = boas[0] || todas[0];
+  return k ? { nome: k, url: env[k].trim() } : { nome: null, url: null };
+}
+
 function conectar() {
   if (_sql) return _sql;
-  const url = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  const { nome, url } = acharUrl();
   if (!url) {
-    const e = new Error("DATABASE_URL não está definida nas variáveis de ambiente do projeto");
+    const vistas = Object.keys(process.env).filter((k) => /DATABASE|POSTGRES|NEON/i.test(k));
+    const e = new Error(
+      "nenhuma variável de conexão encontrada" +
+      (vistas.length ? ` — parecidas no ambiente: ${vistas.join(", ")}` : "")
+    );
     e.semBanco = true;
     throw e;
   }
+  console.log("[conteudo] conectando por", nome);
   _sql = neon(url);
   return _sql;
 }
