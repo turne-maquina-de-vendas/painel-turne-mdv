@@ -27,6 +27,7 @@ const PASTAS = {
   rgv: { id: "1mhwJd0IgSt0hESPFP-cOIbVBdGZgElGy", versao: "STORYS" },
   mqv: { id: "1WaZEzFDHWqEbmpd5KsJxuF6-jL40gYt6", versao: "FEED" },
   met: { id: "1QfctN83oT0rtk7MAm4hKUafE0YxG2_c_", versao: "FEED" },
+  b10x: { id: "1vKkMAcVznyJ2iNRycxLK-j-qewAgdRFb", versao: "FEED" },
 };
 
 const PROFUNDIDADE = 4;        // raiz → leva → cidade → AD já é o pior caso

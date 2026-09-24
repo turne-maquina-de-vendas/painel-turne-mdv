@@ -1464,6 +1464,21 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   ];
 
 
+  /* Criativos em vídeo do Black Friday 10X, versão feed. */
+  var VIDEOS_B10X = [
+    {tipo:"ADS Vídeo 10X", videos:[
+      {id:"adsvideo10x__ad01", code:"AD01", drive:"1T9s-ta4YdbhxCZgXXoMbrLOkwgq41Wy2"},
+      {id:"adsvideo10x__ad02", code:"AD02", drive:"1inQI6QMQ8Pgq2mw1JHM9iEwNJl42FFGq"},
+      {id:"adsvideo10x__ad03", code:"AD03", drive:"1Aj6mCblaC_NcBqaw_m9pjp311qP8fvmP"},
+      {id:"adsvideo10x__ad04", code:"AD04", drive:"14UTd2HtGsXXmxYlvGg8ka1nIsY1jtso3"},
+      {id:"adsvideo10x__ad05", code:"AD05", drive:"1Oylux5yHZfBox2LJFrCHZDwuw2Ih6DgN"},
+      {id:"adsvideo10x__ad06", code:"AD06", drive:"1vJX-6nsRFustfo7latiM4CsMhL2btO0Z"},
+      {id:"adsvideo10x__ad07", code:"AD07", drive:"19DAEIrX8CaBgToXlaPTNc3vydWfm2QGV"},
+      {id:"adsvideo10x__ad08", code:"AD08", drive:"1_rBR9VhzhwfRezEK_mRJ8LNdEaeORbyz"}
+    ]}
+  ];
+
+
   var PRODUTOS = {
     mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
           capa:"arts/produto-mdv.jpg",
@@ -1493,6 +1508,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     b10x: {id:"b10x", nome:"Black Friday 10X", curto:"Black 10X",
           capa:"arts/produto-b10x.jpg", drive:null,
+          driveVideos:"https://drive.google.com/drive/folders/1vKkMAcVznyJ2iNRycxLK-j-qewAgdRFb?usp=sharing",
           links:[{nome:"Termo de Abertura", url:"https://black10xtap.netlify.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
@@ -1513,7 +1529,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
      com a chave que já tem — e portanto com a aprovação que já recebeu.
      Uma varredura incompleta não pode fazer vídeo sumir da tela. */
   function videosDoProduto(id){
-    var base = {mdv:VIDEOS_MDV, rgv:VIDEOS_RGV, mqv:VIDEOS_MQV, met:VIDEOS_MET}[id] || [];
+    var base = {mdv:VIDEOS_MDV, rgv:VIDEOS_RGV, mqv:VIDEOS_MQV,
+                met:VIDEOS_MET, b10x:VIDEOS_B10X}[id] || [];
     var doDrive = (ACERVO[id] || {}).grupos || [];
     if(!doDrive.length) return base;
 
@@ -1556,7 +1573,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       rgv: {remessas: REMESSAS_RGV, videos: videosDoProduto("rgv"), funis: FUNIS_RGV},
       mqv: {remessas: REMESSAS_MQV, videos: videosDoProduto("mqv"), funis: FUNIS_MQV},
       met: {remessas: REMESSAS_MET, videos: videosDoProduto("met"), funis: FUNIS_MET},
-      b10x:{remessas: REMESSAS_B10X, videos: [],         funis: FUNIS_B10X},
+      b10x:{remessas: REMESSAS_B10X, videos: videosDoProduto("b10x"), funis: FUNIS_B10X},
       insta:{remessas: REMESSAS_INSTA, videos: [],        funis: FUNIS_INSTA}
     }[id] || {remessas: [], videos: [], funis: []};
     REMESSAS = acervo.remessas;
