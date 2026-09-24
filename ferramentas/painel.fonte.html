@@ -1554,19 +1554,28 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     var doDrive = (ACERVO[id] || {}).grupos || [];
     if(!doDrive.length) return base;
 
-    var saida = base.map(function(g){ return {tipo:g.tipo, videos:g.videos.slice()}; });
+    var saida = base.map(function(g){
+      return {tipo:g.tipo, videos:g.videos.map(function(v){ return Object.assign({}, v); })};
+    });
     var porTipo = {}, jaTem = {};
     saida.forEach(function(g){
       porTipo[g.tipo] = g;
-      g.videos.forEach(function(v){ jaTem[v.drive] = true; });
+      g.videos.forEach(function(v){ jaTem[v.drive] = v; });
     });
 
     doDrive.forEach(function(g){
       var alvo = porTipo[g.tipo];
       if(!alvo){ alvo = {tipo:g.tipo, videos:[]}; porTipo[g.tipo] = alvo; saida.push(alvo); }
       g.videos.forEach(function(v){
-        if(jaTem[v.drive]) return;      // mesmo arquivo: fica o que já estava
-        jaTem[v.drive] = true;
+        var antigo = jaTem[v.drive];
+        if(antigo){
+          /* mesmo arquivo: o que já estava manda, mas campos que ele não
+             tem — como a pasta do AD — vêm do Drive. Completar não é
+             substituir: a chave e o código continuam os de antes. */
+          for(var k in v){ if(antigo[k] === undefined) antigo[k] = v[k]; }
+          return;
+        }
+        jaTem[v.drive] = v;
         alvo.videos.push(v);
       });
     });
