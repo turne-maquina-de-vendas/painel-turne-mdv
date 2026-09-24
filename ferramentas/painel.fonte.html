@@ -276,6 +276,24 @@ table.controle td.resp{color:var(--dim);white-space:nowrap}
 table.controle td.link a{color:var(--gold);text-decoration:none;white-space:nowrap}
 table.controle td.link a:hover{text-decoration:underline}
 table.controle td.link .sem{color:var(--dim-2)}
+table.controle td.link{white-space:nowrap}
+.copiar{
+  margin-left:8px;vertical-align:middle;
+  width:24px;height:24px;padding:0;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--line);border-radius:6px;
+  background:transparent;color:var(--dim-2);cursor:pointer;
+  transition:color .15s var(--ease),border-color .15s var(--ease),background .15s var(--ease);
+}
+.copiar svg{width:13px;height:13px;fill:currentColor}
+.copiar:hover{color:var(--gold);border-color:var(--gold-dim)}
+.copiar.copiado{color:var(--ok);border-color:var(--ok-line);background:var(--ok-bg)}
+.copiar.falhou{color:var(--bad);border-color:var(--bad-line);background:var(--bad-bg)}
+/* vira um tique enquanto o aviso dura */
+.copiar.copiado svg{display:none}
+.copiar.copiado::after{content:"✓";font-size:12px;font-weight:700;line-height:1}
+.copiar.falhou svg{display:none}
+.copiar.falhou::after{content:"!";font-size:12px;font-weight:700;line-height:1}
 .sel-tipo{
   display:inline-block;margin-right:8px;padding:2px 7px;border-radius:5px;
   font-family:var(--ui);font-weight:700;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
@@ -2490,7 +2508,11 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         '<td class="resp">'+esc(RESPONSAVEL[l.tipo])+'</td>' +
         '<td class="link">' + (url
           ? '<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">' +
-            (l.pasta ? "pasta do AD" : "pasta da remessa") + '</a>'
+            (l.pasta ? "pasta do AD" : "pasta da remessa") + '</a>' +
+            '<button type="button" class="copiar" data-url="'+esc(url)+'" ' +
+              'title="Copiar link" aria-label="Copiar link">' +
+              '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9V5.5A1.5 1.5 0 0 1 10.5 4h8A1.5 1.5 0 0 1 20 5.5v8a1.5 1.5 0 0 1-1.5 1.5H15v3.5A1.5 1.5 0 0 1 13.5 20h-8A1.5 1.5 0 0 1 4 18.5v-8A1.5 1.5 0 0 1 5.5 9H9zm1.6 0h2.9a1.5 1.5 0 0 1 1.5 1.5v2.9h2.4V5.6h-6.8V9z"/></svg>' +
+            '</button>'
           : '<span class="sem">—</span>') + '</td>' +
         '<td><input class="cel" data-c="copy" placeholder="—" value="'+esc(g.copy||"")+'"></td>' +
         '<td><input class="cel" data-c="obs" placeholder="—" value="'+esc(g.obs||"")+'"></td>' +
@@ -2562,6 +2584,42 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     else if(secao === "controle"){ renderControle(); }
     else{ renderPaginas(); }
   }
+
+  /* Copia o link sem tirar a pessoa da tela. O clipboard moderno só
+     funciona em contexto seguro; se falhar, cai no campo escondido, que
+     roda em qualquer navegador. */
+  function copiar(texto, botao){
+    function avisar(ok){
+      botao.classList.add(ok ? "copiado" : "falhou");
+      botao.setAttribute("title", ok ? "Link copiado" : "Não consegui copiar");
+      setTimeout(function(){
+        botao.classList.remove("copiado", "falhou");
+        botao.setAttribute("title", "Copiar link");
+      }, 1400);
+    }
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(texto).then(function(){ avisar(true); },
+                                               function(){ avisar(false); });
+      return;
+    }
+    var c = document.createElement("textarea");
+    c.value = texto;
+    c.setAttribute("readonly", "");
+    c.style.cssText = "position:fixed;top:-1000px;opacity:0";
+    document.body.appendChild(c);
+    c.select();
+    var ok = false;
+    try{ ok = document.execCommand("copy"); }catch(e){ ok = false; }
+    document.body.removeChild(c);
+    avisar(ok);
+  }
+
+  $("#tabControle").addEventListener("click", function(e){
+    var b = e.target.closest(".copiar");
+    if(!b) return;
+    e.preventDefault();
+    copiar(b.dataset.url, b);
+  });
 
   /* grava ao sair do campo, não a cada tecla: a fila do painel é por
      registro, e uma linha por letra digitada entupiria a rede */
