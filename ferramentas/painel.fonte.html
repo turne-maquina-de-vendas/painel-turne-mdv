@@ -255,6 +255,42 @@ button,input,textarea,select{font:inherit;color:inherit}
 /* Produto já entregue: o evento passou. A capa perde força para não
    competir com o que ainda está em aprovação, mas o cartão continua
    clicável — o histórico de aprovações segue lá dentro. */
+/* ---------- controle de criativos ---------- */
+.rolagem{overflow-x:auto;padding:0 var(--pad) 40px}
+table.controle{width:100%;border-collapse:collapse;min-width:900px;font-size:13px}
+table.controle th,table.controle td{
+  border:1px solid var(--line-soft);padding:9px 12px;text-align:left;vertical-align:middle;
+}
+table.controle thead th{
+  font-family:var(--ui);font-weight:700;
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim-2);background:var(--surface);position:sticky;top:0;
+}
+table.controle thead tr.grupo th{
+  text-align:center;color:var(--gold);background:var(--surface-2);border-color:var(--line);
+}
+table.controle tbody tr:hover{background:var(--surface-2)}
+table.controle td.leva{color:var(--dim);white-space:nowrap}
+table.controle td.leva b{color:var(--paper)}
+table.controle td.resp{color:var(--dim);white-space:nowrap}
+table.controle td.link a{color:var(--gold);text-decoration:none;white-space:nowrap}
+table.controle td.link a:hover{text-decoration:underline}
+table.controle td.link .sem{color:var(--dim-2)}
+.sel-tipo{
+  display:inline-block;margin-right:8px;padding:2px 7px;border-radius:5px;
+  font-family:var(--ui);font-weight:700;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid var(--line);color:var(--dim-2);
+}
+.sel-tipo.video{color:var(--pub);border-color:var(--pub-line);background:var(--pub-bg)}
+.sel-tipo.arte{color:var(--gold);border-color:var(--gold-dim)}
+input.cel{
+  width:100%;min-width:130px;border:none;background:transparent;
+  color:var(--paper);font:inherit;padding:2px 0;
+}
+input.cel::placeholder{color:var(--dim-2)}
+input.cel:focus{outline:none;border-bottom:1px solid var(--gold)}
+.vazio-ctl{color:var(--dim-2);padding:28px 12px}
+
 /* Rodapé, igual ao da lp.grupor1.com/r1oficial. */
 .rodape-site{
   border-top:1px solid var(--line);margin-top:56px;
@@ -863,6 +899,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   <button class="sec" role="tab" data-s="criativos" aria-selected="true">Criativos em Imagem <span class="qt" id="qtCri">0</span></button>
   <button class="sec" role="tab" data-s="videos" aria-selected="false"><span id="rotVid">Criativos em Vídeo</span> <span class="qt" id="qtVid">0</span></button>
   <button class="sec" role="tab" data-s="paginas" aria-selected="false">Páginas <span class="qt" id="qtPag">0</span></button>
+  <button class="sec" role="tab" data-s="controle" aria-selected="false">Controle de Criativos <span class="qt" id="qtCtl">0</span></button>
   <button class="home" id="home" type="button">⌂ Home</button>
   <span class="links-prod" id="linksProduto"></span>
 </div></nav>
@@ -903,6 +940,10 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     <button class="chip" data-fv="comentadas" aria-pressed="false">Com anotação</button>
   </div>
   <div id="tipos"></div>
+</main>
+
+<main class="board" id="viewControle" hidden>
+  <div class="rolagem"><table class="controle" id="tabControle"></table></div>
 </main>
 
 <main class="board" id="viewPaginas" hidden>
@@ -2328,6 +2369,81 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     devolverRascunho();
   }
 
+  /* ---------- controle de criativos ----------
+     A tabela não é digitada: ela nasce do que o painel já tem. Cada AD vira
+     uma linha, com o link da pasta individual dele (a varredura do Drive
+     guarda esse id) e o responsável pelo formato — estático é do Lucas,
+     vídeo é do Fernando. Só entrega, copy e observação são campos livres,
+     e esses ficam no banco, chaveados pela linha. */
+  var RESPONSAVEL = {arte:"Lucas", video:"Fernando"};
+
+  function pastaDoAd(tipo, grupo, code){
+    var a = ACERVO[produto] || {};
+    if(tipo === "video"){
+      var g = (a.grupos || []).filter(function(x){ return x.tipo === grupo; })[0];
+      var v = g && g.videos.filter(function(x){ return x.code === code; })[0];
+      return v && v.pasta;
+    }
+    var mapa = (a.artes || {})[grupo];
+    return mapa && mapa[code];
+  }
+
+  function linhasDoControle(){
+    var fora = [];
+    REMESSAS.forEach(function(r){
+      r.artes.forEach(function(x){
+        fora.push({chave: produto+":ctl:"+r.id+":"+x.id, tipo:"arte",
+                   leva: r.nome, code: x.code,
+                   pasta: pastaDoAd("arte", r.id, x.code) || null,
+                   pastaMae: r.drive || (PRODUTOS[produto]||{}).drive || null});
+      });
+    });
+    VIDEOS.forEach(function(g){
+      g.videos.forEach(function(v){
+        fora.push({chave: produto+":ctl:vd:"+v.id, tipo:"video",
+                   leva: g.tipo, code: v.code,
+                   pasta: v.pasta || null,
+                   pastaMae: (PRODUTOS[produto]||{}).driveVideos || null});
+      });
+    });
+    return fora;
+  }
+
+  /* o que a pessoa digitou, vindo do banco */
+  var CONTROLE = {};
+  function guardadas(chave){ return CONTROLE[chave] || {}; }
+
+  function renderControle(){
+    var linhas = linhasDoControle();
+    var t = $("#tabControle");
+    if(!linhas.length){
+      t.innerHTML = '<tbody><tr><td class="vazio-ctl">Nenhum criativo neste produto ainda.</td></tr></tbody>';
+      return;
+    }
+    var cab = '<thead>' +
+      '<tr class="grupo"><th colspan="4">Entrega</th><th colspan="2">Preenchimento cliente</th></tr>' +
+      '<tr><th>Leva</th><th>Data entrega</th><th>Responsável</th><th>Link da pasta</th>' +
+      '<th>Copy descrição</th><th>Observação</th></tr></thead>';
+
+    var corpo = linhas.map(function(l){
+      var g = guardadas(l.chave);
+      var url = l.pasta ? "https://drive.google.com/drive/folders/" + l.pasta : l.pastaMae;
+      return '<tr data-ctl="'+esc(l.chave)+'">' +
+        '<td class="leva"><span class="sel-tipo '+l.tipo+'">'+(l.tipo==="video"?"vídeo":"arte")+'</span>' +
+          esc(l.leva)+' · <b>'+esc(l.code)+'</b></td>' +
+        '<td><input class="cel" data-c="entrega" placeholder="—" value="'+esc(g.entrega||"")+'"></td>' +
+        '<td class="resp">'+esc(RESPONSAVEL[l.tipo])+'</td>' +
+        '<td class="link">' + (url
+          ? '<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">' +
+            (l.pasta ? "pasta do AD" : "pasta da remessa") + '</a>'
+          : '<span class="sem">—</span>') + '</td>' +
+        '<td><input class="cel" data-c="copy" placeholder="—" value="'+esc(g.copy||"")+'"></td>' +
+        '<td><input class="cel" data-c="obs" placeholder="—" value="'+esc(g.obs||"")+'"></td>' +
+      '</tr>';
+    }).join("");
+    t.innerHTML = cab + '<tbody>' + corpo + '</tbody>';
+  }
+
   function totalVideos(){
     return VIDEOS.reduce(function(t,g){ return t + g.videos.length; }, 0);
   }
@@ -2340,10 +2456,12 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     $("#viewCriativos").hidden = secao !== "criativos";
     $("#viewVideos").hidden = secao !== "videos";
     $("#viewPaginas").hidden = secao !== "paginas";
+    $("#viewControle").hidden = secao !== "controle";
 
     $("#qtCri").textContent = REMESSAS.reduce(function(t,r){ return t + r.artes.length; }, 0);
     $("#qtVid").textContent = totalVideos();
     $("#qtPag").textContent = FUNIS.reduce(function(t,f){ return t + f.paginas.length; }, 0);
+    $("#qtCtl").textContent = linhasDoControle().length;
   }
 
   function renderEscolha(){
@@ -2386,8 +2504,24 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     renderCabecalho();
     if(secao === "criativos"){ renderTabs(); renderAlertaFila(); renderGrid(); }
     else if(secao === "videos"){ renderVideos(); }
+    else if(secao === "controle"){ renderControle(); }
     else{ renderPaginas(); }
   }
+
+  /* grava ao sair do campo, não a cada tecla: a fila do painel é por
+     registro, e uma linha por letra digitada entupiria a rede */
+  $("#tabControle").addEventListener("change", function(e){
+    var campo = e.target.closest(".cel");
+    if(!campo) return;
+    var tr = campo.closest("tr"), chave = tr && tr.dataset.ctl;
+    if(!chave) return;
+    var linha = Object.assign({}, CONTROLE[chave]);
+    linha[campo.dataset.c] = campo.value.trim();
+    CONTROLE[chave] = linha;
+    enfileirar({tipo:"controle", id:chave, produto:produto,
+                entrega:linha.entrega || "", copy:linha.copy || "", obs:linha.obs || "",
+                leva:"", responsavel:"", pasta:""});
+  });
 
   // ---------- interações ----------
   $("#produtos").addEventListener("click", function(e){

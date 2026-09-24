@@ -101,6 +101,10 @@ novo = """  // ---------- sincronismo com o servidor ----------
     if(sig === ultimaSig) return;        // nada mudou: não repinta
     ultimaSig = sig;
     status = estado.artes || {};
+    CONTROLE = {};                        // controle de criativos, por linha
+    for(var pr in (estado.controle || {})){
+      (estado.controle[pr] || []).forEach(function(l){ CONTROLE[l.id] = l; });
+    }
     notasServidor = estado.anotacoes || [];
     medicoes = estado.medicoes || {};      // notas do PageSpeed medidas sozinhas
     execucao = estado.execucao || null;
