@@ -14,6 +14,79 @@ import { neon } from "@neondatabase/serverless";
 
 const sql = neon(process.env.DATABASE_URL);
 
+/* As tabelas nascem sozinhas na primeira chamada, e os dados que ficaram
+   no Netlify entram junto — assim subir isto é só fazer o deploy, sem
+   rodar script nenhum na mão. Roda uma vez por instância fria; o marcador
+   na tabela `config` garante que a importação não se repita nunca. */
+const NETLIFY = "https://central-de-conteudo-r1.netlify.app/api/banco";
+let preparado = null;
+
+function preparar() {
+  if (!preparado) preparado = montarBanco().catch((e) => { preparado = null; throw e; });
+  return preparado;
+}
+
+async function montarBanco() {
+  await sql`create table if not exists conteudo_videos (
+    id        text primary key,
+    link      text not null,
+    nome      text not null,
+    tema      text,
+    duracao   text,
+    obs       text,
+    criado_em timestamptz not null default now()
+  )`;
+  await sql`create table if not exists conteudo_cortes (
+    id            text primary key,
+    bruto_id      text not null,
+    bruto_nome    text,
+    bruto_link    text,
+    tc_in         text,
+    tc_out        text,
+    duracao       integer,
+    headline      text,
+    minutado_por  text,
+    editoria      text,
+    produto       text,
+    obs           text,
+    responsavel   text,
+    rede          text,
+    status        text,
+    link_editado  text,
+    nota          text,
+    desempenho    text,
+    data_post     text,
+    criado_em     timestamptz not null default now(),
+    atualizado_em timestamptz not null default now()
+  )`;
+  await sql`create index if not exists conteudo_cortes_bruto  on conteudo_cortes (bruto_id)`;
+  await sql`create index if not exists conteudo_cortes_status on conteudo_cortes (status)`;
+  await sql`create table if not exists config (
+    chave      text primary key,
+    valor      text not null,
+    atualizado timestamptz not null default now()
+  )`;
+
+  const [marca] = await sql`select valor from config where chave = 'conteudo_importado'`;
+  if (marca) return;
+
+  /* Falhar aqui não pode derrubar a API: sem os dados antigos ela abre
+     vazia, e ferramentas/importar-conteudo.mjs continua valendo. */
+  try {
+    const r = await fetch(NETLIFY, { signal: AbortSignal.timeout(8000) });
+    if (r.ok) {
+      const d = await r.json();
+      for (const v of d.videos || []) if (v.id) await gravarVideo(v);
+      for (const c of d.cortes || []) if (c.id) await gravarCorte(c);
+      console.log(`[conteudo] importado do Netlify: ${(d.videos||[]).length} vídeos, ${(d.cortes||[]).length} trechos`);
+    }
+  } catch (e) {
+    console.warn("[conteudo] não consegui importar do Netlify:", e.message);
+  }
+  await sql`insert into config (chave, valor) values ('conteudo_importado', now()::text)
+            on conflict (chave) do nothing`;
+}
+
 const corta = (v, max) => String(v == null ? "" : v).slice(0, max);
 const inteiro = (v) => (Number.isFinite(Number(v)) ? Math.trunc(Number(v)) : 0);
 
@@ -105,6 +178,8 @@ async function gravarVideo(d) {
 
 export default async function handler(req, res) {
   try {
+    await preparar();
+
     if (req.method === "GET") return responder(res, await montar());
 
     if (req.method === "POST") {

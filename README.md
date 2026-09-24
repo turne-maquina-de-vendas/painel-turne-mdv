@@ -189,14 +189,20 @@ marcando ao mesmo tempo não se sobrescrevem.
 
 ### Subir pela primeira vez
 
+**Só o deploy.** Na primeira chamada a `/api/conteudo` as tabelas nascem sozinhas
+e os dados que estão no Netlify entram junto — um marcador em `config`
+(`conteudo_importado`) garante que a importação não se repita. Não precisa rodar
+script nenhum.
+
+Se a importação automática falhar (Netlify fora do ar, por exemplo), a API abre
+vazia e o caminho manual continua valendo:
+
 ```bash
-node ferramentas/criar-tabelas.mjs      # cria conteudo_videos e conteudo_cortes
-node ferramentas/importar-conteudo.mjs  # puxa o que está no Netlify hoje
+node ferramentas/importar-conteudo.mjs
 ```
 
-Depois confira `GET /api/conteudo` e um `POST` de ida e volta. O
-`api/conteudo.js` foi escrito junto com a migração e **não foi testado contra
-o banco** — esse passo não é formalidade.
+Depois do primeiro deploy, confira `GET /api/conteudo` e um `POST` de ida e volta.
+O `api/conteudo.js` **não foi testado contra o banco** — esse passo não é formalidade.
 
 Enquanto isso não roda, a versão no ar continua sendo
 <https://central-de-conteudo-r1.netlify.app> (mesma tela, dados no Netlify Blobs).
@@ -223,10 +229,6 @@ elas `[FD] CNE` (3.113 vídeos), `[FD] RGV PROCESSOS` (908) e `[FD] EXECUTIVOS`
 
 **Minutagem RGV** é cópia estática de minutagem.netlify.app; não se atualiza
 sozinha.
-
-**Sem link na home ainda.** O `index.html` do painel é gerado por
-`ferramentas/gerar-index.py` a partir de `painel.fonte.html` — o atalho para
-`/conteudo` precisa entrar na fonte, não no gerado.
 
 ### O que a varredura do Drive mostrou
 
