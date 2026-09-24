@@ -22,12 +22,16 @@ function responder(res, corpo, status = 200) {
 }
 
 async function montar() {
-  const [anotacoes, status, medicoes, execucoes] = await Promise.all([
+  const [anotacoes, status, medicoes, execucoes, controle] = await Promise.all([
     sql`select id, arte_key, remessa, texto, criado_em
           from anotacoes order by criado_em asc limit 2000`,
     sql`select arte_key, status, remessa, em from status_artes`,
     sql`select id, url, cidade, versao, origem, mobile, desktop, medido_em from medicoes`,
-    sql`select parte, dados from execucoes`
+    sql`select parte, dados from execucoes`,
+    /* cada linha do controle é uma linha da tabela, como as anotações:
+       duas pessoas editando ao mesmo tempo não se sobrescrevem */
+    sql`select id, produto, dados, ordem from controle_criativos
+          order by ordem asc, criado_em asc limit 3000`.catch(() => [])
   ]);
 
   const artes = {};
@@ -56,7 +60,13 @@ async function montar() {
       }
     : null;
 
+  const linhas = {};
+  for (const r of controle) {
+    (linhas[r.produto] = linhas[r.produto] || []).push({ id: r.id, ordem: r.ordem, ...r.dados });
+  }
+
   return {
+    controle: linhas,
     anotacoes: anotacoes.map((r) => ({
       id: r.id, arteKey: r.arte_key, remessa: r.remessa,
       texto: r.texto, criadoEm: r.criado_em
@@ -103,6 +113,26 @@ export default async function handler(req, res) {
                   set url = excluded.url, cidade = excluded.cidade, versao = excluded.versao,
                       origem = excluded.origem, mobile = excluded.mobile,
                       desktop = excluded.desktop, medido_em = excluded.medido_em`;
+
+      } else if (b.tipo === "controle" && b.id && b.produto) {
+        await sql`create table if not exists controle_criativos (
+                    id        text primary key,
+                    produto   text not null,
+                    dados     jsonb not null,
+                    ordem     integer not null default 0,
+                    criado_em timestamptz not null default now())`;
+        const campos = {};
+        for (const k of ["leva", "entrega", "responsavel", "pasta", "copy", "obs"]) {
+          campos[k] = corta(b[k], k === "copy" || k === "obs" ? 1200 : 200);
+        }
+        await sql`insert into controle_criativos (id, produto, dados, ordem)
+                  values (${corta(b.id, 60)}, ${corta(b.produto, 20)},
+                          ${JSON.stringify(campos)}, ${Number(b.ordem) || 0})
+                  on conflict (id) do update
+                  set dados = excluded.dados, ordem = excluded.ordem`;
+
+      } else if (b.tipo === "apagarControle" && b.id) {
+        await sql`delete from controle_criativos where id = ${corta(b.id, 60)}`;
 
       } else if (b.tipo === "apagarMedicao" && b.id) {
         await sql`delete from medicoes where id = ${corta(b.id, 160)}`;

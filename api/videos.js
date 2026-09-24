@@ -30,6 +30,18 @@ const PASTAS = {
   b10x: { id: "1vKkMAcVznyJ2iNRycxLK-j-qewAgdRFb", versao: "FEED" },
 };
 
+/* Pastas dos estáticos, por remessa. Não entram na lista de artes — as
+   imagens já estão no repositório — mas o Controle de Criativos precisa do
+   link da pasta de cada AD, e é aqui que ele sai. */
+const PASTAS_ARTE = {
+  mdv:  { r01: "1REePm5VzbxJ2rLcN-3xsPBkw0y2smoU-" },
+  rgv:  { r02: "144l_lE4PsPGuY08nKitVcJfQjzvhuWoZ" },
+  mqv:  { r03: "1Qi90lyu-9zDm0pFpPZCuEL39NNt7Hn65" },
+  met:  { r01: "1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i" },
+  b10x: { r01: "1RCzM5ZmUAeYtY3OPTcw1YA_kMgXpt8NV" },
+  insta:{ carrossel: "1GsGZp5vypoC1A4jCjqwPihMBp5ybar_b" },
+};
+
 const PROFUNDIDADE = 4;        // raiz → leva → cidade → AD já é o pior caso
 const TEMPO_LIMITE = 240000;   // abaixo do maxDuration, para responder sempre
 
@@ -129,6 +141,7 @@ async function varrerPasta(id, nome, chave, versao, nivel, grupos, expira) {
         id: `${idDe(nome)}__${idDe(f.pasta.name)}`,
         code: f.pasta.name.trim(),
         drive: arq.id,
+        pasta: f.pasta.id,          // link da pasta do AD, para o Controle
       });
     }
     if (videos.length) grupos.push({ tipo: nome.trim(), videos });
@@ -138,6 +151,28 @@ async function varrerPasta(id, nome, chave, versao, nivel, grupos, expira) {
   for (const f of filhas) {
     await varrerPasta(f.pasta.id, f.pasta.name, chave, versao, nivel + 1, grupos, expira);
   }
+}
+
+/* Percorre uma pasta de remessa e devolve { "AD01": "<id da pasta>" }.
+   Desce um nível quando a remessa separa por cidade, como no Meteórico. */
+async function mapearPastas(raiz, chave, expira, nivel = 0) {
+  if (nivel > 2 || Date.now() > expira) return {};
+  const filhos = (await listar(raiz, chave)).filter(ePasta);
+  const mapa = {};
+  for (let i = 0; i < filhos.length; i += 8) {
+    if (Date.now() > expira) break;
+    const lote = filhos.slice(i, i + 8);
+    const dentro = await Promise.all(lote.map((f) => listar(f.id, chave)));
+    for (let k = 0; k < lote.length; k++) {
+      const temPasta = dentro[k].some(ePasta);
+      if (temPasta) {
+        Object.assign(mapa, await mapearPastas(lote[k].id, chave, expira, nivel + 1));
+      } else {
+        mapa[lote[k].name.trim()] = lote[k].id;
+      }
+    }
+  }
+  return mapa;
 }
 
 async function varrer(chave, expira) {
@@ -154,6 +189,16 @@ async function varrer(chave, expira) {
       saida[produto] = { erro: String(e.message).slice(0, 140) };
     }
   }
+  /* as pastas dos estáticos, por remessa */
+  for (const [produto, remessas] of Object.entries(PASTAS_ARTE)) {
+    if (Date.now() > expira) break;
+    const artes = {};
+    for (const [remessa, id] of Object.entries(remessas)) {
+      try { artes[remessa] = await mapearPastas(id, chave, expira); }
+      catch { /* pasta fora do ar: o Controle cai no link da remessa */ }
+    }
+    saida[produto] = Object.assign(saida[produto] || { grupos: [] }, { artes });
+  }
   return saida;
 }
 
@@ -164,7 +209,13 @@ export default async function handler(req, res) {
     try {
       const linhas = await sql`select produto, dados, quando from acervo_video`;
       const out = {};
-      for (const l of linhas) out[l.produto] = { grupos: l.dados?.grupos || [], quando: l.quando };
+      for (const l of linhas) {
+        out[l.produto] = {
+          grupos: l.dados?.grupos || [],
+          artes: l.dados?.artes || {},
+          quando: l.quando
+        };
+      }
       return responder(res, out);
     } catch {
       return responder(res, {});      // tabela ainda não existe: painel usa o HTML
@@ -188,12 +239,14 @@ export default async function handler(req, res) {
     const n = r.grupos.reduce((a, g) => a + g.videos.length, 0);
     /* varredura vazia não apaga o que já está guardado: pasta fora do ar ou
        permissão trocada não pode zerar o painel */
-    if (!n) { resumo[produto] = "vazio — mantido o anterior"; continue; }
+    const artes = r.artes || {};
+    const nArtes = Object.values(artes).reduce((a2, m) => a2 + Object.keys(m).length, 0);
+    if (!n && !nArtes) { resumo[produto] = "vazio — mantido o anterior"; continue; }
     await sql`insert into acervo_video (produto, dados, quando)
-              values (${produto}, ${JSON.stringify({ grupos: r.grupos })}, now())
+              values (${produto}, ${JSON.stringify({ grupos: r.grupos, artes })}, now())
               on conflict (produto) do update
               set dados = excluded.dados, quando = now()`;
-    resumo[produto] = `${r.grupos.length} grupos · ${n} vídeos`;
+    resumo[produto] = `${r.grupos.length} grupos · ${n} vídeos · ${nArtes} pastas de arte`;
   }
   return responder(res, { quando: new Date().toISOString(), resumo });
 }
