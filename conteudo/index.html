@@ -637,6 +637,25 @@ select.pick:hover{border-color:var(--line-strong)}
 }
 .fonte-lk:hover{color:var(--white); border-color:var(--line-strong); background:var(--panel-2)}
 
+
+/* ---------------- RODAPÉ ---------------- */
+.rodape{margin-top:20px; border-top:1px solid var(--line); padding:26px 0 46px}
+.rodape-in{display:flex; align-items:center; gap:24px; flex-wrap:wrap}
+.rodape-c{font-size:12.5px; color:var(--gray-dim); flex:1; min-width:210px}
+.rodape-links{display:flex; gap:22px; flex-wrap:wrap}
+.rodape-links a{font-size:12.5px; color:var(--gray-dim); text-decoration:none; transition:color .14s ease}
+.rodape-links a:hover{color:var(--white)}
+.rodape-social{display:flex; gap:14px; align-items:center}
+.rodape-social a{display:inline-flex; color:var(--gray-dim); transition:color .14s ease}
+.rodape-social a:hover{color:var(--white)}
+.rodape-social svg{width:19px; height:19px; fill:currentColor; display:block}
+.rodape-nota{margin:18px 0 0; font-size:11.5px; color:#4a4a4a; line-height:1.6; max-width:78ch}
+@media (max-width:760px){
+  .rodape-in{gap:16px}
+  .rodape-c{flex:1 1 100%}
+  .rodape-links{flex:1}
+}
+
 /* ---------------- CONTEÚDO OURO ---------------- */
 :root{ --ouro:#e8b923; --ouro-claro:#ffd966; }
 .vd.ouro{border-color:var(--ouro); box-shadow:0 0 0 1px var(--ouro), 0 0 14px rgba(232,185,35,.22)}
@@ -1192,8 +1211,26 @@ tr.ouro td:first-child{box-shadow:inset 3px 0 0 var(--ouro)}
 </section>
 </div>
 
-  <footer style="padding:34px 0 60px; color:var(--gray-dim); font-size:12px; line-height:1.6; border-top:1px solid var(--line)">
-    Central de Conteúdo R1 — painel de atalho pra pasta mãe no Drive. Os arquivos continuam no Drive; este painel só organiza a porta de entrada e guarda o procedimento.
+  <footer class="rodape">
+    <div class="rodape-in">
+      <span class="rodape-c">© 2026 Grupo R1. Todos os direitos reservados.</span>
+      <nav class="rodape-links">
+        <a href="https://lp.grupor1.com/r1oficial/politica-de-privacidade/" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>
+        <a href="https://lp.grupor1.com/r1oficial/termos-de-uso/" target="_blank" rel="noopener noreferrer">Termos de Uso</a>
+      </nav>
+      <div class="rodape-social">
+        <a href="https://facebook.com/oficialgrupo" target="_blank" rel="noopener noreferrer" aria-label="Grupo R1 no Facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.55-1.5h1.65V3.6c-.29-.04-1.27-.12-2.41-.12-2.39 0-4.03 1.46-4.03 4.14V9.9H7.5V13h2.76v8h3.24z"/></svg>
+        </a>
+        <a href="https://instagram.com/oficialgrupo" target="_blank" rel="noopener noreferrer" aria-label="Grupo R1 no Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.6c2.4 0 2.69.01 3.64.05.88.04 1.35.19 1.67.31.42.16.72.36 1.03.67.31.31.51.61.67 1.03.12.32.27.79.31 1.67.04.95.05 1.24.05 3.64s-.01 2.69-.05 3.64c-.4.88-.19 1.35-.31 1.67-.16.42-.36.72-.67 1.03-.31.31-.61.51-1.03.67-.32.12-.79.27-1.67.31-.95.04-1.24.05-3.64.05s-2.69-.01-3.64-.05c-.88-.04-1.35-.19-1.67-.31a2.8 2.8 0 0 1-1.03-.67 2.8 2.8 0 0 1-.67-1.03c-.12-.32-.27-.79-.31-1.67C4.61 14.69 4.6 14.4 4.6 12s.01-2.69.05-3.64c.04-.88.19-1.35.31-1.67.16-.42.36-.72.67-1.03.31-.31.61-.51 1.03-.67.32-.12.79-.27 1.67-.31C9.31 4.61 9.6 4.6 12 4.6zM12 3c-2.44 0-2.75.01-3.71.05-.96.05-1.61.2-2.18.42-.6.23-1.1.54-1.6 1.04-.5.5-.81 1-1.04 1.6-.22.57-.37 1.22-.42 2.18C3.01 9.25 3 9.56 3 12s.01 2.75.05 3.71c.5.96.2 1.61.42 2.18.23.6.54 1.1 1.04 1.6.5.5 1 .81 1.6 1.04.57.22 1.22.37 2.18.42.96.04 1.27.05 3.71.05s2.75-.01 3.71-.05c.96-.05 1.61-.2 2.18-.42.6-.23 1.1-.54 1.6-1.04.5-.5.81-1 1.04-1.6.22-.57.37-1.22.42-2.18.04-.96.05-1.27.05-3.71s-.01-2.75-.05-3.71c-.05-.96-.2-1.61-.42-2.18a4.4 4.4 0 0 0-1.04-1.6 4.4 4.4 0 0 0-1.6-1.04c-.57-.22-1.22-.37-2.18-.42C14.75 3.01 14.44 3 12 3zm0 4.38A4.62 4.62 0 1 0 16.62 12 4.62 4.62 0 0 0 12 7.38zm0 7.62A3 3 0 1 1 15 12a3 3 0 0 1-3 3zm5.88-7.8a1.08 1.08 0 1 1-1.08-1.08 1.08 1.08 0 0 1 1.08 1.08z"/></svg>
+        </a>
+        <a href="https://youtube.com/@oficialgrupo" target="_blank" rel="noopener noreferrer" aria-label="Grupo R1 no YouTube">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.76-1.77C18.25 5 12 5 12 5s-6.25 0-7.84.43A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.76 1.77C5.75 19 12 19 12 19s6.25 0 7.84-.43a2.5 2.5 0 0 0 1.76-1.77A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10.1 14.9V9.1L15.1 12z"/></svg>
+        </a>
+      </div>
+    </div>
+    <p class="rodape-nota">Central de Conteúdo — painel interno sobre a pasta mãe do Drive. Os arquivos continuam no Drive; este painel organiza a porta de entrada, a decupagem e o procedimento.</p>
   </footer>
 </main>
 
