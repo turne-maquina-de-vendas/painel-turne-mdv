@@ -2617,21 +2617,32 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
         botao.setAttribute("title", "Copiar link");
       }, 1400);
     }
+    /* o campo escondido funciona onde a API moderna é barrada — dentro de
+       webview, em http, ou com a permissão negada. Por isso ele é o plano
+       B de verdade, e não só o caminho de quem não tem a API. */
+    function pelaSelecao(){
+      var c = document.createElement("textarea");
+      c.value = texto;
+      c.setAttribute("readonly", "");
+      c.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0";
+      document.body.appendChild(c);
+      c.focus();
+      c.select();
+      c.setSelectionRange(0, texto.length);
+      var ok = false;
+      try{ ok = document.execCommand("copy"); }catch(e){ ok = false; }
+      document.body.removeChild(c);
+      return ok;
+    }
+
     if(navigator.clipboard && window.isSecureContext){
-      navigator.clipboard.writeText(texto).then(function(){ avisar(true); },
-                                               function(){ avisar(false); });
+      navigator.clipboard.writeText(texto).then(
+        function(){ avisar(true); },
+        function(){ avisar(pelaSelecao()); }
+      );
       return;
     }
-    var c = document.createElement("textarea");
-    c.value = texto;
-    c.setAttribute("readonly", "");
-    c.style.cssText = "position:fixed;top:-1000px;opacity:0";
-    document.body.appendChild(c);
-    c.select();
-    var ok = false;
-    try{ ok = document.execCommand("copy"); }catch(e){ ok = false; }
-    document.body.removeChild(c);
-    avisar(ok);
+    avisar(pelaSelecao());
   }
 
   $("#tabControle").addEventListener("click", function(e){
