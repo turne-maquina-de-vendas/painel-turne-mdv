@@ -13,7 +13,7 @@
  */
 
 const ORIGENS = ["https://lp.grupor1.com"];
-const VOZ_PADRAO = "uN7bwBTrJ4H2a9hhd4LC";
+const VOZ_PADRAO = "xtECb5h5A8CQbpnH1hOm";
 const MAX_CHARS = 1000;
 
 export default async function handler(req, res) {
