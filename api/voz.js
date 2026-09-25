@@ -32,7 +32,7 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ erro: "use POST" });
   if (!permitida) return res.status(403).json({ erro: "origem não autorizada" });
 
-  const chave = process.env.ELEVENLABS_API_KEY;
+  const chave = String(process.env.ELEVENLABS_API_KEY || "").trim().replace(/^["']|["']$/g, "").trim();
   if (!chave) return res.status(500).json({ erro: "ELEVENLABS_API_KEY não configurada na Vercel" });
 
   let corpo = req.body;
