@@ -55,7 +55,9 @@ export default async function handler(req, res) {
     });
     if (!r.ok) {
       const detalhe = await r.text();
-      return res.status(r.status).json({ erro: "ElevenLabs recusou", detalhe: detalhe.slice(0, 300) });
+      /* diagnóstico sem expor a chave: só o tamanho e se tem o prefixo esperado */
+      const pista = { tamanho: chave.length, prefixo_sk: chave.startsWith("sk_") };
+      return res.status(r.status).json({ erro: "ElevenLabs recusou", detalhe: detalhe.slice(0, 300), chave: pista });
     }
     const audio = Buffer.from(await r.arrayBuffer());
     res.setHeader("Content-Type", "audio/mpeg");
