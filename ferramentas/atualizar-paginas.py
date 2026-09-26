@@ -74,6 +74,14 @@ B10X = [
     ("black10x-v3", "V3", "https://lp.grupor1.com/black10x-v3/"),
 ]
 
+# Landing pages do Funil Netflix.
+NET = [
+    ("r1play",      "R1 Play",   "https://lp.grupor1.com/r1play/"),
+    ("r1gestao",    "Gestão",    "https://lp.grupor1.com/r1gestao/"),
+    ("r1marketing", "Marketing", "https://lp.grupor1.com/r1marketing/"),
+    ("r1vendas",    "Vendas",    "https://lp.grupor1.com/r1vendas/"),
+]
+
 
 def normal(t):
     """sem acento, sem pontuacao, minusculo — para casar cidade com slug"""
@@ -183,6 +191,7 @@ lista += [{"id": i, "url": u, "cidade": c, "versao": "RGV"} for i, c, u in RGV]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "MQV"} for i, c, u in MQV]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "MET"} for i, c, u in MET]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "B10X"} for i, c, u in B10X]
+lista += [{"id": i, "url": u, "cidade": c, "versao": "NET"} for i, c, u in NET]
 io.open(os.path.join(FUNCOES, "lista-paginas.js"), "w", encoding="utf-8").write(
     "// Gerado por ferramentas/atualizar-paginas.py a partir da planilha MDV - Outubro 2026.\n"
     "// Nao edite a mao: rode o script de novo.\n"
@@ -192,5 +201,5 @@ print(f"{sum(len(g['paginas']) for g in dados)} paginas · {len(dados)} funis")
 for g in dados:
     print(f"  {g['versao']}: {len(g['paginas'])}")
 print(f"ocultos do painel: {', '.join(OCULTAR)}")
-print(f"{len(lista)} páginas na medição automática (inclui {len(RGV)} do RGV, {len(MQV)} da MQV Online e {len(MET)} do Meteorico, {len(B10X)} do Black 10X)")
+print(f"{len(lista)} páginas na medição automática (inclui {len(RGV)} do RGV, {len(MQV)} da MQV Online e {len(MET)} do Meteorico, {len(B10X)} do Black 10X, {len(NET)} do Netflix)")
 print("\nagora rode: python3 ferramentas/gerar-index.py")

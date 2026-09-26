@@ -40,6 +40,10 @@ const PASTAS_ARTE = {
   met:  { r01: "1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i" },
   b10x: { r01: "1RCzM5ZmUAeYtY3OPTcw1YA_kMgXpt8NV" },
   insta:{ carrossel: "1GsGZp5vypoC1A4jCjqwPihMBp5ybar_b" },
+  /* o Netflix separa por área do funil, e cada aba tem sua pasta */
+  net:  { gestao:    "1obIcR-DbEDZ9x1FRYY2JTJXa3HlOTzYA",
+          marketing: "1b-P4xzadsoPX8eMyHPtBQRNHRemSkJ0I",
+          vendas:    "1Vvl4vhqCbtnJl84n3nDi0HJytkAXZUSq" },
 };
 
 const PROFUNDIDADE = 4;        // raiz → leva → cidade → AD já é o pior caso

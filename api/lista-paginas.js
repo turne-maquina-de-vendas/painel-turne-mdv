@@ -182,6 +182,66 @@ export const PAGINAS = [
     "versao": "V5"
   },
   {
+    "id": "turne-mdv-campinagrande-v6",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v6/",
+    "cidade": "Campina Grande (PB)",
+    "versao": "ROTA 45 V6"
+  },
+  {
+    "id": "turne-mdv-joaopessoa-v6",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v6/",
+    "cidade": "João Pessoa (PB)",
+    "versao": "ROTA 45 V6"
+  },
+  {
+    "id": "turne-mdv-palmas-v6",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-palmas-v6/",
+    "cidade": "Palmas (TO)",
+    "versao": "ROTA 45 V6"
+  },
+  {
+    "id": "turne-mdv-vitoriadaconquista-v6",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista-v6/",
+    "cidade": "Vitoria da Conquista (BA)",
+    "versao": "ROTA 45 V6"
+  },
+  {
+    "id": "turne-mdv-brasilia-v6",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-brasilia-v6/",
+    "cidade": "Brasília (DF)",
+    "versao": "ROTA 45 V6"
+  },
+  {
+    "id": "turne-mdv-manaus-v6",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-manaus-v6/",
+    "cidade": "Manaus (AM)",
+    "versao": "ROTA 45 V6"
+  },
+  {
+    "id": "turne-mdv-belem-v6",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-belem-v6/",
+    "cidade": "Belém (PA)",
+    "versao": "ROTA 45 V6"
+  },
+  {
+    "id": "turne-mdv-sinop-v6",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-sinop-v6/",
+    "cidade": "Sinop (MT)",
+    "versao": "ROTA 45 V6"
+  },
+  {
+    "id": "turne-mdv-cuiaba-v6",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v6/",
+    "cidade": "Cuiabá (MT)",
+    "versao": "ROTA 45 V6"
+  },
+  {
+    "id": "turne-mdv-ribeiraopreto-v6",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v6/",
+    "cidade": "Ribeirão Preto (SP)",
+    "versao": "ROTA 45 V6"
+  },
+  {
     "id": "rgv-problema-x-solucao-v4",
     "url": "https://metodorgv.com.br/problema-x-solucao-v4/",
     "cidade": "Problema x Solução V4",
@@ -294,5 +354,29 @@ export const PAGINAS = [
     "url": "https://lp.grupor1.com/black10x-v3/",
     "cidade": "V3",
     "versao": "B10X"
+  },
+  {
+    "id": "r1play",
+    "url": "https://lp.grupor1.com/r1play/",
+    "cidade": "R1 Play",
+    "versao": "NET"
+  },
+  {
+    "id": "r1gestao",
+    "url": "https://lp.grupor1.com/r1gestao/",
+    "cidade": "Gestão",
+    "versao": "NET"
+  },
+  {
+    "id": "r1marketing",
+    "url": "https://lp.grupor1.com/r1marketing/",
+    "cidade": "Marketing",
+    "versao": "NET"
+  },
+  {
+    "id": "r1vendas",
+    "url": "https://lp.grupor1.com/r1vendas/",
+    "cidade": "Vendas",
+    "versao": "NET"
   }
 ];
