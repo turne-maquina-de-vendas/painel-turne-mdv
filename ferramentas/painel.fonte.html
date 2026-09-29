@@ -162,6 +162,37 @@
 .topo-home img{height:30px;width:auto;display:block}
 @media (max-width:640px){ .topo-home img{height:24px} }
 
+/* Tema da Live 01 · Operações, tirado da lp.grupor1.com/liveprocessos1:
+   preto, vermelho e branco, com um cinza de painel mais fechado que o do
+   RGV. As variáveis são as da página (--black, --panel, --card, --red,
+   --green, --gray-mid) nos nomes do painel. Mesma dupla de fontes. */
+:root[data-produto="live1"]{
+  --ink:#0D0D0D;         /* --black */
+  --ink-2:#0A0A0A;
+  --surface:#111111;     /* --card */
+  --surface-2:#1A1A1A;   /* --panel */
+  --surface-3:#242424;
+
+  --line:rgba(255,255,255,.14);
+  --line-soft:rgba(255,255,255,.07);
+  --paper:#FFFFFF;
+  --dim:rgba(255,255,255,.66);
+  --dim-2:rgba(255,255,255,.42);
+
+  --gold:#FE0026;        /* --red */
+  --gold-dim:rgba(254,0,38,.32);
+  --sage:#AEAEAE;        /* --gray-mid */
+  --no-acento:#FFFFFF;
+
+  --ok:#2FA84F;          /* --green da própria página */
+  --ok-bg:rgba(47,168,79,.13);
+  --ok-line:rgba(47,168,79,.34);
+  /* o acento já é vermelho: "reprovado" muda de tom para não confundir */
+  --bad:#FF8A66;
+  --bad-bg:rgba(255,138,102,.13);
+  --bad-line:rgba(255,138,102,.36);
+}
+
 /* Tema do Black Friday 10X, tirado da lp.grupor1.com/black10x: preto, ouro
    e vermelho. As variáveis abaixo são as da própria página (--black,
    --panel, --gold, --red...) traduzidas para os nomes do painel. O par
@@ -1560,6 +1591,23 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   ];
 
 
+  /* Live 01 · Operações. Nasce com as páginas; os criativos vêm depois. */
+  var REMESSAS_LIVE1 = [
+    {id:"r01", nome:"Remessa 01", artes:[]}
+  ];
+
+  var FUNIS_LIVE1 = [
+    {nome:"Live 01 · Operações", versao:"Landing pages", paginas:[
+      {id:"liveprocessos1", cidade:"V1", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://lp.grupor1.com/liveprocessos1/"},
+      {id:"liveprocessos1-v2", cidade:"V2", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://lp.grupor1.com/liveprocessos1-v2/"}
+    ]}
+  ];
+
+
   var PRODUTOS = {
     mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
           capa:"arts/produto-mdv.jpg",
@@ -1583,6 +1631,9 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           drive:"https://drive.google.com/drive/folders/1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i?usp=share_link",
           links:[{nome:"Dashboard de métricas", url:"https://meteorico-set-26.lovable.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
+    live1: {id:"live1", nome:"Live 01 · Operações", curto:"Live 01",
+          capa:"arts/produto-live1.jpg", drive:null,
+          formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     net: {id:"net", nome:"Funil Netflix", curto:"Netflix",
           capa:"arts/produto-net.jpg",
           drive:"https://drive.google.com/drive/folders/1buh32bchPZY_L7RoRo2uU0sSqK8qQeD2?usp=share_link",
@@ -1597,7 +1648,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           links:[{nome:"Termo de Abertura", url:"https://black10xtap.netlify.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
-  var ORDEM_PRODUTOS = ["mdv", "rgv", "met", "b10x", "insta", "net", "mqv"];  // entregues por último
+  var ORDEM_PRODUTOS = ["mdv", "rgv", "met", "b10x", "insta", "net", "live1", "mqv"];  // entregues por último
 
   var produto = null;                       // null = tela de escolha
   var REMESSAS = [], VIDEOS = [], FUNIS = [];
@@ -1669,7 +1720,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       met: {remessas: REMESSAS_MET, videos: videosDoProduto("met"), funis: FUNIS_MET},
       b10x:{remessas: REMESSAS_B10X, videos: videosDoProduto("b10x"), funis: FUNIS_B10X},
       insta:{remessas: REMESSAS_INSTA, videos: [],        funis: FUNIS_INSTA},
-      net:  {remessas: REMESSAS_NET,   videos: [],        funis: FUNIS_NET}
+      net:  {remessas: REMESSAS_NET,   videos: [],        funis: FUNIS_NET},
+      live1:{remessas: REMESSAS_LIVE1, videos: [],        funis: FUNIS_LIVE1}
     }[id] || {remessas: [], videos: [], funis: []};
     REMESSAS = acervo.remessas;
     VIDEOS   = acervo.videos;
@@ -1824,6 +1876,11 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       {id:"turne-mdv-sinop-v6", cidade:"Sinop (MT)", data:"28/10", status:"", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop-v6/"},
       {id:"turne-mdv-cuiaba-v6", cidade:"Cuiabá (MT)", data:"29/10", status:"", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v6/"},
       {id:"turne-mdv-ribeiraopreto-v6", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v6/"}
+    ]},
+    {nome:"Rota 45", versao:"ROTA 45 SEM FORMS", paginas:[
+      {id:"turne-mdv-campinagrande-v4b", cidade:"Campina Grande (PB)", data:"06/10", status:"", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v4b/"},
+      {id:"turne-mdv-joaopessoa-v4b", cidade:"João Pessoa (PB)", data:"07/10", status:"", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v4b/"},
+      {id:"turne-mdv-palmas-v4b", cidade:"Palmas (TO)", data:"08/10", status:"", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas-v4b/"}
     ]}
   ];
   /* FUNIS:fim */

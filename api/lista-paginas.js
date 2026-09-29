@@ -242,6 +242,24 @@ export const PAGINAS = [
     "versao": "ROTA 45 V6"
   },
   {
+    "id": "turne-mdv-campinagrande-v4b",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v4b/",
+    "cidade": "Campina Grande (PB)",
+    "versao": "ROTA 45 SEM FORMS"
+  },
+  {
+    "id": "turne-mdv-joaopessoa-v4b",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v4b/",
+    "cidade": "João Pessoa (PB)",
+    "versao": "ROTA 45 SEM FORMS"
+  },
+  {
+    "id": "turne-mdv-palmas-v4b",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-palmas-v4b/",
+    "cidade": "Palmas (TO)",
+    "versao": "ROTA 45 SEM FORMS"
+  },
+  {
     "id": "rgv-problema-x-solucao-v4",
     "url": "https://metodorgv.com.br/problema-x-solucao-v4/",
     "cidade": "Problema x Solução V4",
@@ -378,5 +396,17 @@ export const PAGINAS = [
     "url": "https://lp.grupor1.com/r1vendas/",
     "cidade": "Vendas",
     "versao": "NET"
+  },
+  {
+    "id": "liveprocessos1",
+    "url": "https://lp.grupor1.com/liveprocessos1/",
+    "cidade": "V1",
+    "versao": "LIVE1"
+  },
+  {
+    "id": "liveprocessos1-v2",
+    "url": "https://lp.grupor1.com/liveprocessos1-v2/",
+    "cidade": "V2",
+    "versao": "LIVE1"
   }
 ];
