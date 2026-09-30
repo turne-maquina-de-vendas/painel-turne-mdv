@@ -34,7 +34,8 @@ const PASTAS = {
    imagens já estão no repositório — mas o Controle de Criativos precisa do
    link da pasta de cada AD, e é aqui que ele sai. */
 const PASTAS_ARTE = {
-  mdv:  { r01: "1REePm5VzbxJ2rLcN-3xsPBkw0y2smoU-" },
+  mdv:  { r01: "1REePm5VzbxJ2rLcN-3xsPBkw0y2smoU-",
+          r04: "15tnCiKYCavZhqpP6m4Hl43Ut4GyfKhuB" },
   rgv:  { r02: "144l_lE4PsPGuY08nKitVcJfQjzvhuWoZ" },
   mqv:  { r03: "1Qi90lyu-9zDm0pFpPZCuEL39NNt7Hn65" },
   met:  { r01: "1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i" },
