@@ -40,6 +40,7 @@ const PASTAS_ARTE = {
   mqv:  { r03: "1Qi90lyu-9zDm0pFpPZCuEL39NNt7Hn65" },
   met:  { r01: "1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i" },
   b10x: { r01: "1RCzM5ZmUAeYtY3OPTcw1YA_kMgXpt8NV" },
+  live1:{ r01: "1IzhDQTmp6OXM6fXH1U7cPAOTilrXZP7b" },
   insta:{ carrossel: "1GsGZp5vypoC1A4jCjqwPihMBp5ybar_b" },
   /* o Netflix separa por área do funil, e cada aba tem sua pasta */
   net:  { gestao:    "1obIcR-DbEDZ9x1FRYY2JTJXa3HlOTzYA",
