@@ -86,6 +86,7 @@ NET = [
 LIVE1 = [
     ("liveprocessos1",    "V1", "https://lp.grupor1.com/liveprocessos1/"),
     ("liveprocessos1-v2", "V2", "https://lp.grupor1.com/liveprocessos1-v2/"),
+    ("liveprocessos1-v3", "V3", "https://lp.grupor1.com/liveprocessos1-v3/"),
 ]
 
 

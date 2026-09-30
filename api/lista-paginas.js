@@ -408,5 +408,11 @@ export const PAGINAS = [
     "url": "https://lp.grupor1.com/liveprocessos1-v2/",
     "cidade": "V2",
     "versao": "LIVE1"
+  },
+  {
+    "id": "liveprocessos1-v3",
+    "url": "https://lp.grupor1.com/liveprocessos1-v3/",
+    "cidade": "V3",
+    "versao": "LIVE1"
   }
 ];
