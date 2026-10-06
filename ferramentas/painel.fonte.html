@@ -1979,7 +1979,31 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     for(var i=0;i<REMESSAS.length;i++){ if(REMESSAS[i].id === lote) return REMESSAS[i]; }
     return REMESSAS[0];
   }
-  function artesDoLote(){ return remessaAtual().artes; }
+  /* ENTROU é injetado pelo gerador logo acima das remessas: a data em que
+     cada arquivo entrou no repositório, lida do histórico do git. O que
+     chegou por último aparece primeiro — é o que ainda espera avaliação.
+     Na versão artifact, sem gerador, o mapa não existe e a ordem é a de
+     origem. */
+  if(typeof ENTROU === "undefined") var ENTROU = {};
+
+  function entradaDa(a){
+    var maior = "";
+    (a.files || []).forEach(function(f){
+      var d = ENTROU[f] || "";
+      if(d > maior) maior = d;        // num carrossel vale o card mais novo
+    });
+    return maior;
+  }
+
+  function artesDoLote(){
+    var lista = remessaAtual().artes.slice();
+    /* empate mantém a ordem de origem: o sort do JS é estável */
+    lista.sort(function(x, y){
+      var a2 = entradaDa(x), b2 = entradaDa(y);
+      return a2 === b2 ? 0 : (a2 > b2 ? -1 : 1);
+    });
+    return lista;
+  }
 
   /* Quantas peças do lote ainda esperam ir ao ar. Reprovada não vai, e
      publicada já foi: nenhuma das duas conta na fila. */

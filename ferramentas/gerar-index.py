@@ -169,6 +169,39 @@ s = s.replace(velho, novo)
 
 assert "window.claude" not in s and "enfileirar({tipo:" in s and "esvaziar" in s, "transformacao incompleta"
 
+# 4b) quando cada arte entrou no repositorio
+#
+# O painel mostra o recem-chegado primeiro. A data nao fica escrita a mao em
+# cada arte — sai do proprio historico do git, entao toda importacao futura
+# ja nasce com a dela, sem ninguem ter que lembrar.
+import json as _json
+import subprocess as _sp
+
+def _datas_das_artes():
+    try:
+        saida = _sp.run(["git", "log", "--diff-filter=A", "--name-only",
+                         "--format=@%aI", "--", "arts/"],
+                        cwd=RAIZ, capture_output=True, text=True, timeout=120).stdout
+    except Exception:
+        return {}
+    datas, quando = {}, None
+    for linha in saida.splitlines():
+        linha = linha.strip()
+        if linha.startswith("@"):
+            quando = linha[1:11]
+        elif linha.startswith("arts/") and quando:
+            datas.setdefault(linha, quando)      # o primeiro que aparece e o mais recente
+    return datas
+
+_datas = _datas_das_artes()
+_mapa = "  var ENTROU = " + _json.dumps(_datas, ensure_ascii=False, sort_keys=True) + ";\n"
+_marca = "  var REMESSAS_MDV = ["
+if _marca in s:
+    s = s.replace(_marca, _mapa + "\n" + _marca, 1)
+    print(f"datas de entrada: {len(_datas)} artes")
+else:
+    raise SystemExit("ERRO: nao achei onde por o mapa de datas")
+
 # 5) documento HTML completo (a versao artifact nao tem head)
 titulo = "<title>Painel de Criativos</title>"
 corpo = s.split(titulo, 1)[1]
