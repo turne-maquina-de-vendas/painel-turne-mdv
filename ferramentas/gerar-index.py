@@ -194,6 +194,18 @@ def _datas_das_artes():
     return datas
 
 _datas = _datas_das_artes()
+
+# Arte recem-baixada ainda nao esta no git: sem isso ela ficaria sem data e
+# cairia para o fim da fila, justamente o contrario do que se quer. Vale a
+# data do arquivo em disco ate o commit entrar.
+import datetime as _dt
+_pasta = os.path.join(RAIZ, "arts")
+if os.path.isdir(_pasta):
+    for _n in os.listdir(_pasta):
+        _k = "arts/" + _n
+        if _k in _datas or not _n.lower().endswith((".jpg", ".png")): continue
+        _m = os.path.getmtime(os.path.join(_pasta, _n))
+        _datas[_k] = _dt.date.fromtimestamp(_m).isoformat()
 _mapa = "  var ENTROU = " + _json.dumps(_datas, ensure_ascii=False, sort_keys=True) + ";\n"
 _marca = "  var REMESSAS_MDV = ["
 if _marca in s:
