@@ -260,6 +260,174 @@ export const PAGINAS = [
     "versao": "ROTA 45 SEM FORMS"
   },
   {
+    "id": "turne-mdv-vitoriadaconquista-v4b",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista-v4b/",
+    "cidade": "Vitoria da Conquista (BA)",
+    "versao": "ROTA 45 SEM FORMS"
+  },
+  {
+    "id": "turne-mdv-brasilia-v4b",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-brasilia-v4b/",
+    "cidade": "Brasília (DF)",
+    "versao": "ROTA 45 SEM FORMS"
+  },
+  {
+    "id": "turne-mdv-manaus-v4b",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-manaus-v4b/",
+    "cidade": "Manaus (AM)",
+    "versao": "ROTA 45 SEM FORMS"
+  },
+  {
+    "id": "turne-mdv-belem-v4b",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-belem-v4b/",
+    "cidade": "Belém (PA)",
+    "versao": "ROTA 45 SEM FORMS"
+  },
+  {
+    "id": "turne-mdv-sinop-v4b",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-sinop-v4b/",
+    "cidade": "Sinop (MT)",
+    "versao": "ROTA 45 SEM FORMS"
+  },
+  {
+    "id": "turne-mdv-cuiaba-v4b",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v4b/",
+    "cidade": "Cuiabá (MT)",
+    "versao": "ROTA 45 SEM FORMS"
+  },
+  {
+    "id": "turne-mdv-ribeiraopreto-v4b",
+    "url": "https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v4b/",
+    "cidade": "Ribeirão Preto (SP)",
+    "versao": "ROTA 45 SEM FORMS"
+  },
+  {
+    "id": "lc_rota-45-vitoriadaconquista-funil-1-v2",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-vitoriadaconquista-funil-1-v2/",
+    "cidade": "Vitoria da Conquista (BA)",
+    "versao": "NOVO PREÇO V2"
+  },
+  {
+    "id": "lc_rota-45-brasilia-funil-1-v2",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-brasilia-funil-1-v2/",
+    "cidade": "Brasília (DF)",
+    "versao": "NOVO PREÇO V2"
+  },
+  {
+    "id": "lc_rota-45-manaus-funil-1-v2",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v2/",
+    "cidade": "Manaus (AM)",
+    "versao": "NOVO PREÇO V2"
+  },
+  {
+    "id": "lc_rota-45-belem-funil-1-v2",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-belem-funil-1-v2/",
+    "cidade": "Belém (PA)",
+    "versao": "NOVO PREÇO V2"
+  },
+  {
+    "id": "lc_rota-45-sinop-funil-1-v2",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-sinop-funil-1-v2/",
+    "cidade": "Sinop (MT)",
+    "versao": "NOVO PREÇO V2"
+  },
+  {
+    "id": "lc_rota-45-cuiaba-funil-1-v2",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-cuiaba-funil-1-v2/",
+    "cidade": "Cuiabá (MT)",
+    "versao": "NOVO PREÇO V2"
+  },
+  {
+    "id": "lc_rota-45-ribeirao-preto-funil-1-v2",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-ribeirao-preto-funil-1-v2/",
+    "cidade": "Ribeirão Preto (SP)",
+    "versao": "NOVO PREÇO V2"
+  },
+  {
+    "id": "lc_rota-45-vitoriadaconquista-funil-1-v3b",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-vitoriadaconquista-funil-1-v3b/",
+    "cidade": "Vitoria da Conquista (BA)",
+    "versao": "NOVO PREÇO V3b"
+  },
+  {
+    "id": "lc_rota-45-brasilia-funil-1-v3b",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-brasilia-funil-1-v3b/",
+    "cidade": "Brasília (DF)",
+    "versao": "NOVO PREÇO V3b"
+  },
+  {
+    "id": "lc_rota-45-manaus-funil-1-v3b",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v3b/",
+    "cidade": "Manaus (AM)",
+    "versao": "NOVO PREÇO V3b"
+  },
+  {
+    "id": "lc_rota-45-belem-funil-1-v3b",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-belem-funil-1-v3b/",
+    "cidade": "Belém (PA)",
+    "versao": "NOVO PREÇO V3b"
+  },
+  {
+    "id": "lc_rota-45-sinop-funil-1-v3b",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-sinop-funil-1-v3b/",
+    "cidade": "Sinop (MT)",
+    "versao": "NOVO PREÇO V3b"
+  },
+  {
+    "id": "lc_rota-45-cuiaba-funil-1-v3b",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-cuiaba-funil-1-v3b/",
+    "cidade": "Cuiabá (MT)",
+    "versao": "NOVO PREÇO V3b"
+  },
+  {
+    "id": "lc_rota-45-ribeirao-preto-funil-1-v3b",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-ribeirao-preto-funil-1-v3b/",
+    "cidade": "Ribeirão Preto (SP)",
+    "versao": "NOVO PREÇO V3b"
+  },
+  {
+    "id": "lc_rota-45-vitoriadaconquista-funil-1-v4",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-vitoriadaconquista-funil-1-v4/",
+    "cidade": "Vitoria da Conquista (BA)",
+    "versao": "NOVO PREÇO V4"
+  },
+  {
+    "id": "lc_rota-45-brasilia-funil-1-v4",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-brasilia-funil-1-v4/",
+    "cidade": "Brasília (DF)",
+    "versao": "NOVO PREÇO V4"
+  },
+  {
+    "id": "lc_rota-45-manaus-funil-1-v4",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v4/",
+    "cidade": "Manaus (AM)",
+    "versao": "NOVO PREÇO V4"
+  },
+  {
+    "id": "lc_rota-45-belem-funil-1-v4",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-belem-funil-1-v4/",
+    "cidade": "Belém (PA)",
+    "versao": "NOVO PREÇO V4"
+  },
+  {
+    "id": "lc_rota-45-sinop-funil-1-v4",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-sinop-funil-1-v4/",
+    "cidade": "Sinop (MT)",
+    "versao": "NOVO PREÇO V4"
+  },
+  {
+    "id": "lc_rota-45-cuiaba-funil-1-v4",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-cuiaba-funil-1-v4/",
+    "cidade": "Cuiabá (MT)",
+    "versao": "NOVO PREÇO V4"
+  },
+  {
+    "id": "lc_rota-45-ribeirao-preto-funil-1-v4",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-ribeirao-preto-funil-1-v4/",
+    "cidade": "Ribeirão Preto (SP)",
+    "versao": "NOVO PREÇO V4"
+  },
+  {
     "id": "rgv-problema-x-solucao-v4",
     "url": "https://metodorgv.com.br/problema-x-solucao-v4/",
     "cidade": "Problema x Solução V4",
@@ -371,6 +539,24 @@ export const PAGINAS = [
     "id": "black10x-v3",
     "url": "https://lp.grupor1.com/black10x-v3/",
     "cidade": "V3",
+    "versao": "B10X"
+  },
+  {
+    "id": "black10x-g",
+    "url": "https://lp.grupor1.com/black10x-g/",
+    "cidade": "G",
+    "versao": "B10X"
+  },
+  {
+    "id": "black10x-v4g",
+    "url": "https://lp.grupor1.com/black10x-v4g/",
+    "cidade": "V4 G",
+    "versao": "B10X"
+  },
+  {
+    "id": "black10x-v5g",
+    "url": "https://lp.grupor1.com/black10x-v5g/",
+    "cidade": "V5 G",
     "versao": "B10X"
   },
   {

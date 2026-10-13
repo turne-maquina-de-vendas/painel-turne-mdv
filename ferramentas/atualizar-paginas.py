@@ -72,6 +72,9 @@ B10X = [
     ("black10x",    "V1", "https://lp.grupor1.com/black10x/"),
     ("black10x-v2", "V2", "https://lp.grupor1.com/black10x-v2/"),
     ("black10x-v3", "V3", "https://lp.grupor1.com/black10x-v3/"),
+    ("black10x-g",   "G",    "https://lp.grupor1.com/black10x-g/"),
+    ("black10x-v4g", "V4 G", "https://lp.grupor1.com/black10x-v4g/"),
+    ("black10x-v5g", "V5 G", "https://lp.grupor1.com/black10x-v5g/"),
 ]
 
 # Landing pages do Funil Netflix.
