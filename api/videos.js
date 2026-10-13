@@ -40,6 +40,7 @@ const PASTAS_ARTE = {
   mqv:  { r03: "1Qi90lyu-9zDm0pFpPZCuEL39NNt7Hn65" },
   met:  { r01: "1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i" },
   b10x: { r01: "1RCzM5ZmUAeYtY3OPTcw1YA_kMgXpt8NV",
+          r02: "1bLvlFl7g1yoqn32OELhUWfC1RSTlOg8m",
           r03: "1Ibjz4_DSgvrnk3Hz21saIUMi5Z8LOyK3" },
   live1:{ r01: "1IzhDQTmp6OXM6fXH1U7cPAOTilrXZP7b" },
   insta:{ carrossel: "1GsGZp5vypoC1A4jCjqwPihMBp5ybar_b",
