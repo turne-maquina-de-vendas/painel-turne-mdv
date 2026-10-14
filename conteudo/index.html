@@ -729,6 +729,7 @@ tr.ouro td:first-child{box-shadow:inset 3px 0 0 var(--ouro)}
       <button class="tab" data-aba="pn" type="button">Painel</button>
       <button class="tab" data-aba="mn" type="button">Minutagem RGV</button>
       <button class="tab" data-aba="pop" type="button">POP</button>
+      <button class="tab" data-aba="rx" type="button">Raio X Conteúdos</button>
     </div>
   </nav>
 </header>
@@ -1024,6 +1025,25 @@ tr.ouro td:first-child{box-shadow:inset 3px 0 0 var(--ouro)}
     <div class="mn-fb">
       O buscador não roda embutido aqui.<br>
       Use <b>Abrir em outra aba</b> pra usar a Minutagem RGV.
+    </div>
+  </div>
+</section>
+</div>
+
+<div id="v-rx" hidden>
+<section style="padding-top:26px; padding-bottom:40px">
+  <div class="sec-head" style="display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:16px">
+    <h2 style="font-size:21px; font-weight:800">Raio X Conteúdos</h2>
+    <p style="margin:0; font-size:13px; color:var(--gray-dim); flex:1; min-width:220px">
+      Leitor diário de conteúdo: notícias, reels e anúncios do dia, com as capas, para pautar o que a R1 publica.
+    </p>
+    <a class="btn btn-ghost btn-sm" href="raiox/index.html" target="_blank" rel="noopener noreferrer">Abrir em outra aba ↗</a>
+  </div>
+  <div class="mn-box rx-box">
+    <iframe id="rxFrame" title="Raio X Conteúdos — leitor diário" loading="lazy"></iframe>
+    <div class="mn-fb">
+      O leitor não roda embutido aqui.<br>
+      Use <b>Abrir em outra aba</b> pra ver o Raio X Conteúdos.
     </div>
   </div>
 </section>
@@ -1491,10 +1511,12 @@ tr.ouro td:first-child{box-shadow:inset 3px 0 0 var(--ouro)}
     $("v-pn").hidden=(nome!=="pn");
     $("v-mn").hidden=(nome!=="mn");
     $("v-pop").hidden=(nome!=="pop");
+    $("v-rx").hidden=(nome!=="rx");
     $("abrirMae").hidden=(nome==="dec");
     if(nome==="dec" && window.__iniciaDecupagem) window.__iniciaDecupagem();
     if(nome==="pn" && window.__iniciaPainel) window.__iniciaPainel();
     if(nome==="mn") ligaMinutagem();
+    if(nome==="rx"){ var rf=$("rxFrame"); if(!rf.getAttribute("src")) rf.setAttribute("src","raiox/index.html"); }
     try{ localStorage.setItem("r1aba",nome); }catch(e){}
     window.scrollTo(0,0);
   }
@@ -1506,7 +1528,7 @@ tr.ouro td:first-child{box-shadow:inset 3px 0 0 var(--ouro)}
   $("verDec").addEventListener("click",function(){ aba("dec"); });
   var salvo=null;
   try{ salvo=localStorage.getItem("r1aba"); }catch(e){}
-  if(salvo==="pop"||salvo==="dec"||salvo==="pn"||salvo==="mn") aba(salvo);
+  if(salvo==="pop"||salvo==="dec"||salvo==="pn"||salvo==="mn"||salvo==="rx") aba(salvo);
 })();
 </script>
 

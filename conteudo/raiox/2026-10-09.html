@@ -1,0 +1,770 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Leitor de Conteúdo · 09/10/2026</title>
+<style>
+:root{--bg:#0e0e0f;--painel:#17171a;--linha:#2a2a2f;--txt:#f2f2f2;--sub:#a0a0a8;--verm:#ff1a00;--claro:#ffece9;--rosa:#ff7a66}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:28px 16px 80px}
+header{border-bottom:2px solid var(--verm);padding-bottom:12px;margin-bottom:14px}
+header h1{margin:0;font-size:28px;letter-spacing:-.5px;text-transform:uppercase}header h1 span{color:var(--verm)}header p{margin:4px 0 0;color:var(--sub)}
+nav.x{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:6px;flex-wrap:wrap;padding:10px 0;margin-bottom:8px;border-bottom:1px solid var(--linha)}
+nav a{color:var(--txt);text-decoration:none;font-size:13px;padding:5px 12px;border:1px solid var(--linha);border-radius:99px}nav a:hover{border-color:var(--verm);color:var(--rosa)}
+.bloco{margin-top:34px;scroll-margin-top:110px}.bloco>h2{font-size:22px;margin:0 0 4px;text-transform:uppercase;letter-spacing:-.3px}.bloco>h2 span{color:var(--verm)}
+.nota{color:var(--sub);margin:0 0 16px;font-size:13px}
+h3{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--verm);margin:34px 0 6px}
+h4.cat{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--rosa);margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--linha)}
+.manchetes{display:grid;gap:10px}
+.manchete{display:flex;gap:14px;background:var(--painel);border:1px solid var(--linha);border-radius:6px;padding:12px;align-items:flex-start}
+.mimg{flex:0 0 150px;aspect-ratio:16/10;border-radius:4px;overflow:hidden;background:#222}.mimg img{width:100%;height:100%;object-fit:cover;display:block}
+.mtxt{min-width:0}.mtxt h4{margin:2px 0 6px;font-size:17px;line-height:1.3}.mtxt h4 a{color:var(--txt);text-decoration:none}.mtxt h4 a:hover{color:var(--rosa)}
+.mmeta{margin:0;color:var(--sub);font-size:12px}.mmeta b{color:var(--rosa);font-weight:600}
+.portal{display:inline-block;background:#fff;color:#111;font-weight:700;font-size:11px;padding:1px 7px;border-radius:3px;margin-right:8px;text-transform:uppercase;letter-spacing:.3px}
+.resumo{margin:0;color:#d6d6da;font-size:14px}.outras{margin:6px 0 0;font-size:12px;color:var(--sub)}.outras a{color:var(--sub)}
+.ideias{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.ideia{display:flex;gap:14px;background:var(--painel);border:1px solid var(--linha);border-left:4px solid var(--verm);border-radius:6px;padding:16px}
+.num{flex:0 0 34px;height:34px;border-radius:50%;background:var(--verm);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+.ideia h4{margin:6px 0 8px;font-size:18px}.ideia p{margin:6px 0;font-size:14px}.gancho{color:var(--claro);font-style:italic;font-size:16px!important}
+.tag{font-size:11px;text-transform:uppercase;letter-spacing:1px;background:#2b1310;color:var(--rosa);padding:2px 8px;border-radius:99px}
+.refs{font-size:13px!important;color:var(--sub)}.refs a{color:var(--rosa)}.vazio{color:var(--sub)}
+.leitura{margin:0;padding-left:18px}.leitura li{margin:5px 0}
+.alertas{margin-top:14px;background:var(--painel);border:1px solid var(--linha);border-radius:6px;padding:14px 18px}.alertas ul{margin:6px 0 0;padding-left:18px}
+.grade{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(170px,100%),1fr))}
+.card{display:flex;flex-direction:column;background:var(--painel);border:1px solid var(--linha);border-radius:6px;overflow:hidden;color:inherit;text-decoration:none}
+.card:hover{border-color:var(--verm)}.thumb{position:relative;aspect-ratio:9/12;background:#222}.ad .thumb{aspect-ratio:1}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.mult{position:absolute;top:8px;left:8px;background:var(--verm);color:#fff;font-weight:700;font-size:13px;padding:2px 8px;border-radius:4px}
+.info{padding:10px 12px}.info b{display:block;font-size:14px}.meta{display:block;color:var(--sub);font-size:12px;margin:2px 0 6px}.info p{margin:0;font-size:13px;color:#d6d6da}
+.fala{margin-top:6px!important;color:var(--claro)!important;font-style:italic}
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--painel);border-radius:6px;overflow:hidden}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--linha)}th{color:var(--sub);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+tr.nos td{color:#fff;background:#2b1310;font-weight:600}.tabela{overflow-x:auto}
+footer{margin-top:48px;color:var(--sub);font-size:12px}
+.abas{display:flex;gap:4px;margin:6px 0 0;border-bottom:1px solid var(--linha)}
+.abas button{background:none;border:0;color:var(--sub);font:600 15px inherit;padding:12px 16px;cursor:pointer;border-bottom:3px solid transparent;font-family:inherit}
+.abas button.on{color:var(--txt);border-bottom-color:var(--verm)}
+.aba{display:none}.aba.on{display:block}
+.norte{background:var(--verm);color:#fff;padding:22px;border-radius:6px;margin-top:24px}.norte h2{margin:4px 0 0;font-size:21px;line-height:1.3}.kicker{margin:0;text-transform:uppercase;font-size:12px;letter-spacing:1.5px;opacity:.85}
+.kpis{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));margin-bottom:12px}
+.kpi{background:var(--painel);border:1px solid var(--linha);border-radius:6px;padding:12px 14px}.kpi span{display:block;color:var(--sub);font-size:12px;text-transform:uppercase;letter-spacing:.5px}.kpi b{display:block;font-size:22px;margin:2px 0}.kpi small{color:var(--sub)}
+.leitura.escuro{background:var(--painel);border:1px solid var(--linha);border-radius:6px;padding:12px 14px 12px 32px;margin-top:12px}
+.parar li::marker{color:var(--verm)}
+.dashs{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(330px,100%),1fr))}
+.dash{display:flex;gap:12px;background:var(--painel);border:1px solid var(--linha);border-radius:6px;padding:10px;border-left:4px solid #3a3a40}
+.dash.bom{border-left-color:#2fbf71}.dash.ruim{border-left-color:var(--verm)}
+.dash img,.semimg{flex:0 0 64px;width:64px;height:64px;border-radius:4px;object-fit:cover;background:#222}
+.dtxt{min-width:0}.dtxt b{display:block;font-size:13px;word-break:break-all}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.chips span{font-size:12px;background:#222226;border-radius:4px;padding:1px 6px;color:#d6d6da}.chips .forte{background:#2b1310;color:#fff;font-weight:700}
+.plano>h4{margin:0 0 4px;font-size:18px}.roteiro{margin:2px 0 6px;padding-left:18px;font-size:14px}.roteiro li{margin:2px 0}
+.fmts{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr))}
+.fmt{background:var(--painel);border:1px solid var(--linha);border-radius:6px;padding:12px}.fhead b{display:block;font-size:16px}.fhead span{color:var(--sub);font-size:12px}
+.minis{display:flex;gap:6px;margin-top:8px}.mini{flex:1;min-width:0;color:var(--sub);text-decoration:none;font-size:11px}.mini img{width:100%;aspect-ratio:9/14;object-fit:cover;border-radius:4px;display:block;background:#222}.mini span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+.aplicar{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr))}.ap{background:var(--painel);border:1px solid var(--linha);border-left:4px solid var(--verm);border-radius:6px;padding:14px}.ap h4{margin:0 0 6px;font-size:16px}.ap p{margin:6px 0;font-size:14px}
+.formula{background:var(--painel);border:1px solid var(--linha);border-left:4px solid #2fbf71;border-radius:6px;padding:12px 16px;margin-bottom:12px}.formula ul{margin:6px 0 0;padding-left:18px}.formula li{margin:4px 0;font-size:14px}
+.vencs{display:grid;gap:14px}.venc{background:var(--painel);border:1px solid var(--linha);border-radius:6px;padding:16px}
+.vtopo{display:flex;gap:12px;align-items:center;margin-bottom:10px}.vtopo b{display:block;font-size:14px;word-break:break-all}.vtopo .meta a{color:var(--rosa)}
+.vab{width:100%;border-radius:4px;display:block;margin:4px 0 10px}.venc p{margin:6px 0;font-size:14px}
+.vcols{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));margin-top:8px}.vcols h5{margin:8px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--rosa)}.vcols ul{margin:0;padding-left:18px;font-size:14px}.vcols li{margin:4px 0}
+.tarjas{display:flex;flex-wrap:wrap;gap:6px}.tarja{background:var(--verm);color:#fff;font-weight:800;font-size:12px;padding:5px 8px;border-radius:3px;letter-spacing:.3px}
+.fimg{flex:0 0 64px;width:64px;height:64px;border-radius:4px;background-color:#222;background-repeat:no-repeat}
+.reserva{margin-top:30px;background:var(--painel);border:1px solid var(--linha);border-radius:6px;padding:12px 16px}.reserva summary{cursor:pointer;color:var(--sub);font-size:14px}
+.dtxt .meta a{color:var(--rosa)}
+@media (max-width:560px){.manchete{flex-direction:column}.mimg{flex:none;width:100%}.ideia{flex-direction:column}}
+</style><style>.dias{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 0 14px;padding-bottom:2px}.dias a{flex-shrink:0;white-space:nowrap;font-size:12px;padding:4px 10px;border-radius:99px;border:1px solid #333;color:inherit;text-decoration:none;opacity:.75}.dias a.on{background:#FF1A00;border-color:#FF1A00;color:#fff;opacity:1}</style></head><body><main>
+<header><h1>Leitor de <span>Conteúdo</span></h1><p>09/10/2026 · 30 notícias de negócio · 26 perfis · 921 anúncios dos concorrentes · dash: 1053 leads em 7 dias</p></header><nav class="dias" aria-label="Relatórios anteriores"><a href="index.html">Hoje · 14/10/2026</a><a href="2026-10-13.html">13/10/2026</a><a href="2026-10-10.html">10/10/2026</a><a href="2026-10-09.html" class="on">09/10/2026</a><a href="2026-10-08.html">08/10/2026</a><a href="2026-10-07.html">07/10/2026</a><a href="2026-10-06.html">06/10/2026</a></nav>
+<div class="abas" role="tablist"><button data-aba="conteudo" class="on">Conteúdo</button><button data-aba="criativos">Criativos</button><button data-aba="concorrentes">Concorrentes</button></div>
+
+<div class="aba on" id="aba-conteudo">
+<section class="bloco" id="manchetes">
+  <h2>Manchetes <span>do dia</span></h2>
+  <p class="nota">Notícias de negócio das últimas 48 horas em grandes portais e órgãos oficiais, sem política. "Em N sites" mostra quantos veículos deram a mesma história.</p>
+  <h4 class="cat">Tributário e impostos</h4><div class="manchetes"><article class="manchete">
+    <a class="mimg" href="https://g1.globo.com/google/amp/sp/bauru-marilia/videos-tem-noticias-1-edicao/video/empresarios-tem-ate-o-fim-de-outubro-para-opcoes-do-simples-nacional-e-iva-da-reforma-15035989.ghtml" target="_blank" rel="noopener"><img loading="lazy" src="capas/2026-10-09/n_c9ce50754818.jpg" alt=""></a>
+    <div class="mtxt">
+      <p class="mmeta"><span class="portal">O Globo / g1</span>07/10/2026 · <b>em 16 sites</b></p>
+      <h4><a href="https://g1.globo.com/google/amp/sp/bauru-marilia/videos-tem-noticias-1-edicao/video/empresarios-tem-ate-o-fim-de-outubro-para-opcoes-do-simples-nacional-e-iva-da-reforma-15035989.ghtml" target="_blank" rel="noopener">Empresários têm até o fim de outubro para opções do Simples Nacional e IVA da reforma</a></h4>
+      <p class="resumo">Termina no fim deste mês o prazo para micro e pequenos empresários realizarem as escolhas fiscais relativas ao Simples Nacional e ao modelo de recolhimento dos novos impostos (CBS e IBS) para 2027.</p>
+      <p class="outras">Também em: <a href="https://news.google.com/rss/articles/CBMisgFBVV95cUxPbFY4ZDM3NFVYN01ZRGhIbkdaN2NJVmlJV2FIQ1N0eHh6N1V1dXhaeW1nNG9MN1QwY1dxNmpxQXhqTDN5QU9lOHhpa1NZOUhCTjlTRkM3WGhFYjN4Y3g2MU1INzc1TS1ieFBOZEVOYm1MZzlvSVhubGpTbkdTMFphaFhIZHFxeE56VGxiRE52dVhhdEZ2SGRBWFdvRHY4Um5RQkRGZnVRdnAxTUNCcF95YVV3?oc=5" target="_blank" rel="noopener">Portal Contábeis</a></p>
+    </div>
+  </article><article class="manchete">
+    <a class="mimg" href="https://exame.com/negocios/simulador-gratuito-mostra-impacto-da-reforma-tributaria-nas-empresas/" target="_blank" rel="noopener"><img loading="lazy" src="capas/2026-10-09/n_9b4b023b3269.jpg" alt=""></a>
+    <div class="mtxt">
+      <p class="mmeta"><span class="portal">Exame</span>07/10/2026 · <b>em 11 sites</b></p>
+      <h4><a href="https://exame.com/negocios/simulador-gratuito-mostra-impacto-da-reforma-tributaria-nas-empresas/" target="_blank" rel="noopener">Simulador gratuito mostra impacto da Reforma Tributária nas empresas</a></h4>
+      <p class="resumo">Ferramenta da Omie compara regimes tributários e projeta os efeitos da Reforma Tributária sobre empresas durante a transição até 2033</p>
+      
+    </div>
+  </article><article class="manchete">
+    <a class="mimg" href="https://www.gazetadopovo.com.br/vozes/parana-sa/recuperacao-judicial-empresas-tecnologia/" target="_blank" rel="noopener"><img loading="lazy" src="capas/2026-10-09/n_9f8e0a76591e.jpg" alt=""></a>
+    <div class="mtxt">
+      <p class="mmeta"><span class="portal">Gazeta do Povo</span>08/10/2026 · <b>em 3 sites</b></p>
+      <h4><a href="https://www.gazetadopovo.com.br/vozes/parana-sa/recuperacao-judicial-empresas-tecnologia/" target="_blank" rel="noopener">Recuperação judicial de empresas impulsiona uso de dados</a></h4>
+      <p class="resumo">Recuperação judicial de empresas amplia atenção aos riscos de crédito; LEME apresenta na Fenalaw ferramentas de análise de dados corporativos.</p>
+      <p class="outras">Também em: <a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxPV2p4S2sxR1lFNWhiSFJHSE93ZXEwS1M0X19hNzVQZkVBakprdHQwVWN3aTlHWmFrSHptZDM4Z3pyM2MtSFRPVk9nNGJ1Rl9OTExPVk1Kd0VmaHlDTUNoVGRSTEg1NWFHalR6VlUxVGV5ZEkwMW5NSVd6QmdsbDE4bWJDYTJqZkQ5cEVCWUNDb3RmM0pJWHlUc1gxZXEzOUJsR2tJOUpBdE9wWWh5?oc=5" target="_blank" rel="noopener">Migalhas</a></p>
+    </div>
+  </article><article class="manchete">
+    <a class="mimg" href="https://fenacon.org.br/noticias/fenacon-realiza-seminario-sobre-a-reforma-tributaria-em-curitiba/" target="_blank" rel="noopener"><img loading="lazy" src="capas/2026-10-09/n_a097a5e23487.jpg" alt=""></a>
+    <div class="mtxt">
+      <p class="mmeta"><span class="portal">Fenacon</span>09/10/2026 · <b>em 7 sites</b></p>
+      <h4><a href="https://fenacon.org.br/noticias/fenacon-realiza-seminario-sobre-a-reforma-tributaria-em-curitiba/" target="_blank" rel="noopener">Fenacon realiza seminário sobre a Reforma Tributária em Curitiba</a></h4>
+      <p class="resumo">Organizada pelo Sescap-PR e realizada na sede do CRCPR, capacitação aborda os impactos das mudanças tributárias e os desafios para empresas e escritórios contábeis. A Reforma Tributária e seus impactos...</p>
+      
+    </div>
+  </article><article class="manchete">
+    <a class="mimg" href="https://www.gov.br/agu/pt-br/comunicacao/noticias/agu-lanca-desenrola-mei-pequeno-valor-e-outros-sete-editais-para-renegociacao-de-dividas-tributarias-e-nao-tributarias" target="_blank" rel="noopener"><img loading="lazy" src="capas/2026-10-09/n_1bb98df69782.jpg" alt=""></a>
+    <div class="mtxt">
+      <p class="mmeta"><span class="portal">Gov.br / Receita Federal</span>07/10/2026 · <b>em 2 sites</b></p>
+      <h4><a href="https://www.gov.br/agu/pt-br/comunicacao/noticias/agu-lanca-desenrola-mei-pequeno-valor-e-outros-sete-editais-para-renegociacao-de-dividas-tributarias-e-nao-tributarias" target="_blank" rel="noopener">AGU lança sete editais para renegociação de dívidas tributárias e não-tributárias — Advocacia-Geral da União</a></h4>
+      <p class="resumo">Transações por adesão contemplam microempreendedores, pessoas físicas, produtores rurais, empregadores e ex-bolsistas de pesquisa de CNPq e Capes</p>
+      
+    </div>
+  </article></div><h4 class="cat">Recuperação judicial e crise</h4><div class="manchetes"><article class="manchete">
+    <a class="mimg" href="https://veja.abril.com.br/economia/com-r-240-milhoes-em-dividas-jac-motors-entra-em-nova-recuperacao-judicial/" target="_blank" rel="noopener"><img loading="lazy" src="capas/2026-10-09/n_23dc408b381e.jpg" alt=""></a>
+    <div class="mtxt">
+      <p class="mmeta"><span class="portal">Veja</span>08/10/2026 · <b>em 13 sites</b></p>
+      <h4><a href="https://veja.abril.com.br/economia/com-r-240-milhoes-em-dividas-jac-motors-entra-em-nova-recuperacao-judicial/" target="_blank" rel="noopener">Com R$ 239 milhões em dívidas, JAC Motors entra em nova recuperação judicial</a></h4>
+      <p class="resumo">Grupo SHC, representante da marca chinesa no país, volta à Justiça apenas 17 meses após encerrar processo anterior</p>
+      <p class="outras">Também em: <a href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxNQ08zZUxLZTZ2OTQwS0xFTFhRenpUa3VXXzhCX3NMOWtPSTNPLU0xcW9odGlkS0hPUkEtS2hZTGlzT3NqdUxIZVdpQ3M2Sm9TYVhTWFpfeXlqX0s2TzlsYkJha2ppUW5mOFRQNW9fZnV3UVFZMFNDYXFPbmozT25lMzdHS1U2Zktua2tiRlFlSzhmck9tTVpubHhwWFRicjZCTGYxbFM2ZzBLQnA1UU1zdXd2VDhJaFBoOG5N0gHAAUFVX3lxTE13b3JFYVVOeWNtNjJNNEV2NmFxMEs3N056VDhycGdDYnp2bE9OSERaUUdiX0g2QjVqVHhZV0RtcDdtOGxPUWpLdGdKWkJlRnc4T2NscHdmQUVDNk9lNUx1S2FBekxqcjBwVXNZZWNxWXNINml3clBXTzRLMlM4Q0o1aWxXYks3S2lPZmF0aTIwcEhGNTJuMW4zakNCemx0UE90aGQ3d1VpcXpOQmc0cGp6blhQOW8xQkVIUUdVemtpNA?oc=5" target="_blank" rel="noopener">Estadão</a></p>
+    </div>
+  </article><article class="manchete">
+    <a class="mimg" href="https://www.infomoney.com.br/mercados/casas-bahia-afirma-que-laudo-sobre-estoque-e-preliminar-mas-confirma-informacoes/" target="_blank" rel="noopener"><img loading="lazy" src="capas/2026-10-09/n_b5a1c8bfa27e.jpg" alt=""></a>
+    <div class="mtxt">
+      <p class="mmeta"><span class="portal">InfoMoney</span>08/10/2026 · <b>em 8 sites</b></p>
+      <h4><a href="https://www.infomoney.com.br/mercados/casas-bahia-afirma-que-laudo-sobre-estoque-e-preliminar-mas-confirma-informacoes/" target="_blank" rel="noopener">Casas Bahia afirma que laudo sobre estoque é preliminar, mas confirma informações</a></h4>
+      <p class="resumo">Segundo a companhia, a perícia foi determinada pela Justiça como etapa preliminar da recuperação judicial</p>
+      <p class="outras">Também em: <a href="https://news.google.com/rss/articles/CBMivgFBVV95cUxOaDB3SnRQRHlacEdVTjEwNFdiYkVLNFlBdTJ5QVVSNVZVNjdad1B4dXgzZmZlX0N0V01OMWg5Q1g5Yk1DdkFWYm96RnhDd2JVSjZxaWxlcVVJeGw3MzNzd01KbXo5a0dwWUhnQWVNeDU5aEc3Mk5fRWN6QV95WTNSWThvSmhVSS1aY0pONG5uSHhselNGcXRUekc3ZElqcHFKemFhaU9sSGhlUzJlYlZKQm5VRjJ5NW9GZ2xjeEln?oc=5" target="_blank" rel="noopener">Money Times</a></p>
+    </div>
+  </article><article class="manchete">
+    <a class="mimg" href="https://www.infomoney.com.br/mercados/oi-em-processo-de-falencia-encerra-2025-com-prejuizo-consolidado-de-r-364-bilhoes/" target="_blank" rel="noopener"><img loading="lazy" src="capas/2026-10-09/n_29f8ddd683fe.jpg" alt=""></a>
+    <div class="mtxt">
+      <p class="mmeta"><span class="portal">InfoMoney</span>08/10/2026 · <b>em 4 sites</b></p>
+      <h4><a href="https://www.infomoney.com.br/mercados/oi-em-processo-de-falencia-encerra-2025-com-prejuizo-consolidado-de-r-364-bilhoes/" target="_blank" rel="noopener">Oi, em processo de falência, encerra 2025 com prejuízo consolidado de R$ 36,4 bilhões</a></h4>
+      <p class="resumo">A receita operacional líquida consolidada somou R$ 2,6 bilhões em 2025, queda de 18,3% ante 2024 (R$ 3,18 bilhões)</p>
+      
+    </div>
+  </article><article class="manchete">
+    <a class="mimg" href="https://www.cnnbrasil.com.br/blogs/fernanda-pressinott/agro/por-que-o-produtor-rural-entra-em-recuperacao-judicial-sem-estar-quebrado/" target="_blank" rel="noopener"><img loading="lazy" src="capas/2026-10-09/n_4184725d2274.jpg" alt=""></a>
+    <div class="mtxt">
+      <p class="mmeta"><span class="portal">CNN Brasil</span>08/10/2026</p>
+      <h4><a href="https://www.cnnbrasil.com.br/blogs/fernanda-pressinott/agro/por-que-o-produtor-rural-entra-em-recuperacao-judicial-sem-estar-quebrado/" target="_blank" rel="noopener">Por que o produtor rural entra em recuperação judicial sem estar &quot;quebrado&quot;</a></h4>
+      <p class="resumo">Instrumento passou a ser utilizado como ferramenta de reorganização financeira e preservação patrimonial.</p>
+      
+    </div>
+  </article></div><h4 class="cat">Vendas</h4><div class="manchetes"><article class="manchete">
+    <a class="mimg" href="https://timesbrasil.com.br/empresas-e-negocios/csn-avanca-na-venda-da-divisao-de-cimentos-para-tentar-conter-alta-da-divida-e-reverter-piora-no-credito/" target="_blank" rel="noopener"><img loading="lazy" src="capas/2026-10-09/n_6d4ff1ec736e.jpg" alt=""></a>
+    <div class="mtxt">
+      <p class="mmeta"><span class="portal">Times Brasil CNBC</span>08/10/2026</p>
+      <h4><a href="https://timesbrasil.com.br/empresas-e-negocios/csn-avanca-na-venda-da-divisao-de-cimentos-para-tentar-conter-alta-da-divida-e-reverter-piora-no-credito/" target="_blank" rel="noopener">CSN avança na venda da divisão de cimentos para tentar conter alta da dívida e reverter piora no crédito</a></h4>
+      <p class="resumo">Transação ocorre em um cenário de piora do perfil de crédito do grupo. A Fitch reduziu a nota da companhia de B para CCC+</p>
+      
+    </div>
+  </article></div><h4 class="cat">Economia do caixa</h4><div class="manchetes"><article class="manchete">
+    <a class="mimg" href="https://veja.abril.com.br/economia/76-das-industrias-enfrentam-dificuldades-para-obter-credito-devido-a-juros-altos-diz-cni/" target="_blank" rel="noopener"><img loading="lazy" src="capas/2026-10-09/n_850997e8b128.jpg" alt=""></a>
+    <div class="mtxt">
+      <p class="mmeta"><span class="portal">Veja</span>09/10/2026 · <b>em 5 sites</b></p>
+      <h4><a href="https://veja.abril.com.br/economia/76-das-industrias-enfrentam-dificuldades-para-obter-credito-devido-a-juros-altos-diz-cni/" target="_blank" rel="noopener">76% das indústrias enfrentam dificuldades para obter crédito devido a juros altos, diz CNI</a></h4>
+      <p class="resumo">Pesquisa mostra que quase metade das empresas não tentou contratar ou renovar financiamentos de curto e médio prazo entre fevereiro e julho de 2026</p>
+      <p class="outras">Também em: <a href="https://news.google.com/rss/articles/CBMipAFBVV95cUxPQXlRZ2hUbjJjVFhoX2tndG9IV0xVTWxhdVZEWXdLdWZKSFpLNUJVaVlhYVZ0RFA0YllNN3N3TzZFLXZiaVpFMnoyUVNUdnVqYThEVXdRM0txNHc3c3hFaTRKUzJPNmlTWlV6dDVSS2ZzTjAtb0tpdGl0RXcxaUtwVnFtMUprMXNJN1lNREJJellrY3VyazM4QWhSdEdNczEwUHJBVg?oc=5" target="_blank" rel="noopener">Metrópoles</a></p>
+    </div>
+  </article><article class="manchete">
+    <a class="mimg" href="https://agenciabrasil.ebc.com.br/economia/noticia/2026-10/industria-aponta-juros-altos-como-principal-barreira-ao-credito" target="_blank" rel="noopener"><img loading="lazy" src="capas/2026-10-09/n_1e906b1b5da0.jpg" alt=""></a>
+    <div class="mtxt">
+      <p class="mmeta"><span class="portal">Agência Brasil</span>09/10/2026 · <b>em 4 sites</b></p>
+      <h4><a href="https://agenciabrasil.ebc.com.br/economia/noticia/2026-10/industria-aponta-juros-altos-como-principal-barreira-ao-credito" target="_blank" rel="noopener">Indústria aponta juros altos como principal barreira ao crédito</a></h4>
+      <p class="resumo">Depois dos juros, as exigências de garantias reais aparecem como o principal entrave nas operações de curto e médio prazo.</p>
+      
+    </div>
+  </article></div>
+</section>
+<section class="bloco" id="ideias">
+  <h2>Ideias de conteúdo <span>pro Ricardo</span></h2>
+  <p class="nota">Pautas prontas pra gravar, com gancho, formato e o dado que sustenta cada uma. Só o que é a cara do Ricardo: empresário raiz, sem motivacional e sem política.</p>
+  <ol class="ideias"><li class="ideia">
+  <div class="num">1</div>
+  <div>
+    <span class="tag">react</span>
+    <h4>76% das indústrias sem crédito: quem depende de banco trava</h4>
+    <p class="gancho">“Três em cada quatro indústrias do Brasil não conseguem crédito. Se a sua empresa só gira com dinheiro de banco, esse vídeo é pra você.”</p>
+    <p><b>Como gravar:</b> React em tela dividida, com a manchete da Veja em cima e o Ricardo embaixo. Faixa vermelha: '76% DAS INDÚSTRIAS NÃO CONSEGUEM CRÉDITO'. 45 a 60s. Postar hoje ou amanhã.</p>
+    <p><b>Por quê:</b> Veja e Agência Brasil (9 sites somando as duas) trazem a pesquisa da CNI: 76% das indústrias têm dificuldade de crédito por causa dos juros, e quase metade nem tentou renovar financiamento entre fevereiro e julho. Depois dos juros, o entrave é a garantia real. A dor de dono é crescer com capital de giro emprestado. O Ricardo viveu o varejo a prazo e pode contar como girava estoque e prazo de fornecedor. Ponte pro RGV: caixa e capital de giro fazem parte dos 3 dias. O ângulo é só o caixa da empresa, sem falar de governo.</p>
+    <p class="refs">Baseada em: <a href="https://veja.abril.com.br/economia/76-das-industrias-enfrentam-dificuldades-para-obter-credito-devido-a-juros-altos-diz-cni/" target="_blank" rel="noopener">Notícia · Veja</a> · <a href="https://agenciabrasil.ebc.com.br/economia/noticia/2026-10/industria-aponta-juros-altos-como-principal-barreira-ao-credito" target="_blank" rel="noopener">Notícia · Agência Brasil</a></p>
+  </div>
+</li><li class="ideia">
+  <div class="num">2</div>
+  <div>
+    <span class="tag">react</span>
+    <h4>Oi: receita caiu 18% e o prejuízo foi de R$ 36 bilhões</h4>
+    <p class="gancho">“A receita caiu 18%. O prejuízo foi de 36 bilhões. Isso acontece quando a venda cai e o custo fica do mesmo tamanho.”</p>
+    <p><b>Como gravar:</b> React de frente pra câmera com print do InfoMoney no topo. 45s. Desenhar na tela duas barras: receita descendo e custo parado. Faixa: 'VENDEU MENOS E O CUSTO FICOU'. Postar até sábado.</p>
+    <p><b>Por quê:</b> O InfoMoney (em 4 sites) mostra que a Oi, em processo de falência, fechou 2025 com receita de R$ 2,6 bilhões, queda de 18,3%, e prejuízo de R$ 36,4 bilhões. A lição pro dono que fatura acima de R$ 200 mil é a mesma de loja: quando a venda cai, quem não corta estrutura a tempo queima o caixa. O Ricardo pode ligar com o caso da loja de shopping que caiu de 4 milhões pra 1 milhão, que é o miolo do AD11, um dos anúncios que mais geram agendamento e venda. Ponte: no RGV o dono aprende a ler margem e custo fixo antes de virar manchete.</p>
+    <p class="refs">Baseada em: <a href="https://www.infomoney.com.br/mercados/oi-em-processo-de-falencia-encerra-2025-com-prejuizo-consolidado-de-r-364-bilhoes/" target="_blank" rel="noopener">Notícia · InfoMoney</a></p>
+  </div>
+</li><li class="ideia">
+  <div class="num">3</div>
+  <div>
+    <span class="tag">reel</span>
+    <h4>Sistema de gestão não salva empresa sem método</h4>
+    <p class="gancho">“Você comprou o melhor sistema do mercado e a empresa continua uma bagunça? O problema não é o sistema.”</p>
+    <p><b>Como gravar:</b> Talking head na mesa, com o notebook aberto do lado. 45 a 60s. Faixa: 'O SISTEMA NÃO RESOLVE SOZINHO'. Exemplo da Ricardo Eletro: com mais de mil lojas, o que mandava era a rotina de número, não o software. Postar na semana.</p>
+    <p><b>Por quê:</b> A Exame publicou que, com a transição pro IBS e a CBS, um sistema de gestão atualizado deixou de ser luxo pra PME, mas que a tecnologia é só a ponta do problema. É a dor de dono que contrata ERP achando que vai organizar a empresa. Junta tributário, que rende pro Ricardo em react, com gestão, que é o miolo do RGV. Ponte: 'sistema registra. Quem decide é o dono com método.'</p>
+    <p class="refs">Baseada em: <a href="https://exame.com/economia/reforma-tributaria-sistema-de-gestao-virou-obrigatorio-para-a-pme-mas-nao-resolve-sozinho/" target="_blank" rel="noopener">Notícia · Exame</a></p>
+  </div>
+</li><li class="ideia">
+  <div class="num">4</div>
+  <div>
+    <span class="tag">carrossel</span>
+    <h4>Faça a conta do imposto de 2027 antes do contador</h4>
+    <p class="gancho">“Capa: 'SUA EMPRESA VAI PAGAR MAIS OU MENOS IMPOSTO EM 2027? FAÇA ESSA CONTA HOJE'.”</p>
+    <p><b>Como gravar:</b> Carrossel de 6 telas no vermelho e branco: o que muda (CBS e IBS), quem precisa decidir até o fim de outubro, o simulador gratuito citado pela Exame, as 3 perguntas pra levar ao contador, o erro de decidir no chute e o CTA 'comente LEÃO'. Postar entre sexta e segunda, antes do fim do prazo.</p>
+    <p><b>Por quê:</b> A Exame (em 11 sites) mostra um simulador gratuito que compara regimes e projeta a reforma até 2033. O Times Brasil, com o FGV IBRE, diz que os empresários ainda não enxergam ganho claro com a reforma. E o g1 (em 16 sites) lembra que a escolha do Simples e do recolhimento da CBS e do IBS vai até o fim de outubro. O formato é útil e salvável, diferente dos reacts. A dor é decidir imposto sem fazer conta. A ponte é que no RGV imposto entra como estratégia, não como boleto.</p>
+    <p class="refs">Baseada em: <a href="https://exame.com/negocios/simulador-gratuito-mostra-impacto-da-reforma-tributaria-nas-empresas/" target="_blank" rel="noopener">Notícia · Exame</a> · <a href="https://timesbrasil.com.br/videos/empresarios-ainda-nao-enxergam-ganhos-da-reforma-tributaria-diz-coordenador-do-fgv-ibre/" target="_blank" rel="noopener">Notícia · Times Brasil CNBC</a> · <a href="https://g1.globo.com/google/amp/sp/bauru-marilia/videos-tem-noticias-1-edicao/video/empresarios-tem-ate-o-fim-de-outubro-para-opcoes-do-simples-nacional-e-iva-da-reforma-15035989.ghtml" target="_blank" rel="noopener">Notícia · O Globo / g1</a></p>
+  </div>
+</li><li class="ideia">
+  <div class="num">5</div>
+  <div>
+    <span class="tag">react</span>
+    <h4>500 mil cartas da Receita: o dono que mistura PF com PJ</h4>
+    <p class="gancho">“A Receita vai mandar carta pra quase 500 mil pessoas até o dia 20. E muito dono de empresa vai receber por um motivo bobo.”</p>
+    <p><b>Como gravar:</b> Selfie de recado, sem produção, com a manchete da CNN em caixa no topo. 30 a 45s. Faixa: 'A CARTA DA RECEITA PODE SER PRA VOCÊ'. Postar até 15/10, antes do fim dos envios no dia 20.</p>
+    <p><b>Por quê:</b> A CNN Brasil (em 4 sites) informa que a Receita envia cartas a quase 500 mil contribuintes na malha fina até 20 de outubro, pra que se regularizem antes da multa. O ângulo de dono é o empresário que tira dinheiro da empresa sem pró-labore nem distribuição de lucro organizada e cai na malha como pessoa física. Fiscalização da Receita é dos temas que mais rendem em react pro Ricardo. Ontem o assunto foi a IA da Receita; hoje é o que fazer com a carta. Ponte: separar o dinheiro do dono do dinheiro da empresa é a primeira aula de caixa.</p>
+    <p class="refs">Baseada em: <a href="https://www.cnnbrasil.com.br/economia/money/macroeconomia/receita-federal-envia-cartas-a-quase-500-mil-contribuintes-na-malha-fina/" target="_blank" rel="noopener">Notícia · CNN Brasil</a></p>
+  </div>
+</li><li class="ideia">
+  <div class="num">6</div>
+  <div>
+    <span class="tag">série</span>
+    <h4>Por que existe tanta loja de...?</h4>
+    <p class="gancho">“Por que tem uma farmácia em cada esquina? Eu tive 1.100 lojas, então te conto a conta que ninguém mostra.”</p>
+    <p><b>Como gravar:</b> Selfie andando na rua ou na frente de uma loja, com caixa de manchete na tela, no estilo do Nardon. 45 a 60s por episódio. Um segmento por vídeo: farmácia, colchão, ótica, loja de celular. Começar nesta semana e manter o mesmo selo vermelho.</p>
+    <p><b>Por quê:</b> O Bruno Nardon postou em 08/10 uma selfie com a caixa 'Por que existe tanta loja de colchão? A verdade por trás' e fez 54 mil views, 3,3 vezes a mediana dele. É curiosidade de varejo, e o Ricardo tem mais autoridade nisso do que qualquer concorrente. A dor de dono aparece no miolo: margem, giro, aluguel e ticket. A ponte é que no RGV o dono aprende a fazer a conta da própria loja. Também vira banco de aberturas pra anúncio no molde do AD11 (loja física), que tem 12 SQL, 7 agendamentos e 1 venda.</p>
+    <p class="refs">Baseada em: <a href="https://www.instagram.com/reel/DePpXX4vSBp/" target="_blank" rel="noopener">Reel @bruno.nardon</a></p>
+  </div>
+</li><li class="ideia">
+  <div class="num">7</div>
+  <div>
+    <span class="tag">reel</span>
+    <h4>Missão China, parte 2: o que o empresário trouxe na mala</h4>
+    <p class="gancho">“Eu fui pra China 17 vezes com a Ricardo Eletro. Desta vez levei empresário junto. Olha o que um deles achou lá e quanto isso muda a margem dele.”</p>
+    <p><b>Como gravar:</b> Bastidor da viagem, com corte rápido de fábrica e o Ricardo explicando o produto e a margem. 45 a 60s. Fechar com 'comente CHINA'. Postar na semana, enquanto o tema está quente no perfil.</p>
+    <p><b>Por quê:</b> O Reel 'Comente CHINA' de 07/10 fez 69 mil views, 5,9 vezes a mediana do Ricardo e o melhor dos últimos 30 dias. O de 08/10, com as 17 viagens à China, ficou na mediana (12 mil). Vale seguir o tema, mas com caso concreto de um empresário e um número, que é o que faz o primeiro funcionar. A dor de dono é a margem espremida pelo fornecedor. A ponte é a Missão China dentro do método RGV.</p>
+    <p class="refs">Baseada em: <a href="https://www.instagram.com/reel/DeNafPQRzvs/" target="_blank" rel="noopener">Reel @ricardonuneseletro</a> · <a href="https://www.instagram.com/reel/DeP08QAOrTJ/" target="_blank" rel="noopener">Reel @ricardonuneseletro</a></p>
+  </div>
+</li></ol>
+</section>
+</div>
+
+<div class="aba" id="aba-criativos">
+<section class="bloco">
+  <h2>Criativos <span>do RGV</span></h2>
+  <p class="nota">O que o dash mostra, o que os concorrentes estão rodando e o que produzir na semana pro público da imersão: dono de empresa que fatura acima de R$ 200 mil por mês.</p>
+  <div class="norte"><p class="kicker">O norte</p><h2>O funil continua igual desde 06/10 e a regra também: quem gera agendamento e venda é a página com filtro de faturamento (AD01, Reels 4, AD11). A novidade da semana é que o vídeo principal melhorou no perfil (30% em 7 dias, contra 20% em 30), e o AD07 e o DIFERENCIAL queimaram R$ 14,9 mil em 7 dias sem nenhum SQL. Trocar abertura desses dois antes de pôr mais verba.</h2></div>
+  <h3>Funil por criativo</h3><p class="nota">Fonte principal: <a href="https://painel-funil-criativos.vercel.app/" target="_blank" rel="noopener">painel Funil por Criativo</a>, que cruza o Meta com o CRM. Dados até 06/10/2026. Aqui o criativo bom é o que gera lead no perfil, SQL, agendamento e venda, não o de lead mais barato.</p>
+  <div class="kpis">
+    <div class="kpi"><span>Custo por lead no perfil · 30 dias</span><b>R$ 312</b><small>2.365 no perfil de 8.110 leads (29.2%)</small></div>
+    <div class="kpi"><span>SQL · 30 dias</span><b>192</b><small>R$ 3.847 por SQL</small></div>
+    <div class="kpi"><span>Agendamentos realizados · 30 dias</span><b>80</b><small>5 vendas no período</small></div>
+    <div class="kpi"><span>Últimos 7 dias</span><b>R$ 317/MQL</b><small>538 no perfil · 25 SQL · 8 ag.</small></div>
+  </div>
+  <div class="tabela"><table><thead><tr><th>30 dias</th><th>Investimento</th><th>Leads</th><th>No perfil</th><th>R$/MQL</th><th>SQL</th><th>Ag. realizados</th><th>Vendas</th></tr></thead>
+  <tbody><tr><td>página</td><td>R$ 590.339</td><td>4.759</td><td>36%</td><td><b>R$ 348</b></td><td>155</td><td>70</td><td>5</td></tr><tr><td>formulário</td><td>R$ 148.231</td><td>3.351</td><td>20%</td><td><b>R$ 221</b></td><td>37</td><td>10</td><td>0</td></tr><tr><td>Vídeo</td><td>R$ 581.522</td><td>7.032</td><td>27%</td><td><b>R$ 307</b></td><td>161</td><td>64</td><td>2</td></tr><tr><td>Imagem</td><td>R$ 154.304</td><td>1.078</td><td>44%</td><td><b>R$ 329</b></td><td>31</td><td>16</td><td>3</td></tr><tr><td>Carrossel</td><td>R$ 2.745</td><td>0</td><td>–%</td><td><b>–</b></td><td>0</td><td>0</td><td>0</td></tr></tbody></table></div>
+  <ul class="leitura escuro"><li>Painel Funil por Criativo, 30 dias até 06/10 (o painel não atualizou desde ontem): R$ 738 mil, 8.110 leads, 2.365 no perfil (29%), 192 SQL, 80 agendamentos realizados e 5 vendas. R$ 312 por lead no perfil.</li><li>Últimos 7 dias: R$ 170,5 mil, 1.478 leads, 36% no perfil, 25 SQL, 8 agendamentos e nenhuma venda. A imagem está com 54% no perfil, contra 32% do vídeo. A página tem 41% no perfil e o formulário 28%.</li><li>Quem mais gera SQL e agendamento em 30 dias: AD01 de 18/08 (59% no perfil, 19 SQL, 12 agendamentos), Reels 4 (18 SQL, 11 agendamentos) e AD11 de 12/08 (12 SQL, 7 agendamentos, 1 venda). Nos 7 dias, o AD01 segue em 1º em agendamento (3).</li><li>Sinal bom no vídeo principal de 09/10/2025: em 7 dias ele subiu pra 30% no perfil e R$ 152 por MQL, com 7 SQL. Em 30 dias eram 20% e R$ 204. Ainda não tem venda.</li><li>Queimando em 7 dias: AD07 de 09/07 (R$ 9.260, 8 no perfil, 0 SQL, R$ 1.158 por MQL) e DIFERENCIAL do Simples 2027 (R$ 5.592, 0 SQL, R$ 799 por MQL). No dash de reserva, o DIFERENCIAL tem 39,7% de gancho: prende, mas não traz dono no perfil.</li><li>Dash de reserva (só Meta): o melhor gancho da conta é o AD03 de 14/09 (48%) e o 'pego na reforma tributária' (46,5%). O pior é o AD29 (12,6%), que mesmo assim gera SQL. Gancho alto não é sinônimo de lead bom.</li></ul>
+  <h3>Mais agendamentos realizados · 30 dias</h3><div class="dashs"><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_3.jpg');background-size:400% 400%;background-position:66.66666666666666% 33.33333333333333%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][AD01][18082026]">[RGV][PER][VD][AD01][18082026]</b>
+    <span class="meta">vídeo · página · ativo · <a href="https://fb.me/28YuXypkdlOoLBZ" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 33.597</span><span>177 leads</span><span>59.3% no perfil</span><span class="forte">R$ 320/MQL</span><span>19 SQL</span><span>12 ag.</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_1.jpg');background-size:400% 400%;background-position:33.33333333333333% 100%"></div>
+  <div class="dtxt"><b title="Reels 4">Reels 4</b>
+    <span class="meta">vídeo · página · ativo · <a href="https://fb.me/1T3BvjbmBtk0YvD" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 43.974</span><span>286 leads</span><span>35.7% no perfil</span><span class="forte">R$ 431/MQL</span><span>18 SQL</span><span>11 ag.</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_0.jpg');background-size:400% 400%;background-position:0% 33.33333333333333%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][ORG][FEED][AD06][09102025]">[RGV][PER][VD][ORG][FEED][AD06][09102025]</b>
+    <span class="meta">vídeo · formulário · ativo · <a href="https://fb.me/22OHuzPS4S2LTeZ" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 120.006</span><span>2891 leads</span><span>20.4% no perfil</span><span class="forte">R$ 204/MQL</span><span>33 SQL</span><span>9 ag.</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_2.jpg');background-size:400% 400%;background-position:33.33333333333333% 33.33333333333333%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][AD11][12082026]">[RGV][PER][VD][AD11][12082026]</b>
+    <span class="meta">vídeo · página · ativo · <a href="https://fb.me/2TXlfN9sSGFpJ7H" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 31.950</span><span>165 leads</span><span>37% no perfil</span><span class="forte">R$ 524/MQL</span><span>12 SQL</span><span>7 ag.</span><span class="forte">1 venda</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_5.jpg');background-size:400% 400%;background-position:0% 0%"></div>
+  <div class="dtxt"><b title="[RGV][PER][IMG][AD08][21082026]">[RGV][PER][IMG][AD08][21082026]</b>
+    <span class="meta">imagem · página · ativo · <a href="https://fb.me/1Tjrf9eKh09ZLhq" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 20.943</span><span>136 leads</span><span>41.9% no perfil</span><span class="forte">R$ 367/MQL</span><span>9 SQL</span><span>6 ag.</span><span class="forte">1 venda</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_0.jpg');background-size:400% 400%;background-position:33.33333333333333% 0%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][FEED][AD36][02042026]">[RGV][PER][VD][FEED][AD36][02042026]</b>
+    <span class="meta">vídeo · página · pausado · <a href="https://fb.me/2a7pSGygOpxBWxR" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 28.920</span><span>616 leads</span><span>36% no perfil</span><span class="forte">R$ 130/MQL</span><span>18 SQL</span><span>5 ag.</span></div>
+  </div></div></div>
+  <h3>Melhor custo por lead no perfil · 30 dias</h3><div class="dashs"><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_4.jpg');background-size:400% 400%;background-position:33.33333333333333% 100%"></div>
+  <div class="dtxt"><b title="[RGV][PER][IMG][FEED][AD24][12032026]">[RGV][PER][IMG][FEED][AD24][12032026]</b>
+    <span class="meta">imagem · página · ativo · <a href="https://fb.me/yZjYUo9kw4BN1YE" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 2.131</span><span>34 leads</span><span>70.6% no perfil</span><span class="forte">R$ 88,8/MQL</span><span>0 SQL</span><span>0 ag.</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_1.jpg');background-size:400% 400%;background-position:33.33333333333333% 33.33333333333333%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][FEED][AD48][02042026]">[RGV][PER][VD][FEED][AD48][02042026]</b>
+    <span class="meta">vídeo · página · pausado · <a href="https://fb.me/2ej8WqAoSfefiMp" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 14.162</span><span>307 leads</span><span>37.8% no perfil</span><span class="forte">R$ 122/MQL</span><span>8 SQL</span><span>2 ag.</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_0.jpg');background-size:400% 400%;background-position:33.33333333333333% 0%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][FEED][AD36][02042026]">[RGV][PER][VD][FEED][AD36][02042026]</b>
+    <span class="meta">vídeo · página · pausado · <a href="https://fb.me/2a7pSGygOpxBWxR" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 28.920</span><span>616 leads</span><span>36% no perfil</span><span class="forte">R$ 130/MQL</span><span>18 SQL</span><span>5 ag.</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_3.jpg');background-size:400% 400%;background-position:0% 0%"></div>
+  <div class="dtxt"><b title="[RGV][PER][IMG][FEED][AD11][31102025]">[RGV][PER][IMG][FEED][AD11][31102025]</b>
+    <span class="meta">imagem · página · ativo · <a href="https://fb.me/2acytLfqL6GfWvr" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 17.852</span><span>341 leads</span><span>36.7% no perfil</span><span class="forte">R$ 143/MQL</span><span>2 SQL</span><span>0 ag.</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_0.jpg');background-size:400% 400%;background-position:33.33333333333333% 100%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][FEED][PROBLEMAESOLUCAO][AD02][20032026]_1">[RGV][PER][VD][FEED][PROBLEMAESOLUCAO][AD02][20032026]_1</b>
+    <span class="meta">vídeo · página · ativo · <a href="https://fb.me/27GDSDJ1MmpdmyU" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 10.960</span><span>222 leads</span><span>33.8% no perfil</span><span class="forte">R$ 146/MQL</span><span>1 SQL</span><span>0 ag.</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_1.jpg');background-size:400% 400%;background-position:100% 33.33333333333333%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][FEED][AD03][06032026]">[RGV][PER][VD][FEED][AD03][06032026]</b>
+    <span class="meta">vídeo · página · ativo · <a href="https://fb.me/23VWGqCEzkvwRBb" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 4.046</span><span>72 leads</span><span>29.2% no perfil</span><span class="forte">R$ 193/MQL</span><span>2 SQL</span><span>1 ag.</span></div>
+  </div></div></div>
+  <h3>Criativos com venda · 30 dias</h3><p class="nota">Venda demora a fechar, então o número ainda é pequeno. Use junto com SQL e agendamento.</p><div class="dashs"><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_8.jpg');background-size:400% 400%;background-position:100% 100%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][AD06][18082026]">[RGV][PER][VD][AD06][18082026]</b>
+    <span class="meta">vídeo · página · pausado · <a href="https://fb.me/37n1bNZrwABhcEM" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 6.071</span><span>33 leads</span><span>42.4% no perfil</span><span class="forte">R$ 434/MQL</span><span>4 SQL</span><span>2 ag.</span><span class="forte">1 venda</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_5.jpg');background-size:400% 400%;background-position:0% 66.66666666666666%"></div>
+  <div class="dtxt"><b title="[RGV][PER][IMG][AD04][21082026]">[RGV][PER][IMG][AD04][21082026]</b>
+    <span class="meta">imagem · página · ativo · <a href="https://fb.me/2aoaKu11jFkI6vs" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 16.492</span><span>98 leads</span><span>48% no perfil</span><span class="forte">R$ 351/MQL</span><span>3 SQL</span><span>2 ag.</span><span class="forte">1 venda</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_5.jpg');background-size:400% 400%;background-position:0% 0%"></div>
+  <div class="dtxt"><b title="[RGV][PER][IMG][AD08][21082026]">[RGV][PER][IMG][AD08][21082026]</b>
+    <span class="meta">imagem · página · ativo · <a href="https://fb.me/1Tjrf9eKh09ZLhq" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 20.943</span><span>136 leads</span><span>41.9% no perfil</span><span class="forte">R$ 367/MQL</span><span>9 SQL</span><span>6 ag.</span><span class="forte">1 venda</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_2.jpg');background-size:400% 400%;background-position:33.33333333333333% 33.33333333333333%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][AD11][12082026]">[RGV][PER][VD][AD11][12082026]</b>
+    <span class="meta">vídeo · página · ativo · <a href="https://fb.me/2TXlfN9sSGFpJ7H" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 31.950</span><span>165 leads</span><span>37% no perfil</span><span class="forte">R$ 524/MQL</span><span>12 SQL</span><span>7 ag.</span><span class="forte">1 venda</span></div>
+  </div></div><div class="dash bom"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_2.jpg');background-size:400% 400%;background-position:100% 66.66666666666666%"></div>
+  <div class="dtxt"><b title="[RGV][PER][IMG][AD03][21082026]">[RGV][PER][IMG][AD03][21082026]</b>
+    <span class="meta">imagem · página · ativo · <a href="https://fb.me/yByw45krkMI9UmR" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 38.046</span><span>240 leads</span><span>42.1% no perfil</span><span class="forte">R$ 377/MQL</span><span>9 SQL</span><span>4 ag.</span><span class="forte">1 venda</span></div>
+  </div></div></div>
+  <h3>Lead barato, mas fora do perfil</h3><p class="nota">Menos de 25% dos leads no perfil. O custo por lead parece ótimo e engana.</p><div class="dashs"><div class="dash ruim"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_0.jpg');background-size:400% 400%;background-position:0% 33.33333333333333%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][ORG][FEED][AD06][09102025]">[RGV][PER][VD][ORG][FEED][AD06][09102025]</b>
+    <span class="meta">vídeo · formulário · ativo · <a href="https://fb.me/22OHuzPS4S2LTeZ" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 120.006</span><span>2891 leads</span><span>20.4% no perfil</span><span class="forte">R$ 204/MQL</span><span>33 SQL</span><span>9 ag.</span></div>
+  </div></div><div class="dash ruim"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_0.jpg');background-size:400% 400%;background-position:0% 66.66666666666666%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][FEED][AD05][13082025]">[RGV][PER][VD][FEED][AD05][13082025]</b>
+    <span class="meta">vídeo · página · ativo · <a href="https://fb.me/2c9Einb6vsQh768" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 32.171</span><span>664 leads</span><span>16.7% no perfil</span><span class="forte">R$ 290/MQL</span><span>5 SQL</span><span>2 ag.</span></div>
+  </div></div><div class="dash ruim"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_1.jpg');background-size:400% 400%;background-position:0% 33.33333333333333%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][FEED][AD06][06032026]">[RGV][PER][VD][FEED][AD06][06032026]</b>
+    <span class="meta">vídeo · formulário · ativo · <a href="https://fb.me/1W0x41VYIjTQbri" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 22.888</span><span>361 leads</span><span>14.4% no perfil</span><span class="forte">R$ 440/MQL</span><span>3 SQL</span><span>1 ag.</span></div>
+  </div></div><div class="dash ruim"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_1.jpg');background-size:400% 400%;background-position:0% 100%"></div>
+  <div class="dtxt"><b title="[ADS RGV] VÍDEO NARRADO CLAUDINHO JURUNENSE">[ADS RGV] VÍDEO NARRADO CLAUDINHO JURUNENSE</b>
+    <span class="meta">vídeo · página · ativo · <a href="https://fb.me/2gTMDHmBHBAnS4M" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 16.201</span><span>358 leads</span><span>20.1% no perfil</span><span class="forte">R$ 225/MQL</span><span>5 SQL</span><span>0 ag.</span></div>
+  </div></div><div class="dash ruim"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_0.jpg');background-size:400% 400%;background-position:33.33333333333333% 66.66666666666666%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][FEED][AD09][23102025]">[RGV][PER][VD][FEED][AD09][23102025]</b>
+    <span class="meta">vídeo · página · ativo · <a href="https://fb.me/29LZQy42MaHEzmq" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 6.093</span><span>119 leads</span><span>23.5% no perfil</span><span class="forte">R$ 218/MQL</span><span>2 SQL</span><span>0 ag.</span></div>
+  </div></div></div>
+  <h3>Queimando verba</h3><p class="nota">Gastou R$ 3 mil ou mais em 30 dias, não gerou SQL, e o lead no perfil saiu caro ou nem saiu.</p><div class="dashs"><div class="dash ruim"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_8.jpg');background-size:400% 400%;background-position:66.66666666666666% 0%"></div>
+  <div class="dtxt"><b title="[RGV][PER][VD][AD02][16092026][DIFERENCIAL]">[RGV][PER][VD][AD02][16092026][DIFERENCIAL]</b>
+    <span class="meta">vídeo · página · ativo · <a href="https://fb.me/1VJFNa9Qv82PBoA" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 7.126</span><span>17 leads</span><span>41.2% no perfil</span><span class="forte">R$ 1.018/MQL</span><span>0 SQL</span><span>0 ag.</span></div>
+  </div></div><div class="dash ruim"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_9.jpg');background-size:400% 400%;background-position:0% 100%"></div>
+  <div class="dtxt"><b title="[+FQQL][SOS][IMG][AD05][01092026]">[+FQQL][SOS][IMG][AD05][01092026]</b>
+    <span class="meta">imagem · página · pausado · <a href="https://fb.me/yzUe0rpxwDf9cLZ" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 5.176</span><span>0 leads</span><span>–% no perfil</span><span class="forte">–/MQL</span><span>0 SQL</span><span>0 ag.</span></div>
+  </div></div><div class="dash ruim"><div class="fimg" style="background-image:url('https://painel-funil-criativos.vercel.app/assets/sprites/g_0.jpg');background-size:400% 400%;background-position:33.33333333333333% 33.33333333333333%"></div>
+  <div class="dtxt"><b title="[RGV][PER][ORG][VD][FEED][AD08][20052025].mp4">[RGV][PER][ORG][VD][FEED][AD08][20052025].mp4</b>
+    <span class="meta">vídeo · página · pausado · <a href="https://fb.me/1Rr0XGAv8O7wGvA" target="_blank" rel="noopener">ver</a></span>
+    <div class="chips"><span>R$ 3.601</span><span>0 leads</span><span>–% no perfil</span><span class="forte">–/MQL</span><span>0 SQL</span><span>0 ag.</span></div>
+  </div></div></div><details class="reserva"><summary>Reserva: dash rgv-mkt, só números do Meta (gancho de 3 segundos e CTR)</summary>
+  <h3>Melhores ganchos · % que passa dos 3 primeiros segundos, 30 dias</h3><div class="dashs"><div class="dash bom">
+    <div class="semimg"></div>
+    <div class="dtxt"><b title="[RGV][PER][VD][AD03][14092026]">[RGV][PER][VD][AD03][14092026]</b>
+      <span class="meta">vídeo · formulário · pausado · 2 cópias</span>
+      <div class="chips"><span>R$ 4.581 gasto</span><span>15 leads</span><span class="forte">R$ 305/lead</span><span>CTR 2,21%</span><span>gancho 47,9%</span></div>
+      
+    </div></div><div class="dash bom">
+    <div class="semimg"></div>
+    <div class="dtxt"><b title="[SOS][PER][VD][AD11][03092026]">[SOS][PER][VD][AD11][03092026]</b>
+      <span class="meta">vídeo · página · pausado · 3 cópias</span>
+      <div class="chips"><span>R$ 2.589 gasto</span><span>7 leads</span><span class="forte">R$ 370/lead</span><span>CTR 3,64%</span><span>gancho 47,6%</span></div>
+      
+    </div></div><div class="dash bom">
+    <img src="capas/2026-10-09/d_f8ff87a78bcc.jpg" alt="">
+    <div class="dtxt"><b title="[RGV][PER][VD][FEED][AD06][06032026]">[RGV][PER][VD][FEED][AD06][06032026]</b>
+      <span class="meta">vídeo · formulário · pausado · 9 cópias</span>
+      <div class="chips"><span>R$ 22.477 gasto</span><span>356 leads</span><span class="forte">R$ 63,14/lead</span><span>CTR 2,58%</span><span>gancho 46,4%</span></div>
+      
+    </div></div><div class="dash bom">
+    <div class="semimg"></div>
+    <div class="dtxt"><b title="[RGV][PER][VD][AD24][14092026]">[RGV][PER][VD][AD24][14092026]</b>
+      <span class="meta">vídeo · formulário · pausado · 3 cópias</span>
+      <div class="chips"><span>R$ 1.003 gasto</span><span>26 leads</span><span class="forte">R$ 38,6/lead</span><span>CTR 3,84%</span><span>gancho 45,6%</span></div>
+      
+    </div></div><div class="dash bom">
+    <div class="semimg"></div>
+    <div class="dtxt"><b title="[RGV][PER][VD][FEED][AD09][23102025]">[RGV][PER][VD][FEED][AD09][23102025]</b>
+      <span class="meta">vídeo · formulário · pausado · 4 cópias</span>
+      <div class="chips"><span>R$ 5.445 gasto</span><span>102 leads</span><span class="forte">R$ 53,38/lead</span><span>CTR 2,13%</span><span>gancho 43,4%</span></div>
+      
+    </div></div><div class="dash bom">
+    <img src="capas/2026-10-09/d_a1d789c12399.jpg" alt="">
+    <div class="dtxt"><b title="[RGV][PER][VD][FEED][AD05][13082025]">[RGV][PER][VD][FEED][AD05][13082025]</b>
+      <span class="meta">vídeo · formulário · pausado · 5 cópias</span>
+      <div class="chips"><span>R$ 31.655 gasto</span><span>542 leads</span><span class="forte">R$ 58,4/lead</span><span>CTR 2,08%</span><span>gancho 42,3%</span></div>
+      
+    </div></div></div>
+  <h3>Piores ganchos · 30 dias</h3><div class="dashs"><div class="dash ruim">
+    <img src="capas/2026-10-09/d_04dcde258c1c.jpg" alt="">
+    <div class="dtxt"><b title="[RGV][PER][VD][AD29][12062026]">[RGV][PER][VD][AD29][12062026]</b>
+      <span class="meta">vídeo · formulário · pausado · 19 cópias</span>
+      <div class="chips"><span>R$ 20.870 gasto</span><span>67 leads</span><span class="forte">R$ 311/lead</span><span>CTR 0,72%</span><span>gancho 11,6%</span></div>
+      
+    </div></div><div class="dash ruim">
+    <div class="semimg"></div>
+    <div class="dtxt"><b title="[RGV][PER][VD][AD12][26062026]">[RGV][PER][VD][AD12][26062026]</b>
+      <span class="meta">vídeo · página · pausado · 3 cópias</span>
+      <div class="chips"><span>R$ 3.172 gasto</span><span>4 leads</span><span class="forte">R$ 793/lead</span><span>CTR 0,91%</span><span>gancho 15,9%</span></div>
+      
+    </div></div><div class="dash ruim">
+    <img src="capas/2026-10-09/d_da6bd22227d7.jpg" alt="">
+    <div class="dtxt"><b title="[RGV][PER][VD][AD07][09072026]">[RGV][PER][VD][AD07][09072026]</b>
+      <span class="meta">vídeo · página · pausado</span>
+      <div class="chips"><span>R$ 32.323 gasto</span><span>132 leads</span><span class="forte">R$ 245/lead</span><span>CTR 2,59%</span><span>gancho 16,2%</span></div>
+      
+    </div></div><div class="dash ruim">
+    <img src="capas/2026-10-09/d_e693e59f283b.jpg" alt="">
+    <div class="dtxt"><b title="[RGV][PER][VD][AD25][26062026]">[RGV][PER][VD][AD25][26062026]</b>
+      <span class="meta">vídeo · página · pausado · 2 cópias</span>
+      <div class="chips"><span>R$ 8.575 gasto</span><span>22 leads</span><span class="forte">R$ 390/lead</span><span>CTR 0,94%</span><span>gancho 17,5%</span></div>
+      
+    </div></div></div>
+  </details><h3>Variações dos vídeos que estão vencendo</h3><p class="nota">Os vídeos com mais leads e melhor custo no dash, baixados e transcritos. A ideia é manter o miolo que converte e testar aberturas, tarjas e ajustes novos.</p>
+  <div class="formula"><b>O que os vencedores têm em comum</b><ul><li>Os dois criativos que mais geram SQL e agendamento, AD01 e AD11, dizem com todas as letras 'é para aquele empresário que fatura acima de 1 milhão de reais, é para dono e dona de empresa' e fecham com 'um especialista vai fazer um diagnóstico e ver se você está preparado'. Esse filtro falado não aparece no vídeo principal, que tem só 20% no perfil.</li><li>Imposto continua sendo o tema que mais prende, mas só vira lead bom quando vem junto do filtro de faturamento. Sem filtro, como no 'pego na reforma', fica em 14% no perfil.</li><li>Prova vinda de fora pesa: o trecho de TV de 2009 com o Luciano Huck abre o 'Reels 4', que tem 18 SQL e 11 agendamentos.</li><li>Caso de varejo com número real, como a loja de 4 milhões que caiu pra 1 milhão, prende o dono de loja e dá autoridade.</li><li>Bater no 'coach de palco' segue presente nos vencedores e é a cara do Ricardo.</li></ul></div>
+  <div class="vencs"><article class="venc">
+      <div class="vtopo"><span class="num">1</span><div><b>[RGV][PER][VD][AD01][18082026]</b><span class="meta">30 dias: 59% dos leads no perfil, o maior entre os grandes · 105 MQL a R$ 320 · 19 SQL · 12 agendamentos realizados, o campeão · 7 dias: 52% no perfil, 4 SQL e 3 agendamentos, segue o 1º em agendamento · <a href="https://www.instagram.com/p/Dc6Cktjsh4w/" target="_blank" rel="noopener">ver o vídeo</a></span></div></div>
+      <img class="vab" src="capas/2026-10-09/v_01dabaa36e0a.png" alt="Quadros da abertura: 0,3s, 1,5s, 3s e 6s">
+      <p><b>O que é:</b> Montagem com cara de página: à esquerda o Ricardo no notebook com a faixa vermelha 'ATENÇÃO EMPRESÁRIO!'; à direita 'O lucro da sua empresa está escapando pelos impostos', com a foto dele. Fala de Pix, malha fiscal e de um empresário que levou multa de R$ 20 milhões. Depois diz 'é para aquele empresário que fatura acima de 1 milhão de reais' e fecha com 'vai conversar com um especialista, que vai fazer um diagnóstico e ver se você está preparado'.</p>
+      <p><b>Por que funciona:</b> Junta o tema que mais prende, imposto, com o filtro de faturamento falado e um CTA de diagnóstico. Quem chega já sabe que é pra dono de empresa grande, e por isso 59% estão no perfil.</p>
+      <div class="vcols">
+        <div><h5>Novas aberturas faladas</h5><ul><li>“Tem empresário aqui que levou multa de 20 milhões. 25 anos de trabalho, perdeu tudo.”</li><li>“O Pix que cai no seu CNPJ já está sendo cruzado pela Receita. Você sabe disso?”</li><li>“Se a sua empresa fatura mais de 1 milhão por ano, o lucro pode estar escapando pelo imposto agora.”</li><li>“Antes de pagar o próximo imposto, presta atenção nesse vídeo.”</li></ul></div>
+        <div><h5>Novas tarjas</h5><div class="tarjas"><span class="tarja">ATENÇÃO EMPRESÁRIO!</span><span class="tarja">MULTA DE R$ 20 MILHÕES</span><span class="tarja">O LUCRO ESTÁ ESCAPANDO PELO IMPOSTO</span></div>
+        <h5>O que mudar</h5><ul><li>Manter a montagem de página e o trecho 'é para empresário que fatura acima de 1 milhão', que é o filtro que faz o perfil subir.</li><li>Trocar só a abertura, uma por versão. A da multa de 20 milhões é a candidata mais forte.</li><li>Aplicar o mesmo fecho, com filtro de faturamento e diagnóstico, nos vídeos de notícia tributária, que hoje têm só 14% no perfil.</li></ul></div>
+      </div>
+    </article><article class="venc">
+      <div class="vtopo"><span class="num">2</span><div><b>Reels 4</b><span class="meta">30 dias: 36% no perfil · 102 MQL a R$ 431 · 18 SQL · 11 agendamentos realizados · <a href="https://www.instagram.com/p/DcrkoxrMCUh/" target="_blank" rel="noopener">ver o vídeo</a></span></div></div>
+      <img class="vab" src="capas/2026-10-09/v_6c71383366aa.png" alt="Quadros da abertura: 0,3s, 1,5s, 3s e 6s">
+      <p><b>O que é:</b> Abre com um trecho de TV de 2009 em que o Luciano Huck fala do Ricardo: 'o bicho trabalha que nem um maluco, até no sábado'. Depois o Ricardo explica os 3 dias do RGV, gestão, marketing e venda, com 40 horas e a regra 'proibido perder venda'.</p>
+      <p><b>Por que funciona:</b> A prova social vem de fora, de alguém famoso e de outra época, e o empresário confia mais nisso do que no Ricardo falando de si. O miolo explica com clareza o que se leva dos 3 dias.</p>
+      <div class="vcols">
+        <div><h5>Novas aberturas faladas</h5><ul><li>“Em 2009, o Luciano Huck falou isso de mim na TV.”</li><li>“Antes de ter 1.100 lojas, eu trabalhava até no sábado vendendo.”</li><li>“O que um apresentador de TV contou sobre o dono da Ricardo Eletro.”</li></ul></div>
+        <div><h5>Novas tarjas</h5><div class="tarjas"><span class="tarja">2009: &quot;O BICHO TRABALHA QUE NEM UM MALUCO&quot;</span><span class="tarja">O DONO QUE VENDIA ATÉ NO SÁBADO</span></div>
+        <h5>O que mudar</h5><ul><li>Testar outros trechos de arquivo de TV e jornal da época da Ricardo Eletro como abertura, no mesmo molde.</li><li>Pôr o filtro de faturamento antes da explicação dos 3 dias, como no AD01.</li><li>Fazer uma versão curta, com só a abertura de arquivo e o miolo dos 3 dias, pra ver se o custo por MQL cai.</li></ul></div>
+      </div>
+    </article><article class="venc">
+      <div class="vtopo"><span class="num">3</span><div><b>[RGV][PER][VD][ORG][FEED][AD06][09102025]</b><span class="meta">30 dias: 2.891 leads a R$ 41, mas só 20% no perfil · 589 MQL a R$ 204 · 33 SQL · 9 agendamentos · 0 vendas · 7 dias: subiu pra 30% no perfil, R$ 152 por MQL, 7 SQL e 2 agendamentos · <a href="https://www.instagram.com/p/DeNGw0ggB_6/" target="_blank" rel="noopener">ver o vídeo</a></span></div></div>
+      <img class="vab" src="capas/2026-10-09/v_cf227707a2a4.png" alt="Quadros da abertura: 0,3s, 1,5s, 3s e 6s">
+      <p><b>O que é:</b> O vídeo principal. Narrado com fotos do Abílio Diniz, da Luiza Trajano e do João Adibe: 'já pensou se você pudesse ser mentorado...?'. Depois apresenta o Ricardo com os números da Ricardo Eletro e o Ricardo explica os 3 dias.</p>
+      <p><b>Por que funciona:</b> O miolo vende muito bem: autoridade com número e explicação clara dos 3 dias. O problema é a entrada, com foto parada e legenda pequena. Só 1 em 5 passa dos 3 segundos, então qualquer ganho na abertura multiplica o resultado.</p>
+      <div class="vcols">
+        <div><h5>Novas aberturas faladas</h5><ul><li>“Só um bilionário do Brasil abre a porta da empresa dele pra você. E não é quem você tá pensando.”</li><li>“1.100 lojas, 12 bilhões por ano, 45 mil funcionários. Agora imagina ter esse cara sentado do seu lado por 3 dias.”</li><li>“Se a sua empresa fatura mais de 200 mil por mês e você ainda decide tudo sozinho, para 1 minuto.”</li><li>“O Abílio não pode mais te mentorar. A Luiza não tem tempo. Mas tem um que tem.”</li><li>“Você pagaria pra sentar 3 dias com o fundador da Ricardo Eletro?”</li></ul></div>
+        <div><h5>Novas tarjas</h5><div class="tarjas"><span class="tarja">QUEM VAI TE MENTORAR?</span><span class="tarja">1.100 LOJAS · R$ 12 BILHÕES POR ANO</span><span class="tarja">SÓ UM BILIONÁRIO ABRE A PORTA PRA VOCÊ</span><span class="tarja">3 DIAS COM O FUNDADOR DA RICARDO ELETRO</span></div>
+        <h5>O que mudar</h5><ul><li>Pôr filtro de faturamento na abertura ou na tarja, porque hoje a maioria dos leads está fora do perfil.</li><li>Pôr tarja grande no primeiro quadro, por cima da foto do Abílio. Hoje não tem tarja.</li><li>Testar começar pelo trecho 'Só um. Ricardo Nunes' com os números, e deixar os outros empresários pra depois.</li></ul></div>
+      </div>
+    </article><article class="venc">
+      <div class="vtopo"><span class="num">4</span><div><b>[RGV][PER][VD][AD11][12082026]</b><span class="meta">30 dias: 37% no perfil · 61 MQL a R$ 524 · 12 SQL · 7 agendamentos · 1 venda · <a href="https://www.instagram.com/p/DcAVPjKsHT-/" target="_blank" rel="noopener">ver o vídeo</a></span></div></div>
+      <img class="vab" src="capas/2026-10-09/v_5e0f5f14ec8f.png" alt="Quadros da abertura: 0,3s, 1,5s, 3s e 6s">
+      <p><b>O que é:</b> Corte de podcast com a faixa vermelha 'LOJA FÍSICA VAI ACABAR?' e imagem de uma loja da Ricardo Eletro. Ele conta de uma loja de shopping que caiu de 4 milhões pra 1 milhão por mês e o aluguel virou 15% do faturamento. Depois se apresenta, de lojinha de 20 m² a 1.100 lojas e 12 bilhões, vendida em 2018, e usa o mesmo fecho do AD01, com filtro de faturamento e diagnóstico.</p>
+      <p><b>Por que funciona:</b> O caso de varejo com número real prende o dono de loja, e a história de 20 m² a 1.100 lojas dá autoridade. A planilha mandava evitar esse vídeo pelo custo por lead, mas no funil ele gera SQL, agendamento e venda.</p>
+      <div class="vcols">
+        <div><h5>Novas aberturas faladas</h5><ul><li>“Uma loja que vendia 4 milhões por mês passou a vender 1 milhão. E o aluguel ficou o mesmo.”</li><li>“Quando o aluguel vira 15% do faturamento, a loja já está morrendo.”</li><li>“Eu saí de uma loja de 20 metros quadrados pra 1.100 lojas. Vou te contar o erro que quase ninguém vê.”</li></ul></div>
+        <div><h5>Novas tarjas</h5><div class="tarjas"><span class="tarja">LOJA FÍSICA VAI ACABAR?</span><span class="tarja">O ALUGUEL VIROU 15% DO FATURAMENTO</span><span class="tarja">DE 20 M² A 1.100 LOJAS</span></div>
+        <h5>O que mudar</h5><ul><li>Tirar da lista do que evitar na planilha: é um dos que mais geram agendamento e venda.</li><li>Testar outros casos de varejo com número na mesma estrutura: pergunta polêmica na faixa e caso real.</li><li>Manter o fecho com filtro de faturamento e diagnóstico.</li></ul></div>
+      </div>
+    </article><article class="venc">
+      <div class="vtopo"><span class="num">5</span><div><b>[RGV][PER][VD][FEED][AD36][02042026]</b><span class="meta">30 dias: 36% no perfil · 222 MQL a R$ 130 · 18 SQL · 5 agendamentos · pausado · <a href="https://www.instagram.com/p/Dd0MTvvMMvw/" target="_blank" rel="noopener">ver o vídeo</a></span></div></div>
+      <img class="vab" src="capas/2026-10-09/v_faf073237e2f.png" alt="Quadros da abertura: 0,3s, 1,5s, 3s e 6s">
+      <p><b>O que é:</b> Selfie do Ricardo ao ar livre, sem produção, em tom de bronca: 'Você tá no regime simples? Pelo amor de Deus, empresário, presta atenção'. Mostra um papel de incentivo fiscal e fecha com 'para de ser amador'.</p>
+      <p><b>Por que funciona:</b> Tom de recado sincero e uma dor de bolso clara. Está pausado com um dos melhores custos da conta, então vale reativar e fazer versões novas.</p>
+      <div class="vcols">
+        <div><h5>Novas aberturas faladas</h5><ul><li>“Tá no Simples e fatura mais de 100 mil por mês? Você pode estar pagando imposto demais. Presta atenção.”</li><li>“Empresário, olha esse papel aqui. Tem benefício fiscal no seu estado que ninguém te contou.”</li><li>“Eu tinha loja nos 27 estados. Sei exatamente onde você tá perdendo dinheiro com imposto.”</li><li>“Pelo amor de Deus, para de pagar imposto sobre faturamento se você ganha sobre lucro.”</li><li>“Sabe quanto do seu faturamento vai pro governo todo mês? Faz a conta comigo.”</li></ul></div>
+        <div><h5>Novas tarjas</h5><div class="tarjas"><span class="tarja">VOCÊ ESTÁ PAGANDO IMPOSTO DEMAIS?</span><span class="tarja">SIMPLES + R$ 100 MIL/MÊS = PREJUÍZO</span><span class="tarja">PARE DE SER AMADOR COM IMPOSTO</span><span class="tarja">O BENEFÍCIO FISCAL QUE NINGUÉM TE CONTOU</span></div>
+        <h5>O que mudar</h5><ul><li>Reativar o original enquanto as versões novas não ficam prontas.</li><li>Abrir mostrando o papel do incentivo fiscal na cara da câmera, como prova visual.</li><li>Gravar selfies curtas em lugares diferentes, como carro, loja e escritório, com a mesma bronca e uma tarja vermelha no topo.</li></ul></div>
+      </div>
+    </article><article class="venc">
+      <div class="vtopo"><span class="num">6</span><div><b>[RGV][PER][VD][AD29][12062026]</b><span class="meta">30 dias: 39% no perfil · 57 MQL a R$ 392 · 10 SQL · 4 agendamentos · 7 dias: 47% no perfil, 2 SQL · <a href="https://www.instagram.com/p/DcrkyCpst64/" target="_blank" rel="noopener">ver o vídeo</a></span></div></div>
+      <img class="vab" src="capas/2026-10-09/v_7c7f15b70a17.png" alt="Quadros da abertura: 0,3s, 1,5s, 3s e 6s">
+      <p><b>O que é:</b> O Ricardo na sala vazia do RGV, com luz vermelha e a tarja 'EMPRESÁRIO': 'eu vou ser claro, se você não estiver sentado numa dessas cadeiras, imagina se o seu concorrente estiver'. Bate nas 'mentorias de coach' e lista os problemas reais: cliente, marketing, imposto, fiscal e caixa. Fecha com 'sua cadeira está aqui reservada, a decisão é sua'.</p>
+      <p><b>Por que funciona:</b> O medo de ficar pra trás do concorrente, num cenário real do evento, mais a crítica aos coaches. Curto, com 55 segundos, e direto.</p>
+      <div class="vcols">
+        <div><h5>Novas aberturas faladas</h5><ul><li>“Imagina o seu concorrente sentado nessa cadeira por 3 dias. E você não.”</li><li>“Essa cadeira está reservada pra você. A decisão é sua.”</li><li>“Eu vou ser claro com você, empresário.”</li></ul></div>
+        <div><h5>Novas tarjas</h5><div class="tarjas"><span class="tarja">EMPRESÁRIO, EU VOU SER CLARO</span><span class="tarja">E SE O SEU CONCORRENTE SENTAR AQUI?</span><span class="tarja">SUA CADEIRA ESTÁ RESERVADA</span></div>
+        <h5>O que mudar</h5><ul><li>Gravar versões na sala cheia, durante o evento, mantendo a mesma fala.</li><li>Pôr o filtro de faturamento na segunda frase.</li><li>Testar abrir na cadeira vazia com a tarja 'E SE O SEU CONCORRENTE SENTAR AQUI?'.</li></ul></div>
+      </div>
+    </article><article class="venc">
+      <div class="vtopo"><span class="num">7</span><div><b>[RGV][PER][VD][FEED][AD48][02042026]</b><span class="meta">30 dias: 38% no perfil · 116 MQL a R$ 122, o melhor custo entre os vídeos · 8 SQL · pausado · <a href="https://www.instagram.com/p/DYFFXsMDDMQ/" target="_blank" rel="noopener">ver o vídeo</a></span></div></div>
+      <img class="vab" src="capas/2026-10-09/v_ac350d53bf32.png" alt="Quadros da abertura: 0,3s, 1,5s, 3s e 6s">
+      <p><b>O que é:</b> Cena de mesa: o Ricardo conversa com um empresário e pega uma nota de 100: 'Vou rasgar essa nota. Você tem coragem?'. Explica que no Simples acima de R$ 100 mil o empresário paga sobre faturamento e não sobre lucro. Fecha com 'tem que ver se vai aprovar você'.</p>
+      <p><b>Por que funciona:</b> Tem ação visual no primeiro quadro, a nota de 100, e uma metáfora fácil: deixar pra depois é rasgar dinheiro todo mês. A seleção no fim dá exclusividade.</p>
+      <div class="vcols">
+        <div><h5>Novas aberturas faladas</h5><ul><li>“Você rasgaria uma nota de 100 agora? Então para de fazer isso todo mês no Simples.”</li><li>“Toda vez que você paga imposto sobre faturamento, você faz isso aqui.”</li><li>“Quanto você fatura? 400 mil? Então você tá rasgando dinheiro.”</li><li>“Deixar o RGV pra depois custa isso aqui todo mês.”</li></ul></div>
+        <div><h5>Novas tarjas</h5><div class="tarjas"><span class="tarja">VOCÊ RASGA R$ 100 TODO MÊS?</span><span class="tarja">SIMPLES ACIMA DE R$ 100 MIL = DINHEIRO RASGADO</span><span class="tarja">DEIXAR PRA DEPOIS CUSTA CARO</span></div>
+        <h5>O que mudar</h5><ul><li>Reativar o original, que está pausado com R$ 46 por lead.</li><li>Começar o vídeo já com a nota sendo rasgada, sem a fala antes.</li><li>Fazer uma versão com uma pilha de notas, uma para cada mês do ano, pra mostrar o tamanho da perda.</li></ul></div>
+      </div>
+    </article></div><h3>Plano da semana</h3><div class="plano"><h4>Linha 001 · Notícia que mexe no bolso do empresário · 3 vídeos pra 15/10 (atualizado em 09/10)</h4><p class="nota">Faixa vermelha com a manchete nos 3 primeiros segundos, legenda embutida, Ricardo em corte de palco ou falando pra câmera, e fecho 'é isso que a gente resolve em 3 dias, de empresário para empresário'. Sempre ligar o imposto ao método, nunca manchete solta. Tamanhos 1080x1920, 1080x1350 e 1080x1080. Novo: como os vídeos de notícia tributária prendem muita gente fora do perfil (14% no 'pego na reforma'), toda abertura de imposto precisa de um filtro na primeira frase, como 'se a sua empresa fatura mais de R$ 200 mil por mês'. Mandar pra página, não pro formulário. Atualização de 09/10: o split payment virou briga entre ministro e campanha no noticiário. No vídeo, falar só do calendário e do caixa (IstoÉ Dinheiro e Portal Contábeis), sem citar nome nem debate.</p>
+  <ol class="ideias"><li class="ideia"><div class="num">1</div><div>
+    <h4>Simples ou regime novo: o prazo vai até o fim de outubro</h4>
+    <p class="gancho">Faixa vermelha: 'SIMPLES OU REGIME NOVO: VOCÊ TEM ATÉ O FIM DE OUTUBRO'. Fala: 'Se a sua empresa fatura mais de 200 mil por mês e é do Simples, presta atenção nos próximos 30 segundos.'</p>
+    <p><b>Formato:</b> Tela dividida: em cima o print oficial da Receita, embaixo o Ricardo no palco. A faixa vermelha corta a divisão.</p>
+    <p><b>Roteiro:</b></p><ul class="roteiro"><li>0 a 3s · Faixa com a manchete e o Ricardo olhando pra câmera, já com o filtro de faturamento.</li><li>3 a 15s · O prazo: o g1 (em 16 portais) diz que a escolha entre o Simples e o recolhimento da CBS e do IBS pra 2027 vai até o fim de outubro. A Receita já atualizou o balanço dos pedidos.</li><li>15 a 30s · A consequência pro caixa: quem vende pra outra empresa pode perder cliente se não gerar crédito de imposto. Decidir no chute custa margem o ano inteiro.</li><li>30 a 45s · Ponte: 'decisão de imposto é decisão de estratégia. É isso que a gente resolve em 3 dias, de empresário para empresário.' CTA pra página.</li></ul>
+    <p><b>Prova social:</b> Print do comunicado oficial da Receita no gov.br com os números, mais a manchete do Portal Contábeis sobre os 270 mil indeferidos. Se tiver, um corte de aluno contando que mudou o regime depois do RGV.</p>
+    <p><b>Variações pra testar:</b></p><ul class="roteiro"><li>Com filtro de faturamento na primeira frase: 'Se a sua empresa fatura mais de 200 mil por mês...'</li><li>Abertura com número: '1,3 milhão de empresas já escolheram. E você?'</li><li>Selfie de recado, sem produção, mesma fala</li><li>Versão quadrada com a faixa no meio pro feed</li></ul>
+    <p class="refs">Baseado em: <a href="https://g1.globo.com/google/amp/sp/bauru-marilia/videos-tem-noticias-1-edicao/video/empresarios-tem-ate-o-fim-de-outubro-para-opcoes-do-simples-nacional-e-iva-da-reforma-15035989.ghtml" target="_blank" rel="noopener">Notícia · O Globo / g1</a> · <a href="https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2026/outubro/receita-federal-atualiza-o-balanco-de-solicitacoes-de-opcao-pelo-simples-nacional-e-pelo-regime-regular-do-ibs-e-da-cbs-2" target="_blank" rel="noopener">Notícia · Gov.br / Receita Federal</a></p>
+  </div></li><li class="ideia"><div class="num">2</div><div>
+    <h4>Split payment: o imposto sai antes do dinheiro chegar</h4>
+    <p class="gancho">Faixa vermelha: 'O IMPOSTO VAI SAIR DA SUA VENDA ANTES DO DINHEIRO CAIR NA CONTA'. Fala: 'Você vende 100 e recebe 70. E isso já tem data pra começar.'</p>
+    <p><b>Formato:</b> Corte de palco com faixa vermelha e um gráfico simples na tela: 100 entra, 70 cai na conta.</p>
+    <p><b>Roteiro:</b></p><ul class="roteiro"><li>0 a 3s · Faixa e a frase do 100 que vira 70.</li><li>3 a 20s · O que é o split payment em uma frase: o banco separa o imposto na hora da venda. O Portal Contábeis discute se a obrigatoriedade fica pra 2028.</li><li>20 a 35s · O que muda no caixa: acabou o capital de giro do imposto, e quem trabalha com margem apertada sente primeiro.</li><li>35 a 45s · Ponte pro RGV e CTA pra página. Sem citar ministro, partido ou a briga sobre derrubar o mecanismo.</li></ul>
+    <p><b>Prova social:</b> No orgânico do Ricardo, split payment já rendeu duas vezes: 207 mil views e 139 mil views com tela dividida e 'comente LEÃO'. Usar trecho desses vídeos como prova de que o tema já pegou.</p>
+    <p><b>Variações pra testar:</b></p><ul class="roteiro"><li>Com filtro de faturamento na primeira frase: 'Se a sua empresa fatura mais de 200 mil por mês...'</li><li>Abertura com pergunta: 'Você sabe quanto da sua venda vai ficar no banco a partir de 2027?'</li><li>Tela dividida com a manchete em cima</li><li>Versão narrada com B-roll de loja e maquininha</li></ul>
+    <p class="refs">Baseado em: <a href="https://istoedinheiro.com.br/split-payment-2027-obrigatoriedade-2028" target="_blank" rel="noopener">Notícia · IstoÉ Dinheiro</a> · <a href="https://www.contabeis.com.br/artigos/79907/split-payment-na-reforma-tributaria-obrigatoriedade-so-em-2028/" target="_blank" rel="noopener">contabeis.com.br</a></p>
+  </div></li><li class="ideia"><div class="num">3</div><div>
+    <h4>Casas Bahia: R$ 17 bilhões de dívida e o erro de caixa</h4>
+    <p class="gancho">Faixa vermelha: 'CASAS BAHIA CONFIRMA: ESTOQUE 40% MENOR E 298 LOJAS FECHADAS'. Fala: 'Eu fui concorrente deles por décadas. Vou te mostrar o erro que nenhuma manchete conta.'</p>
+    <p><b>Formato:</b> Tela dividida: em cima a manchete do Times Brasil com a foto da loja, embaixo o Ricardo. É o formato que a V4 roda há 63 dias em 1º lugar.</p>
+    <p><b>Roteiro:</b></p><ul class="roteiro"><li>0 a 3s · Faixa e o Ricardo.</li><li>3 a 20s · A empresa respondeu à CVM que o laudo da perícia é preliminar, mas confirmou as informações (InfoMoney, em 8 portais): estoque 40,5% menor, 4.647 pessoas a menos, 298 lojas fechadas.</li><li>20 a 35s · A lição pro dono que fatura acima de R$ 200 mil: estoque e prazo comem o caixa antes da venda cair.</li><li>35 a 45s · Ponte pro RGV e CTA pra página.</li></ul>
+    <p><b>Prova social:</b> A autoridade do Ricardo como fundador da Ricardo Eletro, e o react dele sobre a Casas Bahia que fez 1,67 milhão no orgânico.</p>
+    <p><b>Variações pra testar:</b></p><ul class="roteiro"><li>Com filtro de faturamento na primeira frase: 'Se a sua empresa fatura mais de 200 mil por mês...'</li><li>Abertura só com o número: 'R$ 17 bilhões'</li><li>Ricardo andando na frente de uma loja, sem palco</li><li>Versão horizontal pro YouTube, linha 008</li></ul>
+    <p class="refs">Baseado em: <a href="https://www.infomoney.com.br/mercados/casas-bahia-afirma-que-laudo-sobre-estoque-e-preliminar-mas-confirma-informacoes/" target="_blank" rel="noopener">Notícia · InfoMoney</a> · <a href="https://timesbrasil.com.br/empresas-e-negocios/casas-bahia-corta-estoque-em-40-e-reduz-quadro-em-46-mil-pessoas-apos-pedido-de-recuperacao-judicial/" target="_blank" rel="noopener">timesbrasil.com.br</a></p>
+  </div></li></ol>
+  <p class="nota" style="margin-top:12px"><b>Reserva:</b> 76% das indústrias não conseguem crédito. Faixa: '76% DAS INDÚSTRIAS NÃO CONSEGUEM CRÉDITO'. Fala: 'Se a sua empresa depende de banco pra girar, esse número é sobre você.' <a href="https://veja.abril.com.br/economia/76-das-industrias-enfrentam-dificuldades-para-obter-credito-devido-a-juros-altos-diz-cni/" target="_blank" rel="noopener">Notícia · Veja</a> <a href="https://agenciabrasil.ebc.com.br/economia/noticia/2026-10/industria-aponta-juros-altos-como-principal-barreira-ao-credito" target="_blank" rel="noopener">Notícia · Agência Brasil</a></p></div><h3>Formatos que estão funcionando nos concorrentes</h3><p class="nota">Classificados olhando as capas dos anúncios no topo de verba e dos Reels que viralizaram. Anúncio no ar há 30 dias ou mais conta em dobro.</p>
+  <div class="fmts"><div class="fmt"><div class="fhead"><b>Headline com tarja</b><span>4 vencedores · 1 testes novos · 3 virais</span></div><div class="minis"><a class="mini" href="https://www.facebook.com/ads/library/?id=1417800442974332" target="_blank" rel="noopener" title="tarja branca e amarela com a polêmica de gestão; no ar há 508 dias"><img src="capas/2026-10-09/a_1417800442974332.jpg" alt=""><span>Marcus Marques · 510d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=1685979419210339" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_1685979419210339.jpg" alt=""><span>Grupo Acelerador · 150d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=1037963401948755" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_1037963401948755.jpg" alt=""><span>Wendell Carvalho · 94d</span></a></div></div><div class="fmt"><div class="fhead"><b>Imagem de oferta</b><span>4 vencedores · 2 testes novos · 0 virais</span></div><div class="minis"><a class="mini" href="https://www.facebook.com/ads/library/?id=1594226391962320" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_1594226391962320.jpg" alt=""><span>Marcus Marques · 480d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=854999200891121" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_854999200891121.jpg" alt=""><span>João Kepler · 203d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=568191503014007" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_568191503014007.jpg" alt=""><span>Marcus Marques · 480d</span></a></div></div><div class="fmt"><div class="fhead"><b>Print de tela</b><span>2 vencedores · 5 testes novos · 1 virais</span></div><div class="minis"><a class="mini" href="https://www.facebook.com/ads/library/?id=1771098017617083" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_1771098017617083.jpg" alt=""><span>Paulo Vieira (Febracis) · 445d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=1980571499160854" target="_blank" rel="noopener" title="print do app Notas no celular, convite direto"><img src="capas/2026-10-09/a_1980571499160854.jpg" alt=""><span>João Kepler · 203d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=1469362511698068" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_1469362511698068.jpg" alt=""><span>Tallis Gomes · 7d</span></a></div></div><div class="fmt"><div class="fhead"><b>Selfie de recado</b><span>1 vencedores · 3 testes novos · 4 virais</span></div><div class="minis"><a class="mini" href="https://www.facebook.com/ads/library/?id=1695891741516045" target="_blank" rel="noopener" title="selfie no carro respondendo caixinha de pergunta"><img src="capas/2026-10-09/a_1695891741516045.jpg" alt=""><span>G4 · 45d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=1782964189417578" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_1782964189417578.jpg" alt=""><span>Alfredo Soares · 7d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=1388258426369573" target="_blank" rel="noopener" title="Selfie bem de perto com caixa de manchete e capa do livro: &quot;Como o autor de Pai Rico, Pai Pobre tá devendo US$ 1,2 bilhão?&quot;"><img src="capas/2026-10-09/a_1388258426369573.jpg" alt=""><span>Bruno Nardon · 3d</span></a></div></div><div class="fmt"><div class="fhead"><b>Talking head</b><span>1 vencedores · 4 testes novos · 1 virais</span></div><div class="minis"><a class="mini" href="https://www.facebook.com/ads/library/?id=970853725835660" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_970853725835660.jpg" alt=""><span>João Kepler · 130d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=28715595378108701" target="_blank" rel="noopener" title="Tallis sentado no escritório, terno e gravata amarela, legenda pequena &quot;Se você sumir&quot;: pergunta dos 90 dias"><img src="capas/2026-10-09/a_28715595378108701.jpg" alt=""><span>Tallis Gomes · 7d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=1078179368360948" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_1078179368360948.jpg" alt=""><span>Tallis Gomes · 7d</span></a></div></div><div class="fmt"><div class="fhead"><b>Imagem com frase</b><span>3 vencedores · 0 testes novos · 1 virais</span></div><div class="minis"><a class="mini" href="https://www.facebook.com/ads/library/?id=1533327931863891" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_1533327931863891.jpg" alt=""><span>Grupo Acelerador · 129d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=1553878366229138" target="_blank" rel="noopener" title="Print de post estilo X/Twitter em fundo branco com frase de fé &quot;Escravo não habita na terra prometida&quot;"><img src="capas/2026-10-09/a_1553878366229138.jpg" alt=""><span>Paulo Vieira (Febracis) · 52d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=2185454532220773" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_2185454532220773.jpg" alt=""><span>Grupo Acelerador · 149d</span></a></div></div><div class="fmt"><div class="fhead"><b>Palco e bastidor</b><span>1 vencedores · 2 testes novos · 1 virais</span></div><div class="minis"><a class="mini" href="https://www.facebook.com/ads/library/?id=1345271966972389" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_1345271966972389.jpg" alt=""><span>Paulo Vieira (Febracis) · 375d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=1752557979369843" target="_blank" rel="noopener" title="'3 dias de imersão sem palestra motivacional' sobre bastidor do evento"><img src="capas/2026-10-09/a_1752557979369843.jpg" alt=""><span>Bruno Nardon · 4d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=1084686334175141" target="_blank" rel="noopener" title="Nardon em frente à placa da Harvard Business School, foto de viagem como autoridade"><img src="capas/2026-10-09/a_1084686334175141.jpg" alt=""><span>Bruno Nardon · 3d</span></a></div></div><div class="fmt"><div class="fhead"><b>Podcast</b><span>1 vencedores · 1 testes novos · 1 virais</span></div><div class="minis"><a class="mini" href="https://www.facebook.com/ads/library/?id=917206731013802" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/a_917206731013802.jpg" alt=""><span>Primo Rico · 36d</span></a><a class="mini" href="https://www.facebook.com/ads/library/?id=1618940719884131" target="_blank" rel="noopener" title="Corte de entrevista em fundo escuro com selo VENDE-C e título &quot;A arte de atender bem segundo um vendedor bilionário&quot;"><img src="capas/2026-10-09/a_1618940719884131.jpg" alt=""><span>Caio Carneiro · 7d</span></a><a class="mini" href="https://www.instagram.com/reel/DeAqRwMRzIX/" target="_blank" rel="noopener" title=""><img src="capas/2026-10-09/r_DeAqRwMRzIX.jpg" alt=""><span>@janguiediniz</span></a></div></div></div><h3>Como aplicar nos criativos do Ricardo</h3><div class="aplicar"><div class="ap"><h4>Print de nota: 'vendi mais e fiquei mais pobre'</h4><p><b>Onde está funcionando:</b> Teste novo da V4 (no ar há 7 dias): print de nota no celular com o título 'Fechamento do mês: Vendi mais e fiquei mais pobre' e um botão verde. A V4 lançou 60 anúncios novos na semana, e as imagens dela estão em 1º lugar de impressões no formato.</p><p><b>Como fazer no RGV:</b> É a dor exata da linha 002 (caixa). Nota no celular do Ricardo: 'Fechamento do mês: faturei 400 mil e o caixa fechou no vermelho'. Imagem pra página, que é onde a imagem tem 54% no perfil nos últimos 7 dias.</p></div><div class="ap"><h4>Cadeira limitada com filtro</h4><p><b>Onde está funcionando:</b> O Primo Rico roda há 36 dias em 1º lugar, com 7 versões, 'vou colocar 40 cadeiras nessa sala... a gente está filtrando bem quem vai estar'. O Bruno Nardon testa 'vou selecionar 3 empresários' em carrossel e Reel (42 mil views, 2,6x a mediana).</p><p><b>Como fazer no RGV:</b> Já é o mecanismo do AD29 ('sua cadeira está reservada'), que tem 39% no perfil e 10 SQL. Gravar a versão com a sala cheia e o filtro falado: 'só entra quem fatura acima de 200 mil por mês'.</p></div><div class="ap"><h4>Headline com tarja</h4><p><b>Onde está funcionando:</b> Marcus Marques roda há 508 dias em 1º lugar um vídeo com a tarja 'Você tem colaboradores que pensam assim!'. É o formato mais presente entre os vencedores dos concorrentes.</p><p><b>Como fazer no RGV:</b> Padronizar a faixa vermelha, que já dá 47% de gancho nos vídeos de notícia, em todo vídeo do Ricardo. Isso inclui o vídeo principal, que hoje abre sem faixa. A frase da faixa é uma dor de dono, como 'sua empresa cresceu e o lucro não acompanhou?'.</p></div><div class="ap"><h4>Tela dividida com caso real</h4><p><b>Onde está funcionando:</b> A V4 roda há 63 dias em 1º lugar o caso do Arroz Tio João: em cima a marca com faixa vermelha, embaixo o apresentador. O Caio Carneiro usa depoimento em cima e palco embaixo.</p><p><b>Como fazer no RGV:</b> Em cima a empresa da notícia ou a empresa do aluno, embaixo o Ricardo explicando. Serve pros vídeos de notícia e pra linha 004 de caso real.</p></div><div class="ap"><h4>Qualificar o faturamento na primeira frase</h4><p><b>Onde está funcionando:</b> Os testes novos que já entraram em 1º lugar de verba abrem qualificando o faturamento: V4 com 'você fatura acima de R$ 100 mil ao mês' e Alfredo Soares com 'se você fatura acima de 1 milhão por ano'. O vencedor do G4, no ar há 42 dias, fala em 'empresários que lucram 1 milhão por ano'.</p><p><b>Como fazer no RGV:</b> Abrir com 'se a sua empresa fatura mais de R$ 200 mil por mês...'. Filtra curioso e conversa direto com o público da imersão. Testar como abertura nova do vídeo principal.</p></div><div class="ap"><h4>Print de tela: notas, caixinha de pergunta, mensagem</h4><p><b>Onde está funcionando:</b> João Kepler roda há 201 dias um print do app Notas convidando empresários. Alfredo Soares e Tallis Gomes estão com caixinha de pergunta e print de mensagem nos testes novos. Na planilha, a imagem com caixinha de pergunta do RGV teve o melhor CTR, 7,89%.</p><p><b>Como fazer no RGV:</b> Nota no celular do Ricardo: 'Procuro 100 donos de empresa que faturam acima de 200 mil e não têm controle do caixa'. Ou um print de WhatsApp de aluno com o resultado, como prova social.</p></div><div class="ap"><h4>Selfie de recado</h4><p><b>Onde está funcionando:</b> G4 com selfie no carro respondendo caixinha, Alfredo Soares em selfie com figurinha de link. No dash, a selfie do Ricardo (AD36) fez 616 leads a R$ 46,95 e está pausada.</p><p><b>Como fazer no RGV:</b> Reativar ou regravar a selfie, em tom de recado e sem produção, como pede a linha 006.</p></div><div class="ap"><h4>Anti-palestra motivacional</h4><p><b>Onde está funcionando:</b> O Bruno Nardon lançou há 2 dias '3 dias de imersão sem palestra motivacional', já em 1º lugar de verba dele. No orgânico do Ricardo, a crítica aos gurus de marketing fez 120 mil.</p><p><b>Como fazer no RGV:</b> É o território natural do Ricardo, de empresário raiz: 'aqui ninguém vai te mandar abraçar árvore. Vai sentar com dono de empresa e sair com o plano'. Serve pra linha 003 de evento.</p></div></div><h3>Coisas novas pra testar</h3><ul class="leitura escuro"><li>Nota no celular com 'vendi mais e fiquei mais pobre', no molde do teste novo da V4, como imagem de página.</li><li>Abertura nova pro AD07 e pro DIFERENCIAL, os dois com 0 SQL em 7 dias: usar o fecho do AD01 ('é para aquele empresário que fatura acima de 1 milhão' e o diagnóstico) e trocar só os 3 primeiros segundos.</li><li>Série no orgânico 'Por que existe tanta loja de...?', no mecanismo do Nardon (54 mil, 3,3x), contada por quem teve 1.100 lojas. Vira banco de aberturas de varejo pro AD11.</li><li>Ligação ao vivo com aluno, em viva-voz, como prova social no formato que é o recorde do Ricardo (4,6 milhões).</li></ul><h3>O que parar ou trocar</h3><ul class="leitura escuro parar"><li>Continua valendo: NÃO pausar o AD01 de 18/08, o Reels 4, o AD11 de 12/08, o AD29 de 12/06 nem as imagens AD03, AD04 e AD08 de 21/08. São os que geram SQL, agendamento e venda.</li><li>Pausar ou trocar a abertura do DIFERENCIAL (Simples 2027): R$ 7,1 mil em 30 dias e R$ 5,6 mil em 7, sem nenhum SQL. R$ 799 por lead no perfil na semana.</li><li>Segurar a verba do AD07 de 09/07 até a abertura nova da linha 005 ficar pronta: R$ 9,3 mil em 7 dias, 8 leads no perfil e 0 SQL.</li><li>Revisar o 'pego na reforma tributária' (AD06 de 06/03) e o 'Fundador da Ricardo Eletro' (AD05): em 7 dias, 20% e 16% no perfil, sem SQL. Testar com filtro de faturamento antes de cortar.</li><li>Não aumentar verba do formulário só pelo custo por lead: 28% no perfil em 7 dias e nenhuma venda em 30.</li></ul><h3>Ideias de anúncio do dia</h3><ol class="ideias"><li class="ideia">
+  <div class="num">1</div>
+  <div>
+    <span class="tag">imagem</span>
+    <h4>Fechamento do mês: vendi mais e fiquei mais pobre</h4>
+    <p class="gancho">“Print de nota no celular do Ricardo: 'Fechamento do mês. Faturei 400 mil. O caixa fechou no vermelho. De novo.' Texto do anúncio: 'Se a sua empresa fatura mais de R$ 200 mil por mês e o dinheiro some no caminho, é isso que a gente resolve em 3 dias, de empresário para empresário.'”</p>
+    <p><b>Como gravar:</b> Imagem 1080x1350 e 1080x1920, cara de print, pouco texto e um botão vermelho no lugar do verde. Pra página. Encaixa na linha 002 da planilha (caixa: vende bem e o dinheiro não sobra).</p>
+    <p><b>Por quê:</b> A V4 lançou há 7 dias uma imagem com o print 'Vendi mais e fiquei mais pobre' e entrou no topo de impressões das imagens dela. No nosso funil, a imagem tem 54% dos leads no perfil nos últimos 7 dias, contra 32% do vídeo, e 3 das 5 vendas do mês vieram de imagem de página. A imagem com caixinha de pergunta já teve o melhor CTR do RGV na planilha (7,89%).</p>
+    
+  </div>
+</li><li class="ideia">
+  <div class="num">2</div>
+  <div>
+    <span class="tag">reel</span>
+    <h4>A cadeira: só entra quem fatura acima de 200 mil</h4>
+    <p class="gancho">“Faixa vermelha: 'ESSA CADEIRA NÃO É PRA TODO MUNDO'. Fala: 'Aqui só senta dono de empresa que fatura acima de 200 mil por mês. Se for o seu caso, a sua está reservada.'”</p>
+    <p><b>Como gravar:</b> Na sala do RGV, como o AD29, mas gravado com a sala cheia num dia de evento. 30 a 45s, pra página. Fecho com o diagnóstico, igual ao AD01, e 'é isso que a gente resolve em 3 dias, de empresário para empresário'.</p>
+    <p><b>Por quê:</b> O Primo Rico roda há 36 dias em 1º lugar, com 7 versões, 'vou colocar 40 cadeiras nessa sala... a gente está filtrando bem quem vai estar'. O nosso AD29 já usa a cadeira e tem 39% no perfil e 10 SQL, mas o gancho é o pior da conta (12,6%). Juntar a cadeira com o filtro de faturamento falado na primeira frase ataca o ponto fraco sem mexer no que traz dono no perfil.</p>
+    
+  </div>
+</li><li class="ideia">
+  <div class="num">3</div>
+  <div>
+    <span class="tag">reel</span>
+    <h4>Notícia de crédito com faixa e filtro</h4>
+    <p class="gancho">“Faixa vermelha: '76% DAS INDÚSTRIAS NÃO CONSEGUEM CRÉDITO'. Fala: 'Se a sua empresa fatura mais de 200 mil por mês e depende de banco pra girar, presta atenção.'”</p>
+    <p><b>Como gravar:</b> Molde do 'pego na reforma tributária': faixa de notícia, Ricardo de frente, 30 a 45s. Diferença: o filtro de faturamento na primeira frase e o envio pra página, não pro formulário.</p>
+    <p><b>Por quê:</b> A faixa de notícia dá o melhor gancho da conta (46,5%), mas no 'pego na reforma' só 14% dos leads estão no perfil. É a chance de testar a mesma faixa com o filtro do AD01, que tem 59% no perfil, num tema de caixa em vez de imposto. O dado vem da CNI, publicado pela Veja e pela Agência Brasil.</p>
+    <p class="refs">Baseada em: <a href="https://veja.abril.com.br/economia/76-das-industrias-enfrentam-dificuldades-para-obter-credito-devido-a-juros-altos-diz-cni/" target="_blank" rel="noopener">Notícia · Veja</a></p>
+  </div>
+</li></ol>
+</section>
+</div>
+
+<div class="aba" id="aba-concorrentes">
+<section class="bloco" id="mercado">
+  <h2>Mercado e <span>concorrentes</span></h2>
+  <p class="nota" style="font-size:15px;color:var(--txt)"><b>O dia é de caixa e crédito: a CNI mostra que 76% das indústrias não conseguem crédito por causa dos juros, a Oi fecha 2025 com prejuízo de R$ 36,4 bilhões e o prazo do Simples foi esticado até o fim de outubro. É react de empresa grande com lição pro dono, o formato que mais rende pro Ricardo.</b></p>
+  <ul class="leitura"><li>O G4 está na reta final do Valley (29 a 31/10): último lote anunciado pelo G4 (121 mil views, 11x a mediana) e pelo Nardon (41 mil, 2,6x), com '15 mil empresários confirmados'. Nos anúncios, Alfredo Soares segue com 'O sprint final chegou' em 13 versões e o Nardon usa desconto de 20% pra ex-aluno.</li><li>Escassez com filtro virou padrão de oferta: Primo Rico com '40 cadeiras' há 36 dias em 1º lugar, Nardon 'vou selecionar 3 empresários pra mentorar de graça' em Reel e carrossel, e G4 com 'O G4 não é pra qualquer um' em 14 versões.</li><li>A V4 acelerou: 60 anúncios novos na semana, puxados pela garantia 'ou pegue seu dinheiro de volta' e pelo print 'Vendi mais e fiquei mais pobre'. O Caio Carneiro entrou com um corte novo, 'Vendedor não é garçom', já em 6º de impressões.</li><li>No Ricardo, a Missão China puxou o melhor Reel dos últimos 30 dias (69 mil, 5,9x a mediana de 12 mil) e o depoimento do aluno de Goiânia fez 44 mil. Black Friday segue rendendo pouco (4 mil a 11 mil). Faltou react de notícia nesta semana.</li></ul>
+  <div class="alertas"><b>Fica de olho</b><ul><li>Painel Funil por Criativo continua com dados até 06/10, os mesmos de ontem. A coleta rodou sem erro, mas o painel não atualizou. Conferir com quem mantém o painel se o CRM parou de sincronizar.</li><li>A planilha de solicitação de criativos (05/10) ainda manda evitar o AD11 de 12/08 ('Loja física vai acabar?') na linha 005, mas no funil ele tem 12 SQL, 7 agendamentos e 1 venda. E a base da linha 001 são justamente o DIFERENCIAL (0 SQL em 30 dias) e o 'pego na reforma' (14% no perfil). Vale atualizar a planilha com o AD01 como base.</li><li>O prazo do Simples mudou no noticiário: o g1 (em 16 sites) e o Portal Contábeis, com a Resolução CGSN 194/2026, falam em prazo até o fim de outubro, e não mais 15/10. O plano da semana já foi corrigido.</li><li>No dash de reserva, quase todos os vencedores aparecem como pausados (o principal, o AD01, o Reels 4, o AD29). No funil, que vai até 06/10, eles estavam ativos. Se a pausa foi depois do dia 6, ela tirou do ar os criativos que mais geram agendamento.</li><li>Fora por regra de política: dois Reels classificados hoje (G4 com manchete sobre candidato e juros, e Nardon com frase eleitoral na capa) e as manchetes do ministro da Fazenda sobre o split payment (UOL e Times Brasil), que viraram debate com campanha. Foram pro excluir.json. O Reel do Nardon sobre prazo de fornecedor em 2027 saiu junto, por causa da capa.</li><li>Falha de coleta: o download do criativo [RGV][PER][VD][AD18][20052026] caiu na tela de login do Facebook e não foi estudado. Os outros 7 vencedores são os mesmos de ontem, com as mesmas pastas, então as variações foram reaproveitadas e só os números de 7 dias foram atualizados.</li></ul></div>
+  <h3>Viralizou no mercado</h3><p class="nota">Reels dos últimos 14 dias com pelo menos 2x a mediana do próprio perfil, sem motivacional genérico e sem política.</p>
+  <div class="grade"><a class="card" href="https://www.instagram.com/reel/Dd1AFQVx5tC/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_Dd1AFQVx5tC.jpg" alt=""><span class="mult">40,49x</span></div>
+    <div class="info"><b>@carloswizardmartins</b><span class="meta">164 mil views · 28/09/2026</span>
+    <p>Todo mundo quer alcançar um resultado grande e rápido. Mas ninguém te conta que são os PEQUENOS PASSOS diários que mudam tudo. Um grande es…</p></div></a><a class="card" href="https://www.instagram.com/reel/Dd97u7osW7O/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_Dd97u7osW7O.jpg" alt=""><span class="mult">23,16x</span></div>
+    <div class="info"><b>@g4.business</b><span class="meta">249 mil views · 01/10/2026 · +3 mil 24h</span>
+    <p>Feliz Dia do Vendedor! Quem vende, move negócios. 🚀</p></div></a><a class="card" href="https://www.instagram.com/reel/DeH93zvP2Fd/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeH93zvP2Fd.jpg" alt=""><span class="mult">7x</span></div>
+    <div class="info"><b>@alfredosoares</b><span class="meta">284 mil views · 05/10/2026</span>
+    <p>Engolir sapo é um superpoder. No mercado ninguém cresce sozinho. Você depende de sócio, de time, de parceiro e de quem compra de você. Rela…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeC2etPNdJl/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeC2etPNdJl.jpg" alt=""><span class="mult">6,12x</span></div>
+    <div class="info"><b>@camilafarani</b><span class="meta">87 mil views · 03/10/2026 · +8 mil 24h</span>
+    <p>Antes de uma decisão difícil, analise o pior cenário que pode acontecer.</p></div></a><a class="card" href="https://www.instagram.com/reel/Dd_f37tuvA7/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_Dd_f37tuvA7.jpg" alt=""><span class="mult">5,93x</span></div>
+    <div class="info"><b>@bruno.nardon</b><span class="meta">95 mil views · 02/10/2026</span>
+    <p>Você pagaria? O mercado de luxo está cada vez mais focado em experiências e otimização de tempo. Fiz um vídeo sobre isso no meu canal do Yo…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeIcEjFvOfg/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeIcEjFvOfg.jpg" alt=""><span class="mult">5,71x</span></div>
+    <div class="info"><b>@alfredosoares</b><span class="meta">232 mil views · 05/10/2026</span>
+    <p>E aí, devemos assinar a carteira dele? #ZanoCLT</p></div></a><a class="card" href="https://www.instagram.com/reel/Dd43jMRhAGg/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_Dd43jMRhAGg.jpg" alt=""><span class="mult">5,4x</span></div>
+    <div class="info"><b>@caiocarneiro</b><span class="meta">250 mil views · 29/09/2026</span>
+    <p>Ande com pessoas com foco similar ao seu</p></div></a><a class="card" href="https://www.instagram.com/reel/DeAqRwMRzIX/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeAqRwMRzIX.jpg" alt=""><span class="mult">5,35x</span></div>
+    <div class="info"><b>@janguiediniz</b><span class="meta">72 mil views · 02/10/2026</span>
+    <p>Pronto, agora os dois tiveram a chance. 😂🎤 A pergunta que fica: qual irmão mandou melhor? 👀🔥#trends #familia❤️</p></div></a><a class="card" href="https://www.instagram.com/reel/DeNRjsHR3if/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeNRjsHR3if.jpg" alt=""><span class="mult">5,2x</span></div>
+    <div class="info"><b>@camilafarani</b><span class="meta">74 mil views · 07/10/2026</span>
+    <p>Todo empreendedor precisa treinar a mente. Eileen Gu fala no vídeo. Eu reafirmo para o empreendedorismo: precisamos tratar o próprio pensam…</p></div></a><a class="card" href="https://www.instagram.com/reel/Dd-E4wesQEn/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_Dd-E4wesQEn.jpg" alt=""><span class="mult">4,99x</span></div>
+    <div class="info"><b>@g4.business</b><span class="meta">54 mil views · 01/10/2026 · +2 mil 24h</span>
+    <p>A pressão aumentou. E, na final, não basta ter uma boa ideia. É preciso defender seu negócio com convicção, dominar os números e fazer a co…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeAdm5IhH3H/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeAdm5IhH3H.jpg" alt=""><span class="mult">4,76x</span></div>
+    <div class="info"><b>@joaokepler</b><span class="meta">81 mil views · 02/10/2026 · +987 24h</span>
+    <p>O set dessa semana tá 🔥🔥 Escolhe aqui a música da próxima semana 👇🏼</p></div></a><a class="card" href="https://www.instagram.com/reel/DeIHEE_OkKI/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeIHEE_OkKI.jpg" alt=""><span class="mult">3,84x</span></div>
+    <div class="info"><b>@flavioaugustogv</b><span class="meta">425 mil views · 05/10/2026 · +158 mil 24h</span>
+    <p>O empreendedor não precisa gostar do sistema para entender como ele funciona. Precisa conhecer as regras, jogar dentro delas e construir ap…</p></div></a></div>
+  <h3>Reels de portais de negócio</h3><p class="nota">O que Exame, Valor, Forbes, PEGN, Meio & Mensagem e outros postaram nos últimos 4 dias sobre negócio.</p>
+  <div class="grade"><a class="card" href="https://www.instagram.com/reel/DeO9B34Cbs9/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeO9B34Cbs9.jpg" alt=""><span class="mult">1,15x</span></div>
+    <div class="info"><b>@forbesbr</b><span class="meta">79 mil views · 08/10/2026</span>
+    <p>O CONSELHO QUE UM GRANDE FUNDADOR OUVIU DE OUTRO Chaim Zaher, um dos nomes da lista Forbes The Founders 2026, construiu sua trajetória no s…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeNWTmxN4EB/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeNWTmxN4EB.jpg" alt=""><span class="mult">0,62x</span></div>
+    <div class="info"><b>@meioemensagem</b><span class="meta">28 mil views · 07/10/2026</span>
+    <p>Como ser mais criativo? O Meio &amp; Mensagem ouviu a opinião de diferentes líderes da indústria de comunicação e marketing durante o Maximídia…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeP2lurEpYS/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeP2lurEpYS.jpg" alt=""><span class="mult">0,5x</span></div>
+    <div class="info"><b>@forbesbr</b><span class="meta">34 mil views · 08/10/2026</span>
+    <p>DO GARIMPO EM SERRA PELADA A R$ 38,4 BILHÕES EM RECEITA Ilson Mateus foi para Serra Pelada atrás de ouro, mas voltou para Imperatriz sem di…</p></div></a><a class="card" href="https://www.instagram.com/reel/DePa3_JDKDf/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DePa3_JDKDf.jpg" alt=""><span class="mult">0,45x</span></div>
+    <div class="info"><b>@exame</b><span class="meta">24 mil views · 08/10/2026</span>
+    <p>Aléxia Duffles, CMO da MRV, destacou, durante o Open House CMOs by EXAME, alertou que o acirramento da disputa econômica entre Estados Unid…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeJu-nqnaVU/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeJu-nqnaVU.jpg" alt=""><span class="mult">0,43x</span></div>
+    <div class="info"><b>@exame</b><span class="meta">23 mil views · 06/10/2026</span>
+    <p>Faturar alto não significa ter dinheiro no caixa. E a Ecarshop é um exemplo disso.⁣ ⁣ Com faturamento de cerca de R$ 1,2 milhão por mês e 9…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeKabbBNmvq/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeKabbBNmvq.jpg" alt=""><span class="mult">0,36x</span></div>
+    <div class="info"><b>@meioemensagem</b><span class="meta">16 mil views · 06/10/2026 · +3 mil 24h</span>
+    <p>O Dia do Cabelo Maluco deixou de ser apenas uma brincadeira escolar e ganhou espaço nas redes sociais e na rotina de milhares de famílias b…</p></div></a><a class="card" href="https://www.instagram.com/reel/DePUDE3ASuN/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DePUDE3ASuN.jpg" alt=""><span class="mult">0,22x</span></div>
+    <div class="info"><b>@exame</b><span class="meta">12 mil views · 08/10/2026</span>
+    <p>A Sephora reuniu mais de 200 mil pessoas em uma live no Instagram e foi um dos primeiros testes do Live Video Ads no Brasil, nova ferrament…</p></div></a><a class="card" href="https://www.instagram.com/reel/DePNPuMjUmQ/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DePNPuMjUmQ.jpg" alt=""><span class="mult">0,22x</span></div>
+    <div class="info"><b>@valoreconomico</b><span class="meta">3 mil views · 08/10/2026</span>
+    <p>COMO EU CRESCI | De uma filmadora VHS a uma empresa que faturou R$ 20 milhões No novo episódio do podcast Como Eu Cresci, Leandro Gouveia, …</p></div></a></div>
+  <h3>Anúncios vencedores dos concorrentes</h3><p class="nota">No topo de verba da página e rodando há 30 dias ou mais. O selo mostra há quantos dias está no ar.</p>
+  <div class="grade"><a class="card ad" href="https://www.facebook.com/ads/library/?id=1417800442974332" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1417800442974332.jpg" alt=""><span class="mult">510d</span></div>
+    <div class="info"><b>Marcus Marques</b><span class="meta">#1 em verba · video · 2 versões</span>
+    <p>Pessoas que pensam assim não vão crescer! Você deve ter funcionários que pensam que não vão ser promovidos ou reconheci…</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1594226391962320" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1594226391962320.jpg" alt=""><span class="mult">480d</span></div>
+    <div class="info"><b>Marcus Marques</b><span class="meta">#13 em verba · carousel · 5 versões</span>
+    <p>Marcus Marques</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1771098017617083" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1771098017617083.jpg" alt=""><span class="mult">445d</span></div>
+    <div class="info"><b>Paulo Vieira (Febracis)</b><span class="meta">#2 em verba · carousel</span>
+    <p></p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1345271966972389" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1345271966972389.jpg" alt=""><span class="mult">375d</span></div>
+    <div class="info"><b>Paulo Vieira (Febracis)</b><span class="meta">#1 em verba · video</span>
+    <p></p><p class="fala">“Vem acompanhar com a gente a nossa primeira vez no Metoducis! Pra que não sabe o Metoducis? É um treinamento de inteligência emocional do Paulo Vieira, e aqui eles explicam todas …”</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=854999200891121" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_854999200891121.jpg" alt=""><span class="mult">203d</span></div>
+    <div class="info"><b>João Kepler</b><span class="meta">#7 em verba · dco</span>
+    <p>Clique e veja como participar!</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=2387050108448648" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_2387050108448648.jpg" alt=""><span class="mult">157d</span></div>
+    <div class="info"><b>Paulo Vieira (Febracis)</b><span class="meta">#1 em verba · video</span>
+    <p>O Método CIS já transformou a vida de quase 2 milhões de pessoas. A sua pode ser a próxima! Por que algumas pessoas con…</p><p class="fala">“É inexplicável, eu tô saindo daqui, assim, outra pessoa, outra pessoa. Eu precisava disso daqui. Eu sou a Soela, em Fatima Teodoro. Sou de Congonhas, Minas Gerais. Eu sou organiza…”</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1685979419210339" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1685979419210339.jpg" alt=""><span class="mult">150d</span></div>
+    <div class="info"><b>Grupo Acelerador</b><span class="meta">#2 em verba · video</span>
+    <p>COMENTA “192” E NÃO PERCA ESSE EPISÓDIO. Você já reparou que alguns posts de luxo inspiram e outros apenas afastam? Eu …</p><p class="fala">“Eu, por exemplo, eu nunca postei, eu descendo do meu jato, do meu helicóptero, ou dos meus supercarros, com uma trilha sonora de conquista. Like a boss. Isso, com óculos escuros e…”</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=970853725835660" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_970853725835660.jpg" alt=""><span class="mult">130d</span></div>
+    <div class="info"><b>João Kepler</b><span class="meta">#1 em verba · video · 2 versões</span>
+    <p>Clique e veja como participar!</p><p class="fala">“Que você não pode, ah, João, quero sair do operacional, calma. Sua cabeça tem que sair do operacional, não o seu corpo. Vou repetir, é a sua cabeça que tem que sair do operacional…”</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1533327931863891" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1533327931863891.jpg" alt=""><span class="mult">129d</span></div>
+    <div class="info"><b>Grupo Acelerador</b><span class="meta">#1 em verba · carousel</span>
+    <p>Marcus Marques - Acelerador Empresarial (@marcusmarquesoficial) • Instagram photos and videos</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1037963401948755" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1037963401948755.jpg" alt=""><span class="mult">94d</span></div>
+    <div class="info"><b>Wendell Carvalho</b><span class="meta">#1 em verba · video</span>
+    <p></p><p class="fala">“Curso gratuito toda quarta-feira as 20 e 20, curso gratuito toda quarta-feira as 20 e 20, estou ensinando toda quarta-feira ao vivo o que muito curso não ensina. Uma hora de aula …”</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=2228298637739081" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_2228298637739081.jpg" alt=""><span class="mult">66d</span></div>
+    <div class="info"><b>V4 Company</b><span class="meta">#1 em verba · video</span>
+    <p>De armazém em Pelotas a líder nacional de arroz</p><p class="fala">“O Arroz Tio João foi obrigado pelos consumidores a vender algo que ele nunca fabricou, mas para isso acontecer, primeiro eles precisavam traçonar arroz em algo que ninguém achava …”</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1553878366229138" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1553878366229138.jpg" alt=""><span class="mult">52d</span></div>
+    <div class="info"><b>Paulo Vieira (Febracis)</b><span class="meta">#15 em verba · image</span>
+    <p>LP – Notícia Método CIS YES | v2 c1 – FEBRACIS Coaching</p></div></a></div>
+  <h3>Testes novos já recebendo verba</h3><p class="nota">Anúncios lançados nos últimos 7 dias que já entraram no topo de impressões.</p>
+  <div class="grade"><a class="card ad" href="https://www.facebook.com/ads/library/?id=1469362511698068" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1469362511698068.jpg" alt=""><span class="mult">7d</span></div>
+    <div class="info"><b>Tallis Gomes</b><span class="meta">#1 em verba · image</span>
+    <p>Aprender com o TG</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=28715595378108701" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_28715595378108701.jpg" alt=""><span class="mult">7d</span></div>
+    <div class="info"><b>Tallis Gomes</b><span class="meta">#2 em verba · video · 5 versões</span>
+    <p>G4 Gestão e Estratégia</p><p class="fala">“Se você sumir 90 dias da enjoy, quanta é a fatura? Sumir. Sumir. Só tirar um tempo para ficar com a tua esposa e tal, não fazer nada. Quanto a enjoy fatura? Chega a zero. O que a …”</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1782964189417578" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1782964189417578.jpg" alt=""><span class="mult">7d</span></div>
+    <div class="info"><b>Alfredo Soares</b><span class="meta">#1 em verba · video · 13 versões</span>
+    <p>O sprint final chegou</p><p class="fala">“Turma, eu estou com uma condição especial para quem me acompanha aqui, fazer o G4. Como eu acredito que, nesse momento, qualquer empresário ter mais repertório, mais ferramenta, m…”</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=934362836021770" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_934362836021770.jpg" alt=""><span class="mult">7d</span></div>
+    <div class="info"><b>Alfredo Soares</b><span class="meta">#14 em verba · image</span>
+    <p>Saiba preparar a sucessão</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1752557979369843" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1752557979369843.jpg" alt=""><span class="mult">4d</span></div>
+    <div class="info"><b>Bruno Nardon</b><span class="meta">#1 em verba · video</span>
+    <p>🚨 Contagem regressiva para o Valley 🚨 Estamos há menos de 30 dias do que vai ser o maior evento para empreendedores d…</p><p class="fala">“Eu sei que você já passou por algum programa do G4 e por isso eu vou abrir uma condição exclusiva para vocês. Estamos na reta final dos ingressos do G4 Valley e como aluno, você t…”</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1618940719884131" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1618940719884131.jpg" alt=""><span class="mult">7d</span></div>
+    <div class="info"><b>Caio Carneiro</b><span class="meta">#6 em verba · video</span>
+    <p>VENDEDOR NÃO É GARÇOM! Você não está ali pra apenas ouvir pedidos, mas sim para guiar decisões, criar valor e fechar co…</p><p class="fala">“O que é atender bem uma pessoa? Eu gosto disso. Qual é a postura de um atender bem? Presta bem atenção, o cara que vende não é garçom. Garçom é o cara que serve. Pois não, senhor,…”</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=2097913957522906" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_2097913957522906.jpg" alt=""><span class="mult">7d</span></div>
+    <div class="info"><b>V4 Company</b><span class="meta">#15 em verba · image</span>
+    <p>Estruture Seu Marketing em 30 Dias – Ou Pegue Seu Dinheiro de Volta.</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1750459086217086" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1750459086217086.jpg" alt=""><span class="mult">7d</span></div>
+    <div class="info"><b>V4 Company</b><span class="meta">#1 em verba · image</span>
+    <p>Estruture Seu Marketing em 30 Dias – Ou Pegue Seu Dinheiro de Volta.</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1889893895711438" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1889893895711438.jpg" alt=""><span class="mult">3d</span></div>
+    <div class="info"><b>Bruno Nardon</b><span class="meta">#1 em verba · carousel</span>
+    <p>Bruno Nardon</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1388258426369573" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1388258426369573.jpg" alt=""><span class="mult">3d</span></div>
+    <div class="info"><b>Bruno Nardon</b><span class="meta">#3 em verba · video</span>
+    <p>Comenta FLG que eu te mando de graça o material sobre os fundamentos do founder-led growth. O autor de Pai Rico, Pai Po…</p><p class="fala">“O autor de Pai Rico Pai Póbrei está devendo 1.2 bilhões de dólares para os bancos e tem muita gente criticando. No final, quem diria que logo Robert, que é um autor dos maiores be…”</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=4530140337222812" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_4530140337222812.jpg" alt=""><span class="mult">7d</span></div>
+    <div class="info"><b>G4</b><span class="meta">#3 em verba · image</span>
+    <p>Saiba se você é dono</p></div></a><a class="card ad" href="https://www.facebook.com/ads/library/?id=1078179368360948" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/a_1078179368360948.jpg" alt=""><span class="mult">7d</span></div>
+    <div class="info"><b>Tallis Gomes</b><span class="meta">#3 em verba · video</span>
+    <p>G4 Gestão e Estratégia</p><p class="fala">“Se você sumir 90 dias da enjoy, quanta é a fatura? Sumir. Sumir. Só tirar um tempo para ficar com a tua esposa e tal, não fazer nada. Quanto a enjoy fatura? Chega a zero. O que a …”</p></div></a></div>
+  <h3>Ricardo nos últimos 30 dias</h3><p class="nota">O selo compara com a mediana do próprio Ricardo.</p>
+  <div class="grade"><a class="card" href="https://www.instagram.com/reel/DeQQVKyMLKd/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeQQVKyMLKd.jpg" alt=""><span class="mult">0,4x</span></div>
+    <div class="info"><b>@ricardonuneseletro</b><span class="meta">5 mil views · 09/10/2026</span>
+    <p>Comenta EPISÓDIO que eu te mando o conteúdo completo 👇🏻 Nós criamos o benefício de e-commerce de Minas Gerais. E tem gente que ainda perg…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeP08QAOrTJ/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeP08QAOrTJ.jpg" alt=""><span class="mult">1,04x</span></div>
+    <div class="info"><b>@ricardonuneseletro</b><span class="meta">12 mil views · 08/10/2026</span>
+    <p>Fui pra China 17 vezes quando estava à frente da Ricardo Eletro. Agora voltei, levando empresário comigo, pra ver se as coisas ainda estava…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeNafPQRzvs/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeNafPQRzvs.jpg" alt=""><span class="mult">5,88x</span></div>
+    <div class="info"><b>@ricardonuneseletro</b><span class="meta">69 mil views · 07/10/2026</span>
+    <p>Comente &quot;CHINA&quot; e tenha acesso a Missão China participando do método RGV 👇🏻</p></div></a><a class="card" href="https://www.instagram.com/reel/DeNEkUNulbq/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeNEkUNulbq.jpg" alt=""><span class="mult">0,38x</span></div>
+    <div class="info"><b>@ricardonuneseletro</b><span class="meta">4 mil views · 07/10/2026</span>
+    <p>Tudo era pensado no dia da Black Friday para não interferir na venda!! Comente &quot;BLACK&quot; para ter acesso a metodologia que vendeu 1 BILHÃO na…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeK7sDDNNJz/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeK7sDDNNJz.jpg" alt=""><span class="mult">2,05x</span></div>
+    <div class="info"><b>@ricardonuneseletro</b><span class="meta">24 mil views · 06/10/2026 · +10 mil 24h</span>
+    <p>Neymar tem 34 anos e já fez a parte dele. Dos 15 aos 35, bem ou mal, ele rasgou. Agora é tempo de curtir e realizar outras coisas. E o empr…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeKvdfgOisl/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeKvdfgOisl.jpg" alt=""><span class="mult">0,8x</span></div>
+    <div class="info"><b>@ricardonuneseletro</b><span class="meta">9 mil views · 06/10/2026 · +3 mil 24h</span>
+    <p>Meu amigo, todo mundo faz igual. Bota lá depilação por 9,90, desconto de 20% na Black Friday, e fica esperando o cliente aparecer. Não apar…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeILHbcujD4/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeILHbcujD4.jpg" alt=""><span class="mult">0,94x</span></div>
+    <div class="info"><b>@ricardonuneseletro</b><span class="meta">11 mil views · 05/10/2026 · +1 mil 24h</span>
+    <p>Black Friday bem feita não é desconto, é explosão de venda, meu amigo. Num dia de Black Friday feita do jeito certo, você vende 10 vezes ma…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeF5n3IsugP/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeF5n3IsugP.jpg" alt=""><span class="mult">0,69x</span></div>
+    <div class="info"><b>@ricardonuneseletro</b><span class="meta">8 mil views · 05/10/2026 · +772 24h</span>
+    <p>A vida é curta. E ninguém, no fim dela, vai lembrar de quanto você faturou naquele mês. Vão lembrar de quem você foi, de como tratou as pes…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeFuYyYRUYD/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeFuYyYRUYD.jpg" alt=""><span class="mult">3,79x</span></div>
+    <div class="info"><b>@ricardonuneseletro</b><span class="meta">44 mil views · 04/10/2026 · +4 mil 24h</span>
+    <p>Esse empresário veio de Goiânia atrás de ferramenta de venda, de marketing, de comunicação. Levou tudo isso. Mas o que ele mais levou, nas …</p></div></a><a class="card" href="https://www.instagram.com/reel/DeDWe5tSTiZ/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeDWe5tSTiZ.jpg" alt=""><span class="mult">0,96x</span></div>
+    <div class="info"><b>@ricardonuneseletro</b><span class="meta">11 mil views · 04/10/2026</span>
+    <p>Comenta &quot;BLACK&quot; e tenha acesso a metodologia que construiu 1 BILHÃO EM UM DIA👇🏻</p></div></a><a class="card" href="https://www.instagram.com/reel/DeCuLdEuMQD/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeCuLdEuMQD.jpg" alt=""><span class="mult">1,38x</span></div>
+    <div class="info"><b>@ricardonuneseletro</b><span class="meta">16 mil views · 03/10/2026</span>
+    <p>Comente &quot;RGV&quot; para ter acesso exclusivo 👇🏻 Acordar 4h59, banho gelado, abraçar árvore, repetir frase de efeito. Quando eu vi o que estava…</p></div></a><a class="card" href="https://www.instagram.com/reel/DeAp7kURxd2/" target="_blank" rel="noopener">
+    <div class="thumb"><img loading="lazy" src="capas/2026-10-09/r_DeAp7kURxd2.jpg" alt=""><span class="mult">1x</span></div>
+    <div class="info"><b>@ricardonuneseletro</b><span class="meta">12 mil views · 02/10/2026</span>
+    <p>Meu amigo, você tem que fazer do limão uma limonada!</p></div></a></div>
+  <h3>Ranking de perfis</h3><div class="tabela"><table><thead><tr><th>Perfil</th><th>Seguidores</th><th>Mediana de views</th><th>Reels em 14 dias</th><th>Melhor em 14 dias</th></tr></thead><tbody>
+<tr class=""><td>Primo Rico</td><td>11M</td><td>3,8 mi</td><td>10</td><td>13,7 mi</td></tr><tr class=""><td>Tallis Gomes</td><td>3M</td><td>942 mil</td><td>20</td><td>19,9 mi</td></tr><tr class=""><td>Joel Jota</td><td>7M</td><td>219 mil</td><td>14</td><td>1,3 mi</td></tr><tr class=""><td>Geraldo Rufino</td><td>4M</td><td>132 mil</td><td>10</td><td>398 mil</td></tr><tr class=""><td>Flávio Augusto</td><td>1M</td><td>111 mil</td><td>12</td><td>425 mil</td></tr><tr class=""><td>Wendell Carvalho</td><td>10M</td><td>98 mil</td><td>23</td><td>2,8 mi</td></tr><tr class=""><td>Marcus Marques</td><td>3M</td><td>67 mil</td><td>14</td><td>1,3 mi</td></tr><tr class=""><td>V4 Company</td><td>862K</td><td>62 mil</td><td>3</td><td>63 mil</td></tr><tr class=""><td>Caio Carneiro</td><td>3M</td><td>46 mil</td><td>14</td><td>404 mil</td></tr><tr class=""><td>Alfredo Soares</td><td>2M</td><td>41 mil</td><td>27</td><td>284 mil</td></tr><tr class=""><td>João Kepler</td><td>1M</td><td>17 mil</td><td>12</td><td>150 mil</td></tr><tr class=""><td>Bruno Nardon</td><td>569K</td><td>16 mil</td><td>17</td><td>95 mil</td></tr><tr class=""><td>Camila Farani</td><td>1M</td><td>14 mil</td><td>4</td><td>87 mil</td></tr><tr class=""><td>Janguiê Diniz</td><td>1M</td><td>13 mil</td><td>16</td><td>72 mil</td></tr><tr class="nos"><td>Ricardo Nunes</td><td>3M</td><td>12 mil</td><td>15</td><td>69 mil</td></tr><tr class=""><td>G4</td><td>3M</td><td>11 mil</td><td>13</td><td>249 mil</td></tr><tr class=""><td>Grupo Acelerador</td><td>615K</td><td>9 mil</td><td>12</td><td>21 mil</td></tr><tr class=""><td>Carlos Wizard</td><td>515K</td><td>4 mil</td><td>17</td><td>164 mil</td></tr>
+</tbody></table></div>
+  <h3>Quem está anunciando</h3><div class="tabela"><table><thead><tr><th>Anunciante</th><th>No topo hoje</th><th>Novos na semana</th><th>Rodando há 30+ dias</th><th>Formatos</th></tr></thead><tbody>
+<tr class=""><td>Paulo Vieira (Febracis)</td><td>99</td><td>26</td><td>27</td><td>video 50, image 40, carousel 9</td></tr><tr class=""><td>V4 Company</td><td>91</td><td>60</td><td>13</td><td>video 63, image 20, dco 8</td></tr><tr class="nos"><td>Ricardo Nunes</td><td>87</td><td>10</td><td>29</td><td>video 30, dco 57</td></tr><tr class=""><td>Caio Carneiro</td><td>84</td><td>10</td><td>23</td><td>video 54, dco 17, image 13</td></tr><tr class=""><td>G4</td><td>81</td><td>28</td><td>11</td><td>video 34, image 17, dco 23, carousel 7</td></tr><tr class=""><td>Grupo Acelerador</td><td>77</td><td>19</td><td>38</td><td>carousel 8, video 26, image 38, dco 5</td></tr><tr class=""><td>Wendell Carvalho</td><td>75</td><td>11</td><td>20</td><td>video 29, image 12, dco 34</td></tr><tr class=""><td>Primo Rico</td><td>72</td><td>16</td><td>27</td><td>dco 57, video 11, carousel 4</td></tr><tr class=""><td>Marcus Marques</td><td>61</td><td>0</td><td>60</td><td>video 24, dco 28, carousel 6, image 3</td></tr><tr class=""><td>Alfredo Soares</td><td>51</td><td>27</td><td>0</td><td>video 24, dco 16, image 11</td></tr><tr class=""><td>Janguiê Diniz</td><td>48</td><td>0</td><td>0</td><td>dco 34, image 14</td></tr><tr class=""><td>João Kepler</td><td>40</td><td>1</td><td>33</td><td>video 34, dco 5, image 1</td></tr><tr class=""><td>Tallis Gomes</td><td>19</td><td>19</td><td>0</td><td>image 13, video 6</td></tr><tr class=""><td>Bruno Nardon</td><td>18</td><td>6</td><td>12</td><td>video 5, dco 11, carousel 2</td></tr><tr class=""><td>Carlos Wizard</td><td>15</td><td>0</td><td>0</td><td>carousel 15</td></tr><tr class=""><td>Camila Farani</td><td>3</td><td>0</td><td>0</td><td>video 1, carousel 2</td></tr>
+</tbody></table></div>
+</section>
+</div>
+<script>
+(function(){
+  var bs=document.querySelectorAll('.abas button');
+  function abrir(n){ bs.forEach(function(b){b.classList.toggle('on',b.dataset.aba===n)}); document.querySelectorAll('.aba').forEach(function(a){a.classList.toggle('on',a.id==='aba-'+n)}); try{history.replaceState(null,'','#'+n)}catch(e){} }
+  bs.forEach(function(b){ b.addEventListener('click',function(){ abrir(b.dataset.aba); window.scrollTo(0,0); }); });
+  var h=(location.hash||'').slice(1); if(['conteudo','criativos','concorrentes'].indexOf(h)>=0) abrir(h);
+})();
+</script>
+<footer>Fontes: Google Notícias (só portais da lista de veículos aceitos), aba pública de Reels do Instagram e Biblioteca de Anúncios do Meta, coletados sem login. Filtro anti-política: 90 Reels e 1 anúncios com tema eleitoral ficaram de fora.</footer>
+</main></body></html>
