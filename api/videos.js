@@ -44,7 +44,8 @@ const PASTAS_ARTE = {
   b10x: { r01: "1RCzM5ZmUAeYtY3OPTcw1YA_kMgXpt8NV",
           r02: "1bLvlFl7g1yoqn32OELhUWfC1RSTlOg8m",
           r03: "1Ibjz4_DSgvrnk3Hz21saIUMi5Z8LOyK3",
-          r04: "1ckCo-m08Sy5jQH9XkGDwQ67rfUwKEKpK" },
+          r04: "1ckCo-m08Sy5jQH9XkGDwQ67rfUwKEKpK",
+          r05: "1g5J6t01J37zEn_Bxvl6j3gKqsoSeDcvZ" },
   cnebh:{ r01: "13lEBHTbK7Sp4HybwyUKn-6MyaCEwuIBx" },
 };
 
