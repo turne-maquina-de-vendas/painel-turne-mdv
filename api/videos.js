@@ -23,7 +23,16 @@ export const config = { maxDuration: 300 };
    tipo —, mas em todos a pasta do AD é a folha e o nome do grupo é a pasta
    logo acima dela. É isso que a varredura procura. */
 const PASTAS = {
-  mdv: { id: "1wqRYVAbgTSmgEBbXvtclsB1qHjL9vazw", versao: "FEED" },
+  /* O MDV tem duas raízes. A primeira é a semana de 08/set, que já estava
+     aqui: fica sozinha para os grupos dela continuarem se chamando só pelo
+     nome da cidade — é o que está gravado nas aprovações. A segunda é a
+     pasta VÍDEOS inteira, de onde vem todo o resto; ali a mesma cidade se
+     repete em várias remessas, então o grupo leva o caminho no nome
+     ("REMESSA 8 · CUIABA") e o id sai único. A de 08/set é pulada lá para
+     não entrar duas vezes. */
+  mdv: [{ id: "1wqRYVAbgTSmgEBbXvtclsB1qHjL9vazw", versao: "FEED" },
+        { id: "1Sfun84V2JfBgCMt52do3C7lm1ClRdkfA", versao: "FEED",
+          caminho: true, pular: ["1wqRYVAbgTSmgEBbXvtclsB1qHjL9vazw"] }],
   rgv: { id: "1mhwJd0IgSt0hESPFP-cOIbVBdGZgElGy", versao: "STORYS" },
   mqv: { id: "1WaZEzFDHWqEbmpd5KsJxuF6-jL40gYt6", versao: "FEED" },
   met: { id: "1QfctN83oT0rtk7MAm4hKUafE0YxG2_c_", versao: "FEED" },
@@ -126,10 +135,11 @@ function idDe(texto) {
 
 /* Desce a árvore. Uma pasta que só tem arquivos é um AD; o grupo dele é o
    nome da pasta que o contém. */
-async function varrerPasta(id, nome, chave, versao, nivel, grupos, expira) {
+async function varrerPasta(id, nome, chave, cfg, nivel, grupos, expira, cam = []) {
   if (nivel > PROFUNDIDADE || Date.now() > expira) return;
   const itens = await listar(id, chave);
-  const pastas = itens.filter(ePasta);
+  const pular = cfg.pular || [];
+  const pastas = itens.filter(ePasta).filter((p) => !pular.includes(p.id));
 
   if (!pastas.length) return;                    // folha sem subpastas: nada a fazer
 
@@ -144,23 +154,27 @@ async function varrerPasta(id, nome, chave, versao, nivel, grupos, expira) {
   const saoAds = filhas.every((f) => !f.itens.some(ePasta) && f.itens.some(eVideo));
 
   if (saoAds) {
+    /* com caminho, o grupo se chama pela trilha inteira a partir da raiz:
+       é o que mantém CUIABA da remessa 7 separada da CUIABA da remessa 8 */
+    const titulo = (cfg.caminho && cam.length) ? cam.join(" · ") : nome;
     const videos = [];
     for (const f of filhas) {
-      const arq = daVersao(f.itens.filter(eVideo), versao);
+      const arq = daVersao(f.itens.filter(eVideo), cfg.versao);
       if (!arq) continue;
       videos.push({
-        id: `${idDe(nome)}__${idDe(f.pasta.name)}`,
+        id: `${idDe(titulo)}__${idDe(f.pasta.name)}`,
         code: f.pasta.name.trim(),
         drive: arq.id,
         pasta: f.pasta.id,          // link da pasta do AD, para o Controle
       });
     }
-    if (videos.length) grupos.push({ tipo: nome.trim(), videos });
+    if (videos.length) grupos.push({ tipo: titulo.trim(), videos });
     return;
   }
 
   for (const f of filhas) {
-    await varrerPasta(f.pasta.id, f.pasta.name, chave, versao, nivel + 1, grupos, expira);
+    await varrerPasta(f.pasta.id, f.pasta.name, chave, cfg, nivel + 1, grupos, expira,
+                      cam.concat(f.pasta.name.trim()));
   }
 }
 
@@ -186,15 +200,18 @@ async function mapearPastas(raiz, chave, expira, nivel = 0) {
   return mapa;
 }
 
-async function varrer(chave, expira) {
+async function varrer(chave, expira, so) {
   const saida = {};
   for (const [produto, cfg] of Object.entries(PASTAS)) {
+    if (so && produto !== so) continue;
     if (Date.now() > expira) { saida[produto] = { erro: "tempo esgotado" }; continue; }
     try {
       const grupos = [];
       /* a raiz precisa do nome de verdade: na MQV Online os ADs ficam direto
          nela, e o grupo passa a ser ela mesma */
-      await varrerPasta(cfg.id, await nomeDe(cfg.id, chave), chave, cfg.versao, 0, grupos, expira);
+      for (const raiz of [].concat(cfg)) {
+        await varrerPasta(raiz.id, await nomeDe(raiz.id, chave), chave, raiz, 0, grupos, expira);
+      }
       saida[produto] = { grupos: grupos.filter((g) => g.tipo) };
     } catch (e) {
       saida[produto] = { erro: String(e.message).slice(0, 140) };
@@ -202,6 +219,7 @@ async function varrer(chave, expira) {
   }
   /* as pastas dos estáticos, por remessa */
   for (const [produto, remessas] of Object.entries(PASTAS_ARTE)) {
+    if (so && produto !== so) continue;
     if (Date.now() > expira) break;
     const artes = {};
     for (const [remessa, id] of Object.entries(remessas)) {
@@ -237,7 +255,7 @@ export default async function handler(req, res) {
   if (!chave) return responder(res, { erro: "sem GOOGLE_API_KEY" }, 500);
 
   const expira = Date.now() + TEMPO_LIMITE;
-  const varrido = await varrer(chave, expira);
+  const varrido = await varrer(chave, expira, String(req.query?.produto || "") || null);
 
   await sql`create table if not exists acervo_video (
               produto text primary key,
