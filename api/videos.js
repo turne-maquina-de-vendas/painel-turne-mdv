@@ -30,6 +30,7 @@ const PASTAS = {
   b10x: { id: "1vKkMAcVznyJ2iNRycxLK-j-qewAgdRFb", versao: "FEED" },
   /* CNE BH: vídeo em stories, o padrão da casa */
   cnebh: { id: "1ybwVpKVHWRlmDTXOfmMkQptsMhZ2FfCt", versao: "STORYS" },
+  cne: { id: "1yn092fEuO28MaHqYlp3KQMa9qlZqvdEm", versao: "STORYS" },
 };
 
 /* Pastas dos estáticos, por remessa. Não entram na lista de artes — as
@@ -47,6 +48,9 @@ const PASTAS_ARTE = {
           r04: "1ckCo-m08Sy5jQH9XkGDwQ67rfUwKEKpK",
           r05: "1g5J6t01J37zEn_Bxvl6j3gKqsoSeDcvZ" },
   cnebh:{ r01: "13lEBHTbK7Sp4HybwyUKn-6MyaCEwuIBx" },
+  /* a Convocação separa por cidade antes da remessa: o mapa de AD→pasta
+     sai da varredura, aqui fica só a raiz dos estáticos */
+  cne:  { r0: "1yyCHfzPOAm6Ahnv7H952P4povx6VyIep" },
 };
 
 const PROFUNDIDADE = 4;        // raiz → leva → cidade → AD já é o pior caso

@@ -594,5 +594,23 @@ export const PAGINAS = [
     "url": "https://convocacaonacional.com.br/l/belohorizonte-v4/",
     "cidade": "V4",
     "versao": "CNEBH"
+  },
+  {
+    "id": "pelotas-v2",
+    "url": "https://convocacaonacional.com.br/l/pelotas-v2/",
+    "cidade": "V2",
+    "versao": "CNE"
+  },
+  {
+    "id": "pelotas-v3",
+    "url": "https://convocacaonacional.com.br/l/pelotas-v3/",
+    "cidade": "V3",
+    "versao": "CNE"
+  },
+  {
+    "id": "pelotas-v4",
+    "url": "https://convocacaonacional.com.br/l/pelotas-v4/",
+    "cidade": "V4",
+    "versao": "CNE"
   }
 ];

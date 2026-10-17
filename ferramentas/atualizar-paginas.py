@@ -86,6 +86,13 @@ CNEBH = [
     ("bh-v4", "V4", "https://convocacaonacional.com.br/l/belohorizonte-v4/"),
 ]
 
+# Landing pages da Convocacao Nacional (Pelotas como exemplo).
+CNE = [
+    ("pelotas-v2", "V2", "https://convocacaonacional.com.br/l/pelotas-v2/"),
+    ("pelotas-v3", "V3", "https://convocacaonacional.com.br/l/pelotas-v3/"),
+    ("pelotas-v4", "V4", "https://convocacaonacional.com.br/l/pelotas-v4/"),
+]
+
 def normal(t):
     """sem acento, sem pontuacao, minusculo — para casar cidade com slug"""
     t = unicodedata.normalize("NFKD", t).encode("ascii", "ignore").decode()
@@ -195,6 +202,7 @@ lista += [{"id": i, "url": u, "cidade": c, "versao": "MQV"} for i, c, u in MQV]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "MET"} for i, c, u in MET]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "B10X"} for i, c, u in B10X]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "CNEBH"} for i, c, u in CNEBH]
+lista += [{"id": i, "url": u, "cidade": c, "versao": "CNE"} for i, c, u in CNE]
 io.open(os.path.join(FUNCOES, "lista-paginas.js"), "w", encoding="utf-8").write(
     "// Gerado por ferramentas/atualizar-paginas.py a partir da planilha MDV - Outubro 2026.\n"
     "// Nao edite a mao: rode o script de novo.\n"
@@ -204,5 +212,5 @@ print(f"{sum(len(g['paginas']) for g in dados)} paginas · {len(dados)} funis")
 for g in dados:
     print(f"  {g['versao']}: {len(g['paginas'])}")
 print(f"ocultos do painel: {', '.join(OCULTAR)}")
-print(f"{len(lista)} páginas na medição automática (inclui {len(RGV)} do RGV, {len(MQV)} da MQV Online e {len(MET)} do Meteorico, {len(B10X)} do Black 10X, {len(CNEBH)} do CNE BH)")
+print(f"{len(lista)} páginas na medição automática (inclui {len(RGV)} do RGV, {len(MQV)} da MQV Online e {len(MET)} do Meteorico, {len(B10X)} do Black 10X, {len(CNEBH)} do CNE BH, {len(CNE)} da Convocacao)")
 print("\nagora rode: python3 ferramentas/gerar-index.py")
