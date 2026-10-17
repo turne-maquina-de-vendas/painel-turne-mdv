@@ -77,14 +77,6 @@ B10X = [
     ("black10x-v5g", "V5 G", "https://lp.grupor1.com/black10x-v5g/"),
 ]
 
-# Landing pages do Funil Netflix.
-NET = [
-    ("r1play",      "R1 Play",   "https://lp.grupor1.com/r1play/"),
-    ("r1gestao",    "Gestão",    "https://lp.grupor1.com/r1gestao/"),
-    ("r1marketing", "Marketing", "https://lp.grupor1.com/r1marketing/"),
-    ("r1vendas",    "Vendas",    "https://lp.grupor1.com/r1vendas/"),
-]
-
 # Landing pages da Live 01 - Operacoes.
 # Landing pages do CNE BH.
 CNEBH = [
@@ -93,13 +85,6 @@ CNEBH = [
     ("bh-v3", "V3", "https://convocacaonacional.com.br/l/belohorizonte-v3/"),
     ("bh-v4", "V4", "https://convocacaonacional.com.br/l/belohorizonte-v4/"),
 ]
-
-LIVE1 = [
-    ("liveprocessos1",    "V1", "https://lp.grupor1.com/liveprocessos1/"),
-    ("liveprocessos1-v2", "V2", "https://lp.grupor1.com/liveprocessos1-v2/"),
-    ("liveprocessos1-v3", "V3", "https://lp.grupor1.com/liveprocessos1-v3/"),
-]
-
 
 def normal(t):
     """sem acento, sem pontuacao, minusculo — para casar cidade com slug"""
@@ -209,8 +194,6 @@ lista += [{"id": i, "url": u, "cidade": c, "versao": "RGV"} for i, c, u in RGV]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "MQV"} for i, c, u in MQV]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "MET"} for i, c, u in MET]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "B10X"} for i, c, u in B10X]
-lista += [{"id": i, "url": u, "cidade": c, "versao": "NET"} for i, c, u in NET]
-lista += [{"id": i, "url": u, "cidade": c, "versao": "LIVE1"} for i, c, u in LIVE1]
 lista += [{"id": i, "url": u, "cidade": c, "versao": "CNEBH"} for i, c, u in CNEBH]
 io.open(os.path.join(FUNCOES, "lista-paginas.js"), "w", encoding="utf-8").write(
     "// Gerado por ferramentas/atualizar-paginas.py a partir da planilha MDV - Outubro 2026.\n"
@@ -221,5 +204,5 @@ print(f"{sum(len(g['paginas']) for g in dados)} paginas · {len(dados)} funis")
 for g in dados:
     print(f"  {g['versao']}: {len(g['paginas'])}")
 print(f"ocultos do painel: {', '.join(OCULTAR)}")
-print(f"{len(lista)} páginas na medição automática (inclui {len(RGV)} do RGV, {len(MQV)} da MQV Online e {len(MET)} do Meteorico, {len(B10X)} do Black 10X, {len(NET)} do Netflix, {len(LIVE1)} da Live 01, {len(CNEBH)} do CNE BH)")
+print(f"{len(lista)} páginas na medição automática (inclui {len(RGV)} do RGV, {len(MQV)} da MQV Online e {len(MET)} do Meteorico, {len(B10X)} do Black 10X, {len(CNEBH)} do CNE BH)")
 print("\nagora rode: python3 ferramentas/gerar-index.py")

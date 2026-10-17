@@ -28,6 +28,8 @@ const PASTAS = {
   mqv: { id: "1WaZEzFDHWqEbmpd5KsJxuF6-jL40gYt6", versao: "FEED" },
   met: { id: "1QfctN83oT0rtk7MAm4hKUafE0YxG2_c_", versao: "FEED" },
   b10x: { id: "1vKkMAcVznyJ2iNRycxLK-j-qewAgdRFb", versao: "FEED" },
+  /* CNE BH: vídeo em stories, o padrão da casa */
+  cnebh: { id: "1ybwVpKVHWRlmDTXOfmMkQptsMhZ2FfCt", versao: "STORYS" },
 };
 
 /* Pastas dos estáticos, por remessa. Não entram na lista de artes — as
@@ -43,14 +45,7 @@ const PASTAS_ARTE = {
           r02: "1bLvlFl7g1yoqn32OELhUWfC1RSTlOg8m",
           r03: "1Ibjz4_DSgvrnk3Hz21saIUMi5Z8LOyK3",
           r04: "1ckCo-m08Sy5jQH9XkGDwQ67rfUwKEKpK" },
-  live1:{ r01: "1IzhDQTmp6OXM6fXH1U7cPAOTilrXZP7b" },
   cnebh:{ r01: "13lEBHTbK7Sp4HybwyUKn-6MyaCEwuIBx" },
-  insta:{ carrossel: "1GsGZp5vypoC1A4jCjqwPihMBp5ybar_b",
-          estatico:  "1DQY6UoMluESlQqnoM2fnsiqpF-JGy9Zi" },
-  /* o Netflix separa por área do funil, e cada aba tem sua pasta */
-  net:  { gestao:    "1obIcR-DbEDZ9x1FRYY2JTJXa3HlOTzYA",
-          marketing: "1b-P4xzadsoPX8eMyHPtBQRNHRemSkJ0I",
-          vendas:    "1Vvl4vhqCbtnJl84n3nDi0HJytkAXZUSq" },
 };
 
 const PROFUNDIDADE = 4;        // raiz → leva → cidade → AD já é o pior caso

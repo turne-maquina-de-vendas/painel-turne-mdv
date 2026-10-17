@@ -572,48 +572,6 @@ export const PAGINAS = [
     "versao": "B10X"
   },
   {
-    "id": "r1play",
-    "url": "https://lp.grupor1.com/r1play/",
-    "cidade": "R1 Play",
-    "versao": "NET"
-  },
-  {
-    "id": "r1gestao",
-    "url": "https://lp.grupor1.com/r1gestao/",
-    "cidade": "Gestão",
-    "versao": "NET"
-  },
-  {
-    "id": "r1marketing",
-    "url": "https://lp.grupor1.com/r1marketing/",
-    "cidade": "Marketing",
-    "versao": "NET"
-  },
-  {
-    "id": "r1vendas",
-    "url": "https://lp.grupor1.com/r1vendas/",
-    "cidade": "Vendas",
-    "versao": "NET"
-  },
-  {
-    "id": "liveprocessos1",
-    "url": "https://lp.grupor1.com/liveprocessos1/",
-    "cidade": "V1",
-    "versao": "LIVE1"
-  },
-  {
-    "id": "liveprocessos1-v2",
-    "url": "https://lp.grupor1.com/liveprocessos1-v2/",
-    "cidade": "V2",
-    "versao": "LIVE1"
-  },
-  {
-    "id": "liveprocessos1-v3",
-    "url": "https://lp.grupor1.com/liveprocessos1-v3/",
-    "cidade": "V3",
-    "versao": "LIVE1"
-  },
-  {
     "id": "bh-v1",
     "url": "https://convocacaonacional.com.br/l/belohorizonte-v1/",
     "cidade": "V1",

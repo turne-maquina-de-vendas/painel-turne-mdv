@@ -88,47 +88,6 @@
   --bad-line:rgba(255,138,102,.36);
 }
 
-/* Tema do Instagram do Ricardo, tirado do brandbook em
-   ricardonunesbrand.netlify.app. É o único claro do painel: o brandbook é
-   off-white com tinta preta, e o feed que se aprova aqui também é claro.
-   As variáveis da página (--off-white, --preto, --vermelho, --azul-caneta,
-   --amarelo, --cinza) viraram os nomes do painel. */
-:root[data-produto="insta"]{
-  color-scheme:light;
-  --ink:#F2F1EE;         /* --off-white */
-  --ink-2:#EAE8E3;
-  --surface:#FFFFFF;
-  --surface-2:#F7F6F3;
-  --surface-3:#EDEBE6;
-
-  --line:rgba(17,17,17,.15);
-  --line-soft:rgba(17,17,17,.07);
-  --paper:#111111;       /* --preto */
-  --dim:rgba(17,17,17,.62);
-  --dim-2:rgba(17,17,17,.42);
-
-  --gold:#FE0026;        /* --vermelho: o acento do brandbook */
-  --gold-dim:rgba(254,0,38,.30);
-  --sage:#888888;        /* --cinza */
-  --no-acento:#FFFFFF;
-
-  /* o acento já é vermelho e o fundo é claro: os estados precisam de tons
-     que leiam sobre papel e não se confundam com ele */
-  --ok:#15803D;
-  --ok-bg:rgba(21,128,61,.10);
-  --ok-line:rgba(21,128,61,.30);
-  --warn:#A16207;        /* o --amarelo do brandbook, escurecido para texto */
-  --warn-bg:rgba(255,213,79,.28);
-  --warn-line:rgba(161,98,7,.32);
-  --bad:#C2410C;
-  --bad-bg:rgba(194,65,12,.10);
-  --bad-line:rgba(194,65,12,.32);
-  /* o azul-caneta do brandbook é escuro demais para o botão, que leva texto
-     escuro por cima: "publicado" usa o mesmo azul claro dos outros produtos */
-  --pub:#5B9DF9;
-  --pub-bg:rgba(91,157,249,.16);
-  --pub-line:rgba(91,157,249,.45);
-}
 
 /* Tema da tela inicial, tirado da metodorgv.com.br/v30: preto, branco e
    vermelho. Na home data-produto fica vazio — ao abrir um produto, o tema
@@ -162,36 +121,6 @@
 .topo-home img{height:30px;width:auto;display:block}
 @media (max-width:640px){ .topo-home img{height:24px} }
 
-/* Tema da Live 01 · Operações, tirado da lp.grupor1.com/liveprocessos1:
-   preto, vermelho e branco, com um cinza de painel mais fechado que o do
-   RGV. As variáveis são as da página (--black, --panel, --card, --red,
-   --green, --gray-mid) nos nomes do painel. Mesma dupla de fontes. */
-:root[data-produto="live1"]{
-  --ink:#0D0D0D;         /* --black */
-  --ink-2:#0A0A0A;
-  --surface:#111111;     /* --card */
-  --surface-2:#1A1A1A;   /* --panel */
-  --surface-3:#242424;
-
-  --line:rgba(255,255,255,.14);
-  --line-soft:rgba(255,255,255,.07);
-  --paper:#FFFFFF;
-  --dim:rgba(255,255,255,.66);
-  --dim-2:rgba(255,255,255,.42);
-
-  --gold:#FE0026;        /* --red */
-  --gold-dim:rgba(254,0,38,.32);
-  --sage:#AEAEAE;        /* --gray-mid */
-  --no-acento:#FFFFFF;
-
-  --ok:#2FA84F;          /* --green da própria página */
-  --ok-bg:rgba(47,168,79,.13);
-  --ok-line:rgba(47,168,79,.34);
-  /* o acento já é vermelho: "reprovado" muda de tom para não confundir */
-  --bad:#FF8A66;
-  --bad-bg:rgba(255,138,102,.13);
-  --bad-line:rgba(255,138,102,.36);
-}
 
 /* Tema do Black Friday 10X, tirado da lp.grupor1.com/black10x: preto, ouro
    e vermelho. As variáveis abaixo são as da própria página (--black,
@@ -592,7 +521,6 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
   padding:4px 8px;border-radius:6px;
 }
 .tag.car{color:var(--gold);border-color:var(--gold-dim)}
-:root[data-produto="insta"] .tag.car{color:#FF6B80}  /* o vermelho puro some no escuro da pílula */
 
 .navarrow{
   position:absolute;top:50%;transform:translateY(-50%);
@@ -1582,64 +1510,6 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     ]}
   ];
 
-  /* Instagram do Ricardo. Produto recém-aberto, como o Black nasceu. */
-  /* No Instagram não há remessa: o que separa é o formato. Cada aba é um
-     formato, e os reels ficam na seção de vídeo. */
-  var REMESSAS_INSTA = [
-    {id:"carrossel", nome:"Carrosséis",
-     drive:"https://drive.google.com/drive/folders/1GsGZp5vypoC1A4jCjqwPihMBp5ybar_b?usp=sharing",
-     artes:[
-      {id:"boidepiranha",code:"BoidePiranha",tipo:"CAR",files:["arts/insta_car_boidepiranha_c1.jpg","arts/insta_car_boidepiranha_c2.jpg","arts/insta_car_boidepiranha_c3.jpg","arts/insta_car_boidepiranha_c4.jpg","arts/insta_car_boidepiranha_c5.jpg","arts/insta_car_boidepiranha_c6.jpg","arts/insta_car_boidepiranha_c7.jpg","arts/insta_car_boidepiranha_c8.jpg"]},
-      {id:"canais",code:"Canais",tipo:"CAR",files:["arts/insta_car_canais_c1.jpg","arts/insta_car_canais_c2.jpg","arts/insta_car_canais_c3.jpg","arts/insta_car_canais_c4.jpg","arts/insta_car_canais_c5.jpg","arts/insta_car_canais_c6.jpg","arts/insta_car_canais_c7.jpg","arts/insta_car_canais_c8.jpg"]},
-      {id:"desconto",code:"Desconto",tipo:"CAR",files:["arts/insta_car_desconto_c1.jpg","arts/insta_car_desconto_c2.jpg","arts/insta_car_desconto_c3.jpg","arts/insta_car_desconto_c4.jpg","arts/insta_car_desconto_c5.jpg","arts/insta_car_desconto_c6.jpg","arts/insta_car_desconto_c7.jpg","arts/insta_car_desconto_c8.jpg"]},
-      {id:"mktvende",code:"MKTVende",tipo:"CAR",files:["arts/insta_car_mktvende_c1.jpg","arts/insta_car_mktvende_c2.jpg","arts/insta_car_mktvende_c3.jpg","arts/insta_car_mktvende_c4.jpg","arts/insta_car_mktvende_c5.jpg","arts/insta_car_mktvende_c6.jpg","arts/insta_car_mktvende_c7.jpg","arts/insta_car_mktvende_c8.jpg","arts/insta_car_mktvende_c9.jpg"]},
-      {id:"pagaconta",code:"PagaConta",tipo:"CAR",files:["arts/insta_car_pagaconta_c1.jpg","arts/insta_car_pagaconta_c2.jpg","arts/insta_car_pagaconta_c3.jpg","arts/insta_car_pagaconta_c4.jpg","arts/insta_car_pagaconta_c5.jpg","arts/insta_car_pagaconta_c6.jpg","arts/insta_car_pagaconta_c7.jpg","arts/insta_car_pagaconta_c8.jpg"]},
-      {id:"abrir",code:"Abrir",tipo:"CAR",files:["arts/insta_car_abrir_c1-2.jpg","arts/insta_car_abrir_c2-2.jpg","arts/insta_car_abrir_c3.jpg","arts/insta_car_abrir_c4.jpg","arts/insta_car_abrir_c5.jpg","arts/insta_car_abrir_c6-2.jpg","arts/insta_car_abrir_c7.jpg","arts/insta_car_abrir_c8-2.jpg"]},
-      {id:"2027",code:"2027",tipo:"CAR",files:["arts/insta_car_2027_c1.jpg","arts/insta_car_2027_c2.jpg","arts/insta_car_2027_c3.jpg","arts/insta_car_2027_c4.jpg","arts/insta_car_2027_c5.jpg","arts/insta_car_2027_c6.jpg","arts/insta_car_2027_c7.jpg","arts/insta_car_2027_c8.jpg","arts/insta_car_2027_c9.jpg"],postado:{em:"2026-09-23T00:03:01Z",url:"https://www.instagram.com/p/Ddm-kJ-Da-Z/"}},
-      {id:"afila",code:"AFila",tipo:"CAR",files:["arts/insta_car_afila_c1.jpg","arts/insta_car_afila_c2.jpg","arts/insta_car_afila_c3.jpg","arts/insta_car_afila_c4.jpg","arts/insta_car_afila_c5.jpg","arts/insta_car_afila_c6.jpg"],postado:{em:"2026-09-15T23:03:17Z",url:"https://www.instagram.com/p/DdU2KuOjZfs/"}},
-      {id:"agronegocio",code:"Agronegócio",tipo:"CAR",files:["arts/insta_car_agronegocio_c1.jpg","arts/insta_car_agronegocio_c2.jpg","arts/insta_car_agronegocio_c3.jpg","arts/insta_car_agronegocio_c4.jpg","arts/insta_car_agronegocio_c5.jpg","arts/insta_car_agronegocio_c6.jpg"],postado:{em:"2026-09-20T00:04:13Z",url:"https://www.instagram.com/p/DdfQUWdDf-n/"}},
-      {id:"black",code:"Black",tipo:"CAR",files:["arts/insta_car_black_c1.jpg","arts/insta_car_black_c2.jpg","arts/insta_car_black_c3.jpg","arts/insta_car_black_c4.jpg","arts/insta_car_black_c5.jpg","arts/insta_car_black_c6.jpg","arts/insta_car_black_c7.jpg","arts/insta_car_black_c8.jpg"]},
-      {id:"caixavazio",code:"CAIXAVAZIO",tipo:"CAR",files:["arts/insta_car_caixavazio_c1.jpg","arts/insta_car_caixavazio_c2.jpg","arts/insta_car_caixavazio_c3.jpg","arts/insta_car_caixavazio_c4.jpg","arts/insta_car_caixavazio_c5.jpg","arts/insta_car_caixavazio_c6.jpg","arts/insta_car_caixavazio_c7.jpg","arts/insta_car_caixavazio_c8.jpg"]},
-      {id:"calendario",code:"Calendário",tipo:"CAR",files:["arts/insta_car_calendario_c1-2.jpg","arts/insta_car_calendario_c2.jpg","arts/insta_car_calendario_c3.jpg","arts/insta_car_calendario_c4.jpg","arts/insta_car_calendario_c5.jpg","arts/insta_car_calendario_c6.jpg","arts/insta_car_calendario_c7.jpg","arts/insta_car_calendario_c8-2.jpg"]},
-      {id:"combustivel",code:"Combustível",tipo:"CAR",files:["arts/insta_car_combustivel_c1.jpg","arts/insta_car_combustivel_c2.jpg","arts/insta_car_combustivel_c3.jpg","arts/insta_car_combustivel_c4.jpg","arts/insta_car_combustivel_c5.jpg","arts/insta_car_combustivel_c6.jpg"]},
-      {id:"espaco",code:"Espaço",tipo:"CAR",files:["arts/insta_car_espaco_c1.jpg","arts/insta_car_espaco_c2.jpg","arts/insta_car_espaco_c3.jpg","arts/insta_car_espaco_c4.jpg","arts/insta_car_espaco_c5.jpg","arts/insta_car_espaco_c6.jpg"],postado:{em:"2026-09-20T21:19:09Z",url:"https://www.instagram.com/p/DdhiOR4G2Vb/"}},
-      {id:"familia",code:"Família",tipo:"CAR",files:["arts/insta_car_familia_c1.jpg","arts/insta_car_familia_c2.jpg","arts/insta_car_familia_c3.jpg","arts/insta_car_familia_c4.jpg","arts/insta_car_familia_c5.jpg","arts/insta_car_familia_c6.jpg","arts/insta_car_familia_c7.jpg","arts/insta_car_familia_c8.jpg","arts/insta_car_familia_c9.jpg"]},
-      {id:"habibs",code:"Habibs",tipo:"CAR",files:["arts/insta_car_habibs_c1.jpg","arts/insta_car_habibs_c2.jpg","arts/insta_car_habibs_c3.jpg","arts/insta_car_habibs_c4.jpg","arts/insta_car_habibs_c5.jpg","arts/insta_car_habibs_c6.jpg"],postado:{em:"2026-09-16T21:00:51Z",url:"https://www.instagram.com/p/DdXM8vHGwba/"}},
-      {id:"ia",code:"IA",tipo:"CAR",files:["arts/insta_car_ia_c1.jpg","arts/insta_car_ia_c2.jpg","arts/insta_car_ia_c3.jpg","arts/insta_car_ia_c4.jpg","arts/insta_car_ia_c5.jpg","arts/insta_car_ia_c6.jpg","arts/insta_car_ia_c7.jpg","arts/insta_car_ia_c8.jpg"]},
-      {id:"legado",code:"Legado",tipo:"CAR",files:["arts/insta_car_legado_c1.jpg","arts/insta_car_legado_c2.jpg","arts/insta_car_legado_c3.jpg","arts/insta_car_legado_c4.jpg","arts/insta_car_legado_c5.jpg","arts/insta_car_legado_c6.jpg","arts/insta_car_legado_c7.jpg","arts/insta_car_legado_c8.jpg"]},
-      {id:"meta",code:"Meta",tipo:"CAR",files:["arts/insta_car_meta_c1.jpg","arts/insta_car_meta_c2.jpg","arts/insta_car_meta_c3.jpg","arts/insta_car_meta_c4.jpg","arts/insta_car_meta_c5.jpg","arts/insta_car_meta_c6.jpg","arts/insta_car_meta_c7-2.jpg","arts/insta_car_meta_c8-2.jpg","arts/insta_car_meta_c9-2.jpg"]},
-      {id:"marabraz",code:"Marabraz",tipo:"CAR",files:["arts/insta_car_marabraz_c1.jpg","arts/insta_car_marabraz_c2.jpg","arts/insta_car_marabraz_c3.jpg","arts/insta_car_marabraz_c4.jpg","arts/insta_car_marabraz_c5.jpg","arts/insta_car_marabraz_c6.jpg"],postado:{em:"2026-09-18T13:29:55Z",url:"https://www.instagram.com/p/Ddbi7xbEego/"}},
-      {id:"risco",code:"Risco",tipo:"CAR",files:["arts/insta_car_risco_c1-2.jpg","arts/insta_car_risco_c2.jpg","arts/insta_car_risco_c3-2.jpg","arts/insta_car_risco_c4.jpg","arts/insta_car_risco_c5-2.jpg","arts/insta_car_risco_c6-2.jpg","arts/insta_car_risco_c7-2.jpg","arts/insta_car_risco_c8-2.jpg"]},
-      {id:"socio",code:"Sócio",tipo:"CAR",files:["arts/insta_car_socio_c1.jpg","arts/insta_car_socio_c2.jpg","arts/insta_car_socio_c3.jpg","arts/insta_car_socio_c4.jpg","arts/insta_car_socio_c5.jpg","arts/insta_car_socio_c6.jpg","arts/insta_car_socio_c7.jpg","arts/insta_car_socio_c8.jpg"]}
-    ]},
-    {id:"estatico", nome:"Estáticos",
-     drive:"https://drive.google.com/drive/folders/1DQY6UoMluESlQqnoM2fnsiqpF-JGy9Zi?usp=share_link",
-     artes:[
-      {id:"frase01",code:"Frase 01",tipo:"IMG",files:["arts/insta_frase_01.jpg"]},
-      {id:"frase02",code:"Frase 02",tipo:"IMG",files:["arts/insta_frase_02.jpg"]},
-      {id:"frase03",code:"Frase 03",tipo:"IMG",files:["arts/insta_frase_03.jpg"]},
-      {id:"frase04",code:"Frase 04",tipo:"IMG",files:["arts/insta_frase_04.jpg"]},
-      {id:"frase05",code:"Frase 05",tipo:"IMG",files:["arts/insta_frase_05.jpg"]},
-      {id:"frase06",code:"Frase 06",tipo:"IMG",files:["arts/insta_frase_06.jpg"]},
-      {id:"frase07",code:"Frase 07",tipo:"IMG",files:["arts/insta_frase_07.jpg"]},
-      {id:"frase08",code:"Frase 08",tipo:"IMG",files:["arts/insta_frase_08.jpg"]},
-      {id:"frase09",code:"Frase 09",tipo:"IMG",files:["arts/insta_frase_09.jpg"]},
-      {id:"frase10",code:"Frase 10",tipo:"IMG",files:["arts/insta_frase_10.jpg"]},
-      {id:"frase11",code:"Frase 11",tipo:"IMG",files:["arts/insta_frase_11.jpg"]},
-      {id:"frase12",code:"Frase 12",tipo:"IMG",files:["arts/insta_frase_12.jpg"]},
-      {id:"frase13",code:"Frase 13",tipo:"IMG",files:["arts/insta_frase_13.jpg"]},
-      {id:"frase14",code:"Frase 14",tipo:"IMG",files:["arts/insta_frase_14.jpg"]},
-      {id:"frase15",code:"Frase 15",tipo:"IMG",files:["arts/insta_frase_15.jpg"]},
-      {id:"frase16",code:"Frase 16",tipo:"IMG",files:["arts/insta_frase_16.jpg"]},
-      {id:"frase17",code:"Frase 17",tipo:"IMG",files:["arts/insta_frase_17.jpg"]},
-      {id:"frase18",code:"Frase 18",tipo:"IMG",files:["arts/insta_frase_18.jpg"]},
-      {id:"frase19",code:"Frase 19",tipo:"IMG",files:["arts/insta_frase_19.jpg"]},
-      {id:"frase20",code:"Frase 20",tipo:"IMG",files:["arts/insta_frase_20.jpg"]},
-      {id:"frase21",code:"Frase 21",tipo:"IMG",files:["arts/insta_frase_21.jpg"]}
-    ]}
-  ];
-
-  var FUNIS_INSTA = [];
 
   var FUNIS_B10X = [
     {nome:"Black Friday 10X", versao:"Landing pages", paginas:[
@@ -1689,80 +1559,6 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   ];
 
 
-  /* Funil Netflix: o que separa não é remessa, é a área do funil. */
-  var REMESSAS_NET = [
-    {id:"gestao", nome:"Gestão", artes:[
-      {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/net_gestao_ad01.jpg"]},
-      {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/net_gestao_ad02.jpg"]},
-      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/net_gestao_ad03.jpg"]},
-      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/net_gestao_ad04.jpg"]},
-      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/net_gestao_ad05.jpg"]}
-    ]},
-    {id:"marketing", nome:"Marketing", artes:[
-      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/net_marketing_ad06.jpg"]},
-      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/net_marketing_ad07.jpg"]},
-      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/net_marketing_ad08.jpg"]},
-      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/net_marketing_ad09.jpg"]},
-      {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/net_marketing_ad10.jpg"]}
-    ]},
-    {id:"vendas", nome:"Vendas", artes:[
-      {id:"ad11",code:"AD11",tipo:"IMG",files:["arts/net_vendas_ad11.jpg"]},
-      {id:"ad12",code:"AD12",tipo:"IMG",files:["arts/net_vendas_ad12.jpg"]},
-      {id:"ad13",code:"AD13",tipo:"IMG",files:["arts/net_vendas_ad13.jpg"]},
-      {id:"ad14",code:"AD14",tipo:"IMG",files:["arts/net_vendas_ad14.jpg"]},
-      {id:"ad15",code:"AD15",tipo:"IMG",files:["arts/net_vendas_ad15.jpg"]}
-    ]}
-  ];
-
-  var FUNIS_NET = [
-    {nome:"Funil Netflix", versao:"Landing pages", paginas:[
-      {id:"r1play", cidade:"R1 Play", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://lp.grupor1.com/r1play/"},
-      {id:"r1gestao", cidade:"Gestão", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://lp.grupor1.com/r1gestao/"},
-      {id:"r1marketing", cidade:"Marketing", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://lp.grupor1.com/r1marketing/"},
-      {id:"r1vendas", cidade:"Vendas", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://lp.grupor1.com/r1vendas/"}
-    ]}
-  ];
-
-
-  /* Live 01 · Operações. Nasce com as páginas; os criativos vêm depois. */
-  var REMESSAS_LIVE1 = [
-    {id:"r01", nome:"Remessa 01",
-     drive:"https://drive.google.com/drive/folders/1IzhDQTmp6OXM6fXH1U7cPAOTilrXZP7b?usp=share_link",
-     artes:[
-      {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/live1_ad01-3.jpg"]},
-      {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/live1_ad02-3.jpg"]},
-      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/live1_ad03-3.jpg"]},
-      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/live1_ad04-3.jpg"]},
-      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/live1_ad05-2.jpg"]},
-      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/live1_ad06-3.jpg"]},
-      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/live1_ad07-3.jpg"]},
-      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/live1_ad08-3.jpg"]},
-      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/live1_ad09-3.jpg"]},
-      {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/live1_ad10-2.jpg"]}
-    ]}
-  ];
-
-  var FUNIS_LIVE1 = [
-    {nome:"Live 01 · Operações", versao:"Landing pages", paginas:[
-      {id:"liveprocessos1", cidade:"V1", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://lp.grupor1.com/liveprocessos1/"},
-      {id:"liveprocessos1-v2", cidade:"V2", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://lp.grupor1.com/liveprocessos1-v2/"},
-      {id:"liveprocessos1-v3", cidade:"V3", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://lp.grupor1.com/liveprocessos1-v3/"}
-    ]}
-  ];
 
 
   /* CNE BH. Imagem em feed, vídeo em stories — o padrão da casa. */
@@ -1847,17 +1643,6 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           drive:"https://drive.google.com/drive/folders/13lEBHTbK7Sp4HybwyUKn-6MyaCEwuIBx?usp=share_link",
           driveVideos:"https://drive.google.com/drive/folders/1ybwVpKVHWRlmDTXOfmMkQptsMhZ2FfCt?usp=share_link",
           formatoVideo:{nome:"Stories", proporcao:"9 : 16", css:"9/16"}},
-    live1: {id:"live1", nome:"Live 01 · Operações", curto:"Live 01",
-          capa:"arts/produto-live1.jpg", drive:null,
-          formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
-    net: {id:"net", nome:"Funil Netflix", curto:"Netflix",
-          capa:"arts/produto-net.jpg",
-          drive:"https://drive.google.com/drive/folders/1buh32bchPZY_L7RoRo2uU0sSqK8qQeD2?usp=share_link",
-          formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
-    insta: {id:"insta", nome:"Instagram Ricardo", curto:"Instagram",
-          capa:"arts/produto-insta-2.jpg", drive:null,
-          rotuloVideo:"Reels", rastreiaPostagem:true,
-          formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     b10x: {id:"b10x", nome:"Black Friday 10X", curto:"Black 10X",
           capa:"arts/produto-b10x.jpg", drive:null,
           driveVideos:"https://drive.google.com/drive/folders/1vKkMAcVznyJ2iNRycxLK-j-qewAgdRFb?usp=sharing",
@@ -1865,7 +1650,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
                  {nome:"Termo de Abertura", url:"https://black10xtap.netlify.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
-  var ORDEM_PRODUTOS = ["mdv", "rgv", "cnebh", "b10x", "insta", "net", "live1", "mqv", "met"];  // entregues por último
+  var ORDEM_PRODUTOS = ["mdv", "rgv", "cnebh", "b10x", "mqv", "met"];  // entregues por último
 
   var produto = null;                       // null = tela de escolha
   var REMESSAS = [], VIDEOS = [], FUNIS = [];
@@ -1936,9 +1721,6 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       mqv: {remessas: REMESSAS_MQV, videos: videosDoProduto("mqv"), funis: FUNIS_MQV},
       met: {remessas: REMESSAS_MET, videos: videosDoProduto("met"), funis: FUNIS_MET},
       b10x:{remessas: REMESSAS_B10X, videos: videosDoProduto("b10x"), funis: FUNIS_B10X},
-      insta:{remessas: REMESSAS_INSTA, videos: [],        funis: FUNIS_INSTA},
-      net:  {remessas: REMESSAS_NET,   videos: [],        funis: FUNIS_NET},
-      live1:{remessas: REMESSAS_LIVE1, videos: [],        funis: FUNIS_LIVE1},
       cnebh:{remessas: REMESSAS_CNEBH, videos: videosDoProduto("cnebh"), funis: FUNIS_CNEBH}
     }[id] || {remessas: [], videos: [], funis: []};
     REMESSAS = acervo.remessas;
