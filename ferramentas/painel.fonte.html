@@ -1765,6 +1765,60 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   ];
 
 
+  /* CNE BH. Imagem em feed, vídeo em stories — o padrão da casa. */
+  var REMESSAS_CNEBH = [
+    {id:"r01", nome:"Remessa 01",
+     drive:"https://drive.google.com/drive/folders/13lEBHTbK7Sp4HybwyUKn-6MyaCEwuIBx?usp=share_link",
+     artes:[
+      {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/bh1_ad01.jpg"]},
+      {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/bh1_ad02.jpg"]},
+      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/bh1_ad03.jpg"]},
+      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/bh1_ad04.jpg"]},
+      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/bh1_ad05.jpg"]},
+      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/bh1_ad06.jpg"]},
+      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/bh1_ad07.jpg"]},
+      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/bh1_ad08.jpg"]},
+      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/bh1_ad09.jpg"]},
+      {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/bh1_ad10.jpg"]},
+      {id:"ad11",code:"AD11",tipo:"IMG",files:["arts/bh1_ad11.jpg"]},
+      {id:"ad12",code:"AD12",tipo:"IMG",files:["arts/bh1_ad12.jpg"]},
+      {id:"ad13",code:"AD13",tipo:"IMG",files:["arts/bh1_ad13.jpg"]},
+      {id:"ad14",code:"AD14",tipo:"IMG",files:["arts/bh1_ad14.jpg"]}
+    ]}
+  ];
+
+  var VIDEOS_CNEBH = [
+    {tipo:"Belo Horizonte", videos:[
+      {id:"bh__ad01", code:"AD01", drive:"1NmurQQifOyvYtexeJsfcQ7X2VAMIWetZ", pasta:"1k6H_0o10u50Xc1LZ6dl4dzJfiQuUqCLE"},
+      {id:"bh__ad02", code:"AD02", drive:"1MIcQ0mrew2dxcPZ4SYYqesDT3LCI9CPL", pasta:"1m50CKF9V92v6yB2abfKsnWVjk0lM2MG1"},
+      {id:"bh__ad03", code:"AD03", drive:"10k3om8olY9zNe-0FmMev-JsrH7vgZf1_", pasta:"1pMStZfTKG6HP8ysczrazo1xI2QXgW-Qv"},
+      {id:"bh__ad04", code:"AD04", drive:"1uOgO6uEizJ23JBOIFbdxbJKVAPtGfh71", pasta:"1E1Ra4mh4eDg6O4R2EDtobHLzypfa4kRX"},
+      {id:"bh__ad05", code:"AD05", drive:"1FBTN_4HEphBZMQB56zsJc0vJWmCIWkNu", pasta:"1OqQ3krMPAMmigfrJjWXka7TEkvjcjlK5"},
+      {id:"bh__ad06", code:"AD06", drive:"1z47pW4IbfGS_taDhf2wryW3gULSH0u_s", pasta:"1gaXhDlI49DT6VJ6trj0zHfW0KGjYdCMl"},
+      {id:"bh__ad07", code:"AD07", drive:"1W_tHjUwRS_-dxo1CFLhwpo3gsMprVfFr", pasta:"11aH3jHXZraGN8fea3oH7ZSH7OhIczeCk"},
+      {id:"bh__ad08", code:"AD08", drive:"12985BEJLPFPJmcw57NVlFKjhOvqbD_nH", pasta:"1KmBKx_jrqoQ9PA_ovdck-A8TotKqjDNT"},
+      {id:"bh__ad09", code:"AD09", drive:"1ZH70PRv7sxhRYbdp9OkacWlFhGEPizP7", pasta:"1j7VyxvN3bqf1DRo3gvtMcE62DtKKeF4R"}
+    ]}
+  ];
+
+  var FUNIS_CNEBH = [
+    {nome:"CNE Belo Horizonte", versao:"Landing pages", paginas:[
+      {id:"bh-v1", cidade:"V1", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://convocacaonacional.com.br/l/belohorizonte-v1/"},
+      {id:"bh-v2", cidade:"V2", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://convocacaonacional.com.br/l/belohorizonte-v2/"},
+      {id:"bh-v3", cidade:"V3", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://convocacaonacional.com.br/l/belohorizonte-v3/"},
+      {id:"bh-v4", cidade:"V4", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://convocacaonacional.com.br/l/belohorizonte-v4/"}
+    ]}
+  ];
+
+
   var PRODUTOS = {
     mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
           capa:"arts/produto-mdv.jpg",
@@ -1783,11 +1837,16 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           drive:"https://drive.google.com/drive/folders/1c-FI-jTph2zsrGMFg20q1-QxcVeSSlJD?usp=share_link",
           links:[{nome:"Dashboard de métricas", url:"https://maquina-vendas-online-set-26.lovable.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
-    met: {id:"met", nome:"Meteórico MQV", curto:"Meteórico",
+    met: {id:"met", nome:"Meteórico MQV", curto:"Meteórico", entregue:true,
           capa:"arts/produto-met-2.jpg",
           drive:"https://drive.google.com/drive/folders/1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i?usp=share_link",
           links:[{nome:"Dashboard de métricas", url:"https://meteorico-set-26.lovable.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
+    cnebh: {id:"cnebh", nome:"CNE BH", curto:"CNE BH",
+          capa:"arts/produto-cnebh.jpg",
+          drive:"https://drive.google.com/drive/folders/13lEBHTbK7Sp4HybwyUKn-6MyaCEwuIBx?usp=share_link",
+          driveVideos:"https://drive.google.com/drive/folders/1ybwVpKVHWRlmDTXOfmMkQptsMhZ2FfCt?usp=share_link",
+          formatoVideo:{nome:"Stories", proporcao:"9 : 16", css:"9/16"}},
     live1: {id:"live1", nome:"Live 01 · Operações", curto:"Live 01",
           capa:"arts/produto-live1.jpg", drive:null,
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
@@ -1806,7 +1865,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
                  {nome:"Termo de Abertura", url:"https://black10xtap.netlify.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
-  var ORDEM_PRODUTOS = ["mdv", "rgv", "met", "b10x", "insta", "net", "live1", "mqv"];  // entregues por último
+  var ORDEM_PRODUTOS = ["mdv", "rgv", "cnebh", "b10x", "insta", "net", "live1", "mqv", "met"];  // entregues por último
 
   var produto = null;                       // null = tela de escolha
   var REMESSAS = [], VIDEOS = [], FUNIS = [];
@@ -1823,8 +1882,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
      com a chave que já tem — e portanto com a aprovação que já recebeu.
      Uma varredura incompleta não pode fazer vídeo sumir da tela. */
   function videosDoProduto(id){
-    var base = {mdv:VIDEOS_MDV, rgv:VIDEOS_RGV, mqv:VIDEOS_MQV,
-                met:VIDEOS_MET, b10x:VIDEOS_B10X}[id] || [];
+    var base = {mdv:VIDEOS_MDV, rgv:VIDEOS_RGV, mqv:VIDEOS_MQV, met:VIDEOS_MET,
+                b10x:VIDEOS_B10X, cnebh:VIDEOS_CNEBH}[id] || [];
     var doDrive = (ACERVO[id] || {}).grupos || [];
     if(!doDrive.length) return base;
 
@@ -1879,7 +1938,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       b10x:{remessas: REMESSAS_B10X, videos: videosDoProduto("b10x"), funis: FUNIS_B10X},
       insta:{remessas: REMESSAS_INSTA, videos: [],        funis: FUNIS_INSTA},
       net:  {remessas: REMESSAS_NET,   videos: [],        funis: FUNIS_NET},
-      live1:{remessas: REMESSAS_LIVE1, videos: [],        funis: FUNIS_LIVE1}
+      live1:{remessas: REMESSAS_LIVE1, videos: [],        funis: FUNIS_LIVE1},
+      cnebh:{remessas: REMESSAS_CNEBH, videos: videosDoProduto("cnebh"), funis: FUNIS_CNEBH}
     }[id] || {remessas: [], videos: [], funis: []};
     REMESSAS = acervo.remessas;
     VIDEOS   = acervo.videos;
@@ -2073,6 +2133,12 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       {id:"lc_rota-45-sinop-funil-1-v4", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-sinop-funil-1-v4/"},
       {id:"lc_rota-45-cuiaba-funil-1-v4", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-cuiaba-funil-1-v4/"},
       {id:"lc_rota-45-ribeirao-preto-funil-1-v4", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-ribeirao-preto-funil-1-v4/"}
+    ]},
+    {nome:"Rota 45", versao:"NOVOS TESTES", paginas:[
+      {id:"lc_rota-45-manaus-funil-1-v6", cidade:"Manaus (AM)", data:"26/10", status:"", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v6/"}
+    ]},
+    {nome:"Rota 45", versao:"VENDA WPP", paginas:[
+      {id:"lc_rota-45-manaus-funil-2-v1", cidade:"Manaus (AM)", data:"26/10", status:"", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-2-v1"}
     ]}
   ];
   /* FUNIS:fim */

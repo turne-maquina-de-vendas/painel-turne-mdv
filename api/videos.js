@@ -44,6 +44,7 @@ const PASTAS_ARTE = {
           r03: "1Ibjz4_DSgvrnk3Hz21saIUMi5Z8LOyK3",
           r04: "1ckCo-m08Sy5jQH9XkGDwQ67rfUwKEKpK" },
   live1:{ r01: "1IzhDQTmp6OXM6fXH1U7cPAOTilrXZP7b" },
+  cnebh:{ r01: "13lEBHTbK7Sp4HybwyUKn-6MyaCEwuIBx" },
   insta:{ carrossel: "1GsGZp5vypoC1A4jCjqwPihMBp5ybar_b",
           estatico:  "1DQY6UoMluESlQqnoM2fnsiqpF-JGy9Zi" },
   /* o Netflix separa por área do funil, e cada aba tem sua pasta */

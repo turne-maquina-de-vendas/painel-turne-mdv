@@ -428,6 +428,18 @@ export const PAGINAS = [
     "versao": "NOVO PREÇO V4"
   },
   {
+    "id": "lc_rota-45-manaus-funil-1-v6",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v6/",
+    "cidade": "Manaus (AM)",
+    "versao": "NOVOS TESTES"
+  },
+  {
+    "id": "lc_rota-45-manaus-funil-2-v1",
+    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-2-v1",
+    "cidade": "Manaus (AM)",
+    "versao": "VENDA WPP"
+  },
+  {
     "id": "rgv-problema-x-solucao-v4",
     "url": "https://metodorgv.com.br/problema-x-solucao-v4/",
     "cidade": "Problema x Solução V4",
@@ -600,5 +612,29 @@ export const PAGINAS = [
     "url": "https://lp.grupor1.com/liveprocessos1-v3/",
     "cidade": "V3",
     "versao": "LIVE1"
+  },
+  {
+    "id": "bh-v1",
+    "url": "https://convocacaonacional.com.br/l/belohorizonte-v1/",
+    "cidade": "V1",
+    "versao": "CNEBH"
+  },
+  {
+    "id": "bh-v2",
+    "url": "https://convocacaonacional.com.br/l/belohorizonte-v2/",
+    "cidade": "V2",
+    "versao": "CNEBH"
+  },
+  {
+    "id": "bh-v3",
+    "url": "https://convocacaonacional.com.br/l/belohorizonte-v3/",
+    "cidade": "V3",
+    "versao": "CNEBH"
+  },
+  {
+    "id": "bh-v4",
+    "url": "https://convocacaonacional.com.br/l/belohorizonte-v4/",
+    "cidade": "V4",
+    "versao": "CNEBH"
   }
 ];
