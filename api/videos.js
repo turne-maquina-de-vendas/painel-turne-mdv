@@ -121,10 +121,13 @@ function daVersao(arquivos, versao) {
   const v = normal(versao);
   const bate = arquivos.filter((f) => normal(f.name).includes(v));
   if (bate.length) return bate[0];
-  /* STORYS e STORY aparecem escritos das duas formas nas pastas */
+  /* o mesmo formato aparece escrito de quatro jeitos nas pastas:
+     STORYS, STORY, STORIE e STORIES — nenhum deles contém o outro */
   if (v === "STORYS") {
-    const alt = arquivos.filter((f) => normal(f.name).includes("STORY"));
-    if (alt.length) return alt[0];
+    for (const outro of ["STORY", "STORIE"]) {
+      const alt = arquivos.filter((f) => normal(f.name).includes(outro));
+      if (alt.length) return alt[0];
+    }
   }
   return null;
 }
