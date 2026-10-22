@@ -60,6 +60,8 @@ const PASTAS_ARTE = {
   /* a Convocação separa por cidade antes da remessa: o mapa de AD→pasta
      sai da varredura, aqui fica só a raiz dos estáticos */
   cne:  { r0: "1yyCHfzPOAm6Ahnv7H952P4povx6VyIep" },
+  xmt:  { r01: "1GRJ08fnIha7SkhRrL7CJyDEeMhzLY-_9",
+          r02: "1M8EyTaJLJ1lqIl5O07gvmNT5ZUH7BQO5" },
 };
 
 const PROFUNDIDADE = 4;        // raiz → leva → cidade → AD já é o pior caso

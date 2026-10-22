@@ -122,6 +122,38 @@
 @media (max-width:640px){ .topo-home img{height:24px} }
 
 
+/* Tema do Xeque-Mate Tributário, tirado da ricardonunes.grupor1.com/xequemate:
+   preto de fundo, o off-white do texto e o ouro mais fechado da página, com
+   o vinho dela no lugar do vermelho puro — numa página sobre imposto o
+   vermelho berrante disputa atenção com o acento. */
+:root[data-produto="xmt"]{
+  --ink:#0D0D0D;
+  --ink-2:#121212;
+  --surface:#151515;
+  --surface-2:#1C1C1C;
+  --surface-3:#282828;
+
+  --line:rgba(242,239,234,.14);
+  --line-soft:rgba(242,239,234,.07);
+  --paper:#F2EFEA;       /* o off-white da página, não branco puro */
+  --dim:rgba(242,239,234,.66);
+  --dim-2:rgba(242,239,234,.42);
+
+  --gold:#CF9B45;
+  --gold-dim:rgba(207,155,69,.34);
+  --sage:#A8A29A;
+  --no-acento:#140E04;
+
+  --ok:#2FA84F;
+  --ok-bg:rgba(47,168,79,.14);
+  --ok-line:rgba(47,168,79,.36);
+  --bad:#C2303A;         /* o vinho #710912 clareado para ler no escuro */
+  --bad-bg:rgba(194,48,58,.15);
+  --bad-line:rgba(194,48,58,.40);
+
+  --grad-gold:linear-gradient(100deg,#C28D39 0%,#D9AB5E 48%,#D19C47 100%);
+}
+
 /* Tema do Black Friday 10X, tirado da lp.grupor1.com/black10x: preto, ouro
    e vermelho. As variáveis abaixo são as da própria página (--black,
    --panel, --gold, --red...) traduzidas para os nomes do painel. O par
@@ -475,6 +507,20 @@ h1 .lote{font-size:.6em;color:var(--gold);font-weight:500}
 .chip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--no-acento);font-weight:700}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px;align-items:start}
+
+/* faixa com o nome da praça: quebra a grade em blocos, uma cidade por vez */
+.cidade-sep{
+  grid-column:1/-1;
+  display:flex;align-items:baseline;gap:12px;
+  margin:16px 0 -6px;padding-bottom:10px;
+  border-bottom:1px solid var(--line);
+}
+.cidade-sep:first-child{margin-top:0}
+.cidade-sep b{
+  font-family:var(--disp);font-weight:600;font-size:17px;
+  letter-spacing:-.01em;color:var(--paper);
+}
+.cidade-sep small{font-family:var(--mono);font-size:11px;color:var(--dim-2);letter-spacing:.02em}
 
 .vazio{
   grid-column:1/-1;
@@ -1186,14 +1232,18 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       {id:"rgv-problema-x-solucao-v4", cidade:"Problema x Solução V4", data:"—",
        status:"", mobile:null, desktop:null,
        url:"https://metodorgv.com.br/problema-x-solucao-v4/"},
+      {id:"rgv-v34", cidade:"V34", data:"—", status:"", mobile:null, desktop:null,
+       url:"https://metodorgv.com.br/v34/"},
+      {id:"rgv-v33", cidade:"V33", data:"—", status:"", mobile:null, desktop:null,
+       url:"https://metodorgv.com.br/v33/"},
+      {id:"rgv-v32", cidade:"V32", data:"—", status:"", mobile:null, desktop:null,
+       url:"https://metodorgv.com.br/v32/"},
       {id:"rgv-v31", cidade:"V31", data:"—", status:"", mobile:null, desktop:null,
        url:"https://metodorgv.com.br/v31/"},
       {id:"rgv-v30", cidade:"V30", data:"—", status:"", mobile:null, desktop:null,
        url:"https://metodorgv.com.br/v30/"},
       {id:"rgv-v30-v2", cidade:"V30 V2", data:"—", status:"", mobile:null, desktop:null,
-       url:"https://metodorgv.com.br/v30-v2/"},
-      {id:"rgv-rmkt-v2", cidade:"RMKT V2", data:"—", status:"", mobile:null, desktop:null,
-       url:"https://metodorgv.com.br/rmkt-v2/"}
+       url:"https://metodorgv.com.br/v30-v2/"}
     ]}
   ];
 
@@ -1958,6 +2008,72 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   ];
 
 
+  /* Xeque-Mate Tributário. Imagem em feed, o padrão da casa. */
+  var REMESSAS_XMT = [
+    {id:"r01", nome:"Remessa 01",
+     drive:"https://drive.google.com/drive/folders/1GRJ08fnIha7SkhRrL7CJyDEeMhzLY-_9?usp=share_link",
+     artes:[
+      {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/xmt1_ad01.jpg"]},
+      {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/xmt1_ad02.jpg"]},
+      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/xmt1_ad03.jpg"]},
+      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/xmt1_ad04.jpg"]},
+      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/xmt1_ad05.jpg"]},
+      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/xmt1_ad06.jpg"]},
+      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/xmt1_ad07.jpg"]},
+      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/xmt1_ad08.jpg"]},
+      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/xmt1_ad09.jpg"]},
+      {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/xmt1_ad10.jpg"]},
+      {id:"ad11",code:"AD11",tipo:"IMG",files:["arts/xmt1_ad11.jpg"]},
+      {id:"ad12",code:"AD12",tipo:"IMG",files:["arts/xmt1_ad12.jpg"]},
+      {id:"ad13",code:"AD13",tipo:"IMG",files:["arts/xmt1_ad13.jpg"]},
+      {id:"ad14",code:"AD14",tipo:"IMG",files:["arts/xmt1_ad14.jpg"]}
+    ]},
+    {id:"r02", nome:"Remessa 02",
+     drive:"https://drive.google.com/drive/folders/1M8EyTaJLJ1lqIl5O07gvmNT5ZUH7BQO5?usp=share_link",
+     artes:[
+      {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/xmt2_ad01.jpg"]},
+      {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/xmt2_ad02.jpg"]},
+      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/xmt2_ad03.jpg"]},
+      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/xmt2_ad04.jpg"]},
+      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/xmt2_ad05.jpg"]},
+      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/xmt2_ad06.jpg"]},
+      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/xmt2_ad07.jpg"]},
+      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/xmt2_ad08.jpg"]},
+      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/xmt2_ad09.jpg"]},
+      {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/xmt2_ad10.jpg"]},
+      {id:"ad11",code:"AD11",tipo:"IMG",files:["arts/xmt2_ad11.jpg"]},
+      {id:"ad12",code:"AD12",tipo:"IMG",files:["arts/xmt2_ad12.jpg"]},
+      {id:"ad13",code:"AD13",tipo:"IMG",files:["arts/xmt2_ad13.jpg"]},
+      {id:"ad14",code:"AD14",tipo:"IMG",files:["arts/xmt2_ad14.jpg"]},
+      {id:"ad15",code:"AD15",tipo:"IMG",files:["arts/xmt2_ad15.jpg"]},
+      {id:"ad16",code:"AD16",tipo:"IMG",files:["arts/xmt2_ad16.jpg"]},
+      {id:"ad17",code:"AD17",tipo:"IMG",files:["arts/xmt2_ad17.jpg"]},
+      {id:"ad18",code:"AD18",tipo:"IMG",files:["arts/xmt2_ad18.jpg"]},
+      {id:"ad19",code:"AD19",tipo:"IMG",files:["arts/xmt2_ad19.jpg"]}
+    ]}
+  ];
+
+  /* sem vídeo ainda: a lista fica aqui para a varredura ter onde cair */
+  var VIDEOS_XMT = [];
+
+  var FUNIS_XMT = [
+    {nome:"Xeque-Mate Tributário", versao:"Landing pages", paginas:[
+      {id:"xequemate-v2", cidade:"V2", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://ricardonunes.grupor1.com/xequemate-v2"},
+      {id:"xequemate-v4", cidade:"V4", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://ricardonunes.grupor1.com/xequemate-v4"},
+      {id:"xequemate-v5", cidade:"V5", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://ricardonunes.grupor1.com/xequemate-v5"},
+      {id:"xequemate-v6", cidade:"V6", data:"—",
+       status:"", mobile:null, desktop:null,
+       url:"https://ricardonunes.grupor1.com/xequemate-v6"}
+    ]}
+  ];
+
+
   var PRODUTOS = {
     mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
           capa:"arts/produto-mdv.jpg",
@@ -1991,6 +2107,10 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           drive:"https://drive.google.com/drive/folders/1yyCHfzPOAm6Ahnv7H952P4povx6VyIep?usp=share_link",
           driveVideos:"https://drive.google.com/drive/folders/1yn092fEuO28MaHqYlp3KQMa9qlZqvdEm?usp=share_link",
           formatoVideo:{nome:"Stories", proporcao:"9 : 16", css:"9/16"}},
+    xmt: {id:"xmt", nome:"Xeque-Mate Tributário", curto:"Xeque-Mate",
+          capa:"arts/produto-xmt.jpg",
+          drive:"https://drive.google.com/drive/folders/1GRJ08fnIha7SkhRrL7CJyDEeMhzLY-_9?usp=share_link",
+          formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     b10x: {id:"b10x", nome:"Black Friday 10X", curto:"Black 10X",
           capa:"arts/produto-b10x.jpg", drive:null,
           driveVideos:"https://drive.google.com/drive/folders/1vKkMAcVznyJ2iNRycxLK-j-qewAgdRFb?usp=sharing",
@@ -1998,7 +2118,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
                  {nome:"Termo de Abertura", url:"https://black10xtap.netlify.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
-  var ORDEM_PRODUTOS = ["mdv", "rgv", "cne", "cnebh", "b10x", "mqv", "met"];  // entregues por último
+  var ORDEM_PRODUTOS = ["mdv", "rgv", "xmt", "cne", "cnebh", "b10x", "mqv", "met"];  // entregues por último
 
   var produto = null;                       // null = tela de escolha
   var REMESSAS = [], VIDEOS = [], FUNIS = [];
@@ -2016,7 +2136,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
      Uma varredura incompleta não pode fazer vídeo sumir da tela. */
   function videosDoProduto(id){
     var base = {mdv:VIDEOS_MDV, rgv:VIDEOS_RGV, mqv:VIDEOS_MQV, met:VIDEOS_MET,
-                b10x:VIDEOS_B10X, cnebh:VIDEOS_CNEBH}[id] || [];
+                b10x:VIDEOS_B10X, cnebh:VIDEOS_CNEBH, cne:VIDEOS_CNE,
+                xmt:VIDEOS_XMT}[id] || [];
     var doDrive = (ACERVO[id] || {}).grupos || [];
     if(!doDrive.length) return base;
 
@@ -2070,7 +2191,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       met: {remessas: REMESSAS_MET, videos: videosDoProduto("met"), funis: FUNIS_MET},
       b10x:{remessas: REMESSAS_B10X, videos: videosDoProduto("b10x"), funis: FUNIS_B10X},
       cnebh:{remessas: REMESSAS_CNEBH, videos: videosDoProduto("cnebh"), funis: FUNIS_CNEBH},
-      cne:  {remessas: REMESSAS_CNE,   videos: videosDoProduto("cne"),   funis: FUNIS_CNE}
+      cne:  {remessas: REMESSAS_CNE,   videos: videosDoProduto("cne"),   funis: FUNIS_CNE},
+      xmt:  {remessas: REMESSAS_XMT,   videos: videosDoProduto("xmt"),   funis: FUNIS_XMT}
     }[id] || {remessas: [], videos: [], funis: []};
     REMESSAS = acervo.remessas;
     VIDEOS   = acervo.videos;
@@ -2179,40 +2301,40 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   /* FUNIS:inicio */
   var FUNIS_MDV = [
     {nome:"Rota 45", versao:"V1", paginas:[
-      {id:"turne-mdv-campina-grande", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-campina-grande/"},
-      {id:"turne-mdv-joao-pessoa", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joao-pessoa/"},
-      {id:"turne-mdv-palmas", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas/"},
-      {id:"turne-mdv-vitoriadaconquista", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista/"},
-      {id:"turne-mdv-brasilia", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-brasilia/"},
-      {id:"turne-mdv-manaus", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-manaus/"},
-      {id:"turne-mdv-belem", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-belem/"},
-      {id:"turne-mdv-sinop", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop/"},
-      {id:"turne-mdv-cuiaba", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba/"},
-      {id:"turne-mdv-ribeirao-preto", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeirao-preto/"}
+      {id:"turne-mdv-campina-grande", cidade:"Campina Grande (PB)", data:"06/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-campina-grande/"},
+      {id:"turne-mdv-joao-pessoa", cidade:"João Pessoa (PB)", data:"07/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joao-pessoa/"},
+      {id:"turne-mdv-palmas", cidade:"Palmas (TO)", data:"08/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas/"},
+      {id:"turne-mdv-vitoriadaconquista", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista/"},
+      {id:"turne-mdv-brasilia", cidade:"Brasília (DF)", data:"14/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-brasilia/"},
+      {id:"turne-mdv-manaus", cidade:"Manaus (AM)", data:"26/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-manaus/"},
+      {id:"turne-mdv-belem", cidade:"Belém (PA)", data:"27/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-belem/"},
+      {id:"turne-mdv-sinop", cidade:"Sinop (MT)", data:"28/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop/"},
+      {id:"turne-mdv-cuiaba", cidade:"Cuiabá (MT)", data:"29/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba/"},
+      {id:"turne-mdv-ribeirao-preto", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeirao-preto/"}
     ]},
     {nome:"Rota 45", versao:"V4", paginas:[
-      {id:"turne-mdv-campinagrande-v4", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v4/"},
-      {id:"turne-mdv-joaopessoa-v4", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v4/"},
-      {id:"turne-mdv-palmas-v4", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas-v4/"},
-      {id:"turne-mdv-vitoriadaconquista-v4", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista-v4/"},
-      {id:"turne-mdv-brasilia-v4", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-brasilia-v4/"},
-      {id:"turne-mdv-manaus-v4", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-manaus-v4/"},
-      {id:"turne-mdv-belem-v4", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-belem-v4/"},
-      {id:"turne-mdv-sinop-v4", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop-v4/"},
-      {id:"turne-mdv-cuiaba-v4", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v4/"},
-      {id:"turne-mdv-ribeiraopreto-v4", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v4/"}
+      {id:"turne-mdv-campinagrande-v4", cidade:"Campina Grande (PB)", data:"06/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v4/"},
+      {id:"turne-mdv-joaopessoa-v4", cidade:"João Pessoa (PB)", data:"07/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v4/"},
+      {id:"turne-mdv-palmas-v4", cidade:"Palmas (TO)", data:"08/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas-v4/"},
+      {id:"turne-mdv-vitoriadaconquista-v4", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista-v4/"},
+      {id:"turne-mdv-brasilia-v4", cidade:"Brasília (DF)", data:"14/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-brasilia-v4/"},
+      {id:"turne-mdv-manaus-v4", cidade:"Manaus (AM)", data:"26/10", status:"Ativo no Tráfego", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-manaus-v4/"},
+      {id:"turne-mdv-belem-v4", cidade:"Belém (PA)", data:"27/10", status:"Ativo no Tráfego", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-belem-v4/"},
+      {id:"turne-mdv-sinop-v4", cidade:"Sinop (MT)", data:"28/10", status:"Ativo no Tráfego", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop-v4/"},
+      {id:"turne-mdv-cuiaba-v4", cidade:"Cuiabá (MT)", data:"29/10", status:"Ativo no Tráfego", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v4/"},
+      {id:"turne-mdv-ribeiraopreto-v4", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Ativo no Tráfego", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v4/"}
     ]},
     {nome:"Rota 45", versao:"V5", paginas:[
-      {id:"turne-mdv-campinagrande-v5", cidade:"Campina Grande (PB)", data:"06/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v5/"},
-      {id:"turne-mdv-joaopessoa-v5", cidade:"João Pessoa (PB)", data:"07/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v5/"},
-      {id:"turne-mdv-palmas-v5", cidade:"Palmas (TO)", data:"08/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas-v5/"},
-      {id:"turne-mdv-vitoriadaconquista-v5", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista-v5/"},
-      {id:"turne-mdv-brasilia-v5", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-brasilia-v5/"},
-      {id:"turne-mdv-manaus-v5", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-manaus-v5/"},
-      {id:"turne-mdv-belem-v5", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-belem-v5/"},
-      {id:"turne-mdv-sinop-v5", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop-v5/"},
-      {id:"turne-mdv-cuiaba-v5", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v5/"},
-      {id:"turne-mdv-ribeiraopreto-v5", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v5/"}
+      {id:"turne-mdv-campinagrande-v5", cidade:"Campina Grande (PB)", data:"06/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v5/"},
+      {id:"turne-mdv-joaopessoa-v5", cidade:"João Pessoa (PB)", data:"07/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-joaopessoa-v5/"},
+      {id:"turne-mdv-palmas-v5", cidade:"Palmas (TO)", data:"08/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-palmas-v5/"},
+      {id:"turne-mdv-vitoriadaconquista-v5", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-vitoriadaconquista-v5/"},
+      {id:"turne-mdv-brasilia-v5", cidade:"Brasília (DF)", data:"14/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-brasilia-v5/"},
+      {id:"turne-mdv-manaus-v5", cidade:"Manaus (AM)", data:"26/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-manaus-v5/"},
+      {id:"turne-mdv-belem-v5", cidade:"Belém (PA)", data:"27/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-belem-v5/"},
+      {id:"turne-mdv-sinop-v5", cidade:"Sinop (MT)", data:"28/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-sinop-v5/"},
+      {id:"turne-mdv-cuiaba-v5", cidade:"Cuiabá (MT)", data:"29/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-cuiaba-v5/"},
+      {id:"turne-mdv-ribeiraopreto-v5", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v5/"}
     ]},
     {nome:"Rota 45", versao:"ROTA 45 V6", paginas:[
       {id:"turne-mdv-campinagrande-v6", cidade:"Campina Grande (PB)", data:"06/10", status:"", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-campinagrande-v6/"},
@@ -2239,37 +2361,46 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       {id:"turne-mdv-ribeiraopreto-v4b", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/turne-mdv-ribeiraopreto-v4b/"}
     ]},
     {nome:"Rota 45", versao:"NOVO PREÇO V2", paginas:[
-      {id:"lc_rota-45-vitoriadaconquista-funil-1-v2", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-vitoriadaconquista-funil-1-v2/"},
-      {id:"lc_rota-45-brasilia-funil-1-v2", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-brasilia-funil-1-v2/"},
-      {id:"lc_rota-45-manaus-funil-1-v2", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v2/"},
-      {id:"lc_rota-45-belem-funil-1-v2", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-belem-funil-1-v2/"},
-      {id:"lc_rota-45-sinop-funil-1-v2", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-sinop-funil-1-v2/"},
-      {id:"lc_rota-45-cuiaba-funil-1-v2", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-cuiaba-funil-1-v2/"},
-      {id:"lc_rota-45-ribeirao-preto-funil-1-v2", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-ribeirao-preto-funil-1-v2/"}
+      {id:"lc_rota-45-vitoriadaconquista-funil-1-v2", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-vitoriadaconquista-funil-1-v2/"},
+      {id:"lc_rota-45-brasilia-funil-1-v2", cidade:"Brasília (DF)", data:"14/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-brasilia-funil-1-v2/"},
+      {id:"lc_rota-45-manaus-funil-1-v2", cidade:"Manaus (AM)", data:"26/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v2/"},
+      {id:"lc_rota-45-belem-funil-1-v2", cidade:"Belém (PA)", data:"27/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-belem-funil-1-v2/"},
+      {id:"lc_rota-45-sinop-funil-1-v2", cidade:"Sinop (MT)", data:"28/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-sinop-funil-1-v2/"},
+      {id:"lc_rota-45-cuiaba-funil-1-v2", cidade:"Cuiabá (MT)", data:"29/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-cuiaba-funil-1-v2/"},
+      {id:"lc_rota-45-ribeirao-preto-funil-1-v2", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-ribeirao-preto-funil-1-v2/"}
     ]},
     {nome:"Rota 45", versao:"NOVO PREÇO V3b", paginas:[
-      {id:"lc_rota-45-vitoriadaconquista-funil-1-v3b", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-vitoriadaconquista-funil-1-v3b/"},
-      {id:"lc_rota-45-brasilia-funil-1-v3b", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-brasilia-funil-1-v3b/"},
-      {id:"lc_rota-45-manaus-funil-1-v3b", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v3b/"},
-      {id:"lc_rota-45-belem-funil-1-v3b", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-belem-funil-1-v3b/"},
-      {id:"lc_rota-45-sinop-funil-1-v3b", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-sinop-funil-1-v3b/"},
-      {id:"lc_rota-45-cuiaba-funil-1-v3b", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-cuiaba-funil-1-v3b/"},
-      {id:"lc_rota-45-ribeirao-preto-funil-1-v3b", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-ribeirao-preto-funil-1-v3b/"}
+      {id:"lc_rota-45-vitoriadaconquista-funil-1-v3b", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-vitoriadaconquista-funil-1-v3b/"},
+      {id:"lc_rota-45-brasilia-funil-1-v3b", cidade:"Brasília (DF)", data:"14/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-brasilia-funil-1-v3b/"},
+      {id:"lc_rota-45-manaus-funil-1-v3b", cidade:"Manaus (AM)", data:"26/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v3b/"},
+      {id:"lc_rota-45-belem-funil-1-v3b", cidade:"Belém (PA)", data:"27/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-belem-funil-1-v3b/"},
+      {id:"lc_rota-45-sinop-funil-1-v3b", cidade:"Sinop (MT)", data:"28/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-sinop-funil-1-v3b/"},
+      {id:"lc_rota-45-cuiaba-funil-1-v3b", cidade:"Cuiabá (MT)", data:"29/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-cuiaba-funil-1-v3b/"},
+      {id:"lc_rota-45-ribeirao-preto-funil-1-v3b", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-ribeirao-preto-funil-1-v3b/"}
     ]},
     {nome:"Rota 45", versao:"NOVO PREÇO V4", paginas:[
-      {id:"lc_rota-45-vitoriadaconquista-funil-1-v4", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-vitoriadaconquista-funil-1-v4/"},
-      {id:"lc_rota-45-brasilia-funil-1-v4", cidade:"Brasília (DF)", data:"14/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-brasilia-funil-1-v4/"},
-      {id:"lc_rota-45-manaus-funil-1-v4", cidade:"Manaus (AM)", data:"26/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v4/"},
-      {id:"lc_rota-45-belem-funil-1-v4", cidade:"Belém (PA)", data:"27/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-belem-funil-1-v4/"},
-      {id:"lc_rota-45-sinop-funil-1-v4", cidade:"Sinop (MT)", data:"28/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-sinop-funil-1-v4/"},
-      {id:"lc_rota-45-cuiaba-funil-1-v4", cidade:"Cuiabá (MT)", data:"29/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-cuiaba-funil-1-v4/"},
-      {id:"lc_rota-45-ribeirao-preto-funil-1-v4", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Aprovado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-ribeirao-preto-funil-1-v4/"}
+      {id:"lc_rota-45-vitoriadaconquista-funil-1-v4", cidade:"Vitoria da Conquista (BA)", data:"13/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-vitoriadaconquista-funil-1-v4/"},
+      {id:"lc_rota-45-brasilia-funil-1-v4", cidade:"Brasília (DF)", data:"14/10", status:"Desativado", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-brasilia-funil-1-v4/"},
+      {id:"lc_rota-45-manaus-funil-1-v4", cidade:"Manaus (AM)", data:"26/10", status:"Ativo no Tráfego", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v4/"},
+      {id:"lc_rota-45-belem-funil-1-v4", cidade:"Belém (PA)", data:"27/10", status:"Ativo no Tráfego", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-belem-funil-1-v4/"},
+      {id:"lc_rota-45-sinop-funil-1-v4", cidade:"Sinop (MT)", data:"28/10", status:"Ativo no Tráfego", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-sinop-funil-1-v4/"},
+      {id:"lc_rota-45-cuiaba-funil-1-v4", cidade:"Cuiabá (MT)", data:"29/10", status:"Ativo no Tráfego", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-cuiaba-funil-1-v4/"},
+      {id:"lc_rota-45-ribeirao-preto-funil-1-v4", cidade:"Ribeirão Preto (SP)", data:"30/10", status:"Ativo no Tráfego", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-ribeirao-preto-funil-1-v4/"}
     ]},
-    {nome:"Rota 45", versao:"NOVOS TESTES", paginas:[
-      {id:"lc_rota-45-manaus-funil-1-v6", cidade:"Manaus (AM)", data:"26/10", status:"", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v6/"}
+    {nome:"Rota 45", versao:"v6", paginas:[
+      {id:"manaus-funil-1-v6", cidade:"Manaus (AM)", data:"26/10", status:"Ativo no Tráfego", mobile:null, desktop:null, url:"https://ricardonunes.convocacaonacional.com.br/manaus-funil-1-v6"}
+    ]},
+    {nome:"Rota 45", versao:"v7", paginas:[
+      {id:"manaus-funil-1-v7", cidade:"Manaus (AM)", data:"26/10", status:"Ativo no Tráfego", mobile:null, desktop:null, url:"https://ricardonunes.convocacaonacional.com.br/manaus-funil-1-v7"}
     ]},
     {nome:"Rota 45", versao:"VENDA WPP", paginas:[
-      {id:"lc_rota-45-manaus-funil-2-v1", cidade:"Manaus (AM)", data:"26/10", status:"", mobile:null, desktop:null, url:"https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-2-v1"}
+      {id:"manaus-funil-2-v1", cidade:"Manaus (AM)", data:"26/10", status:"Ativo no Tráfego", mobile:null, desktop:null, url:"https://ricardonunes.convocacaonacional.com.br/manaus-funil-2-v1"}
+    ]},
+    {nome:"Rota 45", versao:"v4", paginas:[
+      {id:"turne-mdv-manaus-v4", cidade:"Manaus (AM)", data:"26/10", status:"", mobile:null, desktop:null, url:"https://ricardonunes.turnemaquinadevendas.com.br/turne-mdv-manaus-v4"},
+      {id:"turne-mdv-belem-v4", cidade:"Belém (PA)", data:"27/10", status:"", mobile:null, desktop:null, url:"https://ricardonunes.turnemaquinadevendas.com.br/turne-mdv-belem-v4"},
+      {id:"turne-mdv-sinop-v4", cidade:"Sinop (MT)", data:"28/10", status:"", mobile:null, desktop:null, url:"https://ricardonunes.turnemaquinadevendas.com.br/turne-mdv-sinop-v4"},
+      {id:"turne-mdv-cuiaba-v4", cidade:"Cuiabá (MT)", data:"29/10", status:"", mobile:null, desktop:null, url:"https://ricardonunes.turnemaquinadevendas.com.br/turne-mdv-cuiaba-v4"}
     ]}
   ];
   /* FUNIS:fim */
@@ -2491,18 +2622,37 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       return;
     }
 
-    grid.innerHTML = visiveis.map(function(a){
+    /* O código da arte vem como "CANOAS · AD01" quando a peça é de praça.
+       Agrupo por cidade em vez de confiar na ordem: o sort por data de
+       entrada pode intercalar praças, e aí sairia cabeçalho repetido. */
+    var grupos = [], ondeEsta = {};
+    visiveis.forEach(function(a){
+      var partes = String(a.code).split(" · ");
+      var cidade = partes.length > 1 ? partes[0].trim() : "";
+      if(!(cidade in ondeEsta)){
+        ondeEsta[cidade] = grupos.length;
+        grupos.push({ cidade: cidade, itens: [] });
+      }
+      grupos[ondeEsta[cidade]].itens.push(a);
+    });
+    /* lote sem praça nenhuma (RGV, Black...) segue como uma grade só */
+    var porCidade = grupos.some(function(g){ return g.cidade; });
+
+    function cartao(a){
       var s = st(a.key);
       var n = notasDe(a.key).length;
       var i = slide[a.key] || 0;
       var car = a.tipo === "CAR";
       var open = aberta === a.key;
+      /* com a faixa da praça em cima, repetir a cidade em cada card só
+         rouba espaço do código: fica só o ADxx */
+      var rotulo = porCidade ? String(a.code).split(" · ").pop() : a.code;
 
       return '<article class="card'+(open?" aberta":"")+'" data-key="'+a.key+'" data-st="'+s+'">' +
         '<div class="shot" data-zoom role="button" tabindex="0" aria-label="Ver '+a.code+' em tamanho grande">' +
           '<img src="'+a.files[i]+'" alt="Arte '+a.code+(car?" card "+(i+1):"")+'" loading="lazy">' +
           '<div class="tagline">' +
-            '<span class="tag">'+a.code+'</span>' +
+            '<span class="tag">'+rotulo+'</span>' +
             (car ? '<span class="tag car">carrossel '+(i+1)+'/'+a.files.length+'</span>' : '') +
           '</div>' +
           (car ? '<button class="navarrow prev" data-nav="-1" aria-label="Card anterior">‹</button>' +
@@ -2528,6 +2678,15 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
 
         (open ? blocoNotas(a) : "") +
       '</article>';
+    }
+
+    grid.innerHTML = grupos.map(function(g){
+      var cabecalho = (porCidade && g.cidade)
+        ? '<h3 class="cidade-sep"><b>' + esc(g.cidade) + '</b>' +
+          '<small>' + g.itens.length + (g.itens.length === 1 ? " arte" : " artes") +
+          '</small></h3>'
+        : '';
+      return cabecalho + g.itens.map(cartao).join("");
     }).join("");
 
     devolverRascunho();

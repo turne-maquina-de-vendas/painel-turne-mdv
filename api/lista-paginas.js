@@ -428,16 +428,46 @@ export const PAGINAS = [
     "versao": "NOVO PREÇO V4"
   },
   {
-    "id": "lc_rota-45-manaus-funil-1-v6",
-    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-1-v6/",
+    "id": "manaus-funil-1-v6",
+    "url": "https://ricardonunes.convocacaonacional.com.br/manaus-funil-1-v6",
     "cidade": "Manaus (AM)",
-    "versao": "NOVOS TESTES"
+    "versao": "v6"
   },
   {
-    "id": "lc_rota-45-manaus-funil-2-v1",
-    "url": "https://turnemaquinadevendas.com.br/lc/rota-45-manaus-funil-2-v1",
+    "id": "manaus-funil-1-v7",
+    "url": "https://ricardonunes.convocacaonacional.com.br/manaus-funil-1-v7",
+    "cidade": "Manaus (AM)",
+    "versao": "v7"
+  },
+  {
+    "id": "manaus-funil-2-v1",
+    "url": "https://ricardonunes.convocacaonacional.com.br/manaus-funil-2-v1",
     "cidade": "Manaus (AM)",
     "versao": "VENDA WPP"
+  },
+  {
+    "id": "turne-mdv-manaus-v4",
+    "url": "https://ricardonunes.turnemaquinadevendas.com.br/turne-mdv-manaus-v4",
+    "cidade": "Manaus (AM)",
+    "versao": "v4"
+  },
+  {
+    "id": "turne-mdv-belem-v4",
+    "url": "https://ricardonunes.turnemaquinadevendas.com.br/turne-mdv-belem-v4",
+    "cidade": "Belém (PA)",
+    "versao": "v4"
+  },
+  {
+    "id": "turne-mdv-sinop-v4",
+    "url": "https://ricardonunes.turnemaquinadevendas.com.br/turne-mdv-sinop-v4",
+    "cidade": "Sinop (MT)",
+    "versao": "v4"
+  },
+  {
+    "id": "turne-mdv-cuiaba-v4",
+    "url": "https://ricardonunes.turnemaquinadevendas.com.br/turne-mdv-cuiaba-v4",
+    "cidade": "Cuiabá (MT)",
+    "versao": "v4"
   },
   {
     "id": "rgv-problema-x-solucao-v4",
@@ -612,5 +642,29 @@ export const PAGINAS = [
     "url": "https://convocacaonacional.com.br/l/pelotas-v4/",
     "cidade": "V4",
     "versao": "CNE"
+  },
+  {
+    "id": "xequemate-v2",
+    "url": "https://ricardonunes.grupor1.com/xequemate-v2",
+    "cidade": "V2",
+    "versao": "XMT"
+  },
+  {
+    "id": "xequemate-v4",
+    "url": "https://ricardonunes.grupor1.com/xequemate-v4",
+    "cidade": "V4",
+    "versao": "XMT"
+  },
+  {
+    "id": "xequemate-v5",
+    "url": "https://ricardonunes.grupor1.com/xequemate-v5",
+    "cidade": "V5",
+    "versao": "XMT"
+  },
+  {
+    "id": "xequemate-v6",
+    "url": "https://ricardonunes.grupor1.com/xequemate-v6",
+    "cidade": "V6",
+    "versao": "XMT"
   }
 ];
