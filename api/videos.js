@@ -39,6 +39,7 @@ const PASTAS = {
   /* CNE BH: vídeo em stories, o padrão da casa */
   cnebh: { id: "1ybwVpKVHWRlmDTXOfmMkQptsMhZ2FfCt", versao: "STORYS" },
   cne: { id: "1yn092fEuO28MaHqYlp3KQMa9qlZqvdEm", versao: "STORYS" },
+  xmt: { id: "1lOEv6xltbi3YBZxFn35-2jC7V0AUmIIN", versao: "STORYS" },
 };
 
 /* Pastas dos estáticos, por remessa. Não entram na lista de artes — as
