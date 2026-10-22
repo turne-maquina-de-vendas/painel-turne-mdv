@@ -35,7 +35,6 @@ const PASTAS = {
           caminho: true, pular: ["1wqRYVAbgTSmgEBbXvtclsB1qHjL9vazw"] }],
   rgv: { id: "1mhwJd0IgSt0hESPFP-cOIbVBdGZgElGy", versao: "STORYS" },
   mqv: { id: "1WaZEzFDHWqEbmpd5KsJxuF6-jL40gYt6", versao: "FEED" },
-  met: { id: "1QfctN83oT0rtk7MAm4hKUafE0YxG2_c_", versao: "FEED" },
   b10x: { id: "1vKkMAcVznyJ2iNRycxLK-j-qewAgdRFb", versao: "FEED" },
   /* CNE BH: vídeo em stories, o padrão da casa */
   cnebh: { id: "1ybwVpKVHWRlmDTXOfmMkQptsMhZ2FfCt", versao: "STORYS" },
@@ -50,7 +49,6 @@ const PASTAS_ARTE = {
           r04: "15tnCiKYCavZhqpP6m4Hl43Ut4GyfKhuB" },
   rgv:  { r02: "144l_lE4PsPGuY08nKitVcJfQjzvhuWoZ" },
   mqv:  { r03: "1Qi90lyu-9zDm0pFpPZCuEL39NNt7Hn65" },
-  met:  { r01: "1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i" },
   b10x: { r01: "1RCzM5ZmUAeYtY3OPTcw1YA_kMgXpt8NV",
           r02: "1bLvlFl7g1yoqn32OELhUWfC1RSTlOg8m",
           r03: "1Ibjz4_DSgvrnk3Hz21saIUMi5Z8LOyK3",

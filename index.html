@@ -1419,85 +1419,6 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
     ]}
   ];
 
-  /* Estáticos do Meteórico, versão feed. Uma remessa só, com as duas
-     cidades juntas — o código do cartão diz de qual cidade a arte é. */
-  var REMESSAS_MET = [
-    {id:"r01", nome:"Remessa 01",
-     drive:"https://drive.google.com/drive/folders/1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i?usp=share_link",
-     artes:[
-      {id:"cba_ad01",code:"CBA AD01",tipo:"IMG",files:["arts/met1_cba_ad01.jpg"]},
-      {id:"cba_ad02",code:"CBA AD02",tipo:"IMG",files:["arts/met1_cba_ad02.jpg"]},
-      {id:"cba_ad03",code:"CBA AD03",tipo:"IMG",files:["arts/met1_cba_ad03.jpg"]},
-      {id:"cba_ad04",code:"CBA AD04",tipo:"IMG",files:["arts/met1_cba_ad04.jpg"]},
-      {id:"cba_ad05",code:"CBA AD05",tipo:"IMG",files:["arts/met1_cba_ad05.jpg"]},
-      {id:"cba_ad06",code:"CBA AD06",tipo:"IMG",files:["arts/met1_cba_ad06.jpg"]},
-      {id:"cba_ad07",code:"CBA AD07",tipo:"IMG",files:["arts/met1_cba_ad07.jpg"]},
-      {id:"cba_ad08",code:"CBA AD08",tipo:"IMG",files:["arts/met1_cba_ad08.jpg"]},
-      {id:"cba_ad09",code:"CBA AD09",tipo:"IMG",files:["arts/met1_cba_ad09.jpg"]},
-      {id:"cba_ad10",code:"CBA AD10",tipo:"IMG",files:["arts/met1_cba_ad10-2.jpg"]},
-      {id:"cba_ad11",code:"CBA AD11",tipo:"IMG",files:["arts/met1_cba_ad11.jpg"]},
-      {id:"cba_ad12",code:"CBA AD12",tipo:"IMG",files:["arts/met1_cba_ad12.jpg"]},
-      {id:"cba_ad13",code:"CBA AD13",tipo:"IMG",files:["arts/met1_cba_ad13.jpg"]},
-      {id:"cba_ad14",code:"CBA AD14",tipo:"IMG",files:["arts/met1_cba_ad14.jpg"]}
-    ]}
-  ];
-
-  /* Landing pages do Meteórico: duas cidades, cada uma com frio e RMKT. */
-  var FUNIS_MET = [
-    {nome:"Meteórico", versao:"Ribeirão Preto · Público frio", paginas:[
-      {id:"met-ribeirao-preto", cidade:"V1", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://turnemaquinadevendas.com.br/met-ribeirao-preto/"},
-      {id:"met-ribeirao-preto-v2", cidade:"V2", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://turnemaquinadevendas.com.br/met-ribeirao-preto-v2/"}
-    ]},
-    {nome:"Meteórico", versao:"Ribeirão Preto · Público quente · RMKT", paginas:[
-      {id:"met-ribeirao-preto-v3", cidade:"V3", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://turnemaquinadevendas.com.br/met-ribeirao-preto-v3/"},
-      {id:"met-ribeirao-preto-v4", cidade:"V4", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://turnemaquinadevendas.com.br/met-ribeirao-preto-v4/"}
-    ]},
-    {nome:"Meteórico", versao:"Cuiabá · Público frio", paginas:[
-      {id:"met-cuiaba", cidade:"V1", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://turnemaquinadevendas.com.br/met-cuiaba/"},
-      {id:"met-cuiaba-v2", cidade:"V2", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://turnemaquinadevendas.com.br/met-cuiaba-v2/"}
-    ]},
-    {nome:"Meteórico", versao:"Cuiabá · Público quente · RMKT", paginas:[
-      {id:"met-cuiaba-v3", cidade:"V3", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://turnemaquinadevendas.com.br/met-cuiaba-v3/"},
-      {id:"met-cuiaba-v4", cidade:"V4", data:"—",
-       status:"", mobile:null, desktop:null,
-       url:"https://turnemaquinadevendas.com.br/met-cuiaba-v4/"}
-    ]}
-  ];
-
-  /* Criativos em vídeo do Meteórico, versão feed. O Drive separa por
-     cidade dentro da remessa 1. */
-  var VIDEOS_MET = [
-    {tipo:"Cuiabá · Remessa 01", videos:[
-      {id:"cba__ad01", code:"AD01", drive:"19e49728IebNNCwkR81nGjqazQWSspdNv"},
-      {id:"cba__ad02", code:"AD02", drive:"1fZ7XzefKtVzvJLIAmKrEDHrQvSCntMhF"},
-      {id:"cba__ad03", code:"AD03", drive:"1wgi8A9OvWw5mBP2MwZNcx7Af0lmmEwzy"},
-      {id:"cba__ad04", code:"AD04", drive:"1UbYAWSoZkJ5Pf8H7F9dPXEj-N1qhk6mo"},
-      {id:"cba__ad05", code:"AD05", drive:"1_TA8pYR90KBlMxCqw3Xp4TPbhKjQ6GF7"},
-      {id:"cba__ad06", code:"AD06", drive:"1Phg8Bx0HTrAvO_r7cdAOALwabejO8XfL"}
-    ]},
-    {tipo:"Ribeirão Preto · Remessa 01", videos:[
-      {id:"rp__ad01", code:"AD01", drive:"18B8YG-Wy698WYGYInBD79q33mB3V1hgL"},
-      {id:"rp__ad02", code:"AD02", drive:"1n-N_tskNcmtIZk3MTNEmhv7mPySn2YDe"},
-      {id:"rp__ad03", code:"AD03", drive:"1lhoc9G278GrNkQ4OcJ6giUYAx-xGWolV"},
-      {id:"rp__ad04", code:"AD04", drive:"1aW6N-502dhcRzM8VQ2Y4DnT0q0PFFly4"},
-      {id:"rp__ad05", code:"AD05", drive:"1c-2cWQPVwxe2yZCTVMcKN_ovJ6G2eYlm"},
-      {id:"rp__ad06", code:"AD06", drive:"1ZryoIPVOduqcFpavyuFGVuUNtsdokDCM"}
-    ]}
-  ];
 
   /* Black Friday 10X. Produto recém-aberto: a remessa já existe para a aba
      não nascer vazia, e recebe as artes quando elas vierem. */
@@ -2115,11 +2036,6 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           drive:"https://drive.google.com/drive/folders/1c-FI-jTph2zsrGMFg20q1-QxcVeSSlJD?usp=share_link",
           links:[{nome:"Dashboard de métricas", url:"https://maquina-vendas-online-set-26.lovable.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
-    met: {id:"met", nome:"Meteórico MQV", curto:"Meteórico", entregue:true,
-          capa:"arts/produto-met-2.jpg",
-          drive:"https://drive.google.com/drive/folders/1dutCsN5ZwyTIKTgB24wTJk_vmVICbD5i?usp=share_link",
-          links:[{nome:"Dashboard de métricas", url:"https://meteorico-set-26.lovable.app"}],
-          formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}},
     cnebh: {id:"cnebh", nome:"CNE BH", curto:"CNE BH",
           capa:"arts/produto-cnebh-2.jpg",
           drive:"https://drive.google.com/drive/folders/13lEBHTbK7Sp4HybwyUKn-6MyaCEwuIBx?usp=share_link",
@@ -2141,7 +2057,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
                  {nome:"Termo de Abertura", url:"https://black10xtap.netlify.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
-  var ORDEM_PRODUTOS = ["mdv", "rgv", "xmt", "cne", "cnebh", "b10x", "mqv", "met"];  // entregues por último
+  var ORDEM_PRODUTOS = ["mdv", "rgv", "xmt", "cne", "cnebh", "b10x", "mqv"];  // entregues por último
 
   var produto = null;                       // null = tela de escolha
   var REMESSAS = [], VIDEOS = [], FUNIS = [];
@@ -2158,7 +2074,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
      com a chave que já tem — e portanto com a aprovação que já recebeu.
      Uma varredura incompleta não pode fazer vídeo sumir da tela. */
   function videosDoProduto(id){
-    var base = {mdv:VIDEOS_MDV, rgv:VIDEOS_RGV, mqv:VIDEOS_MQV, met:VIDEOS_MET,
+    var base = {mdv:VIDEOS_MDV, rgv:VIDEOS_RGV, mqv:VIDEOS_MQV,
                 b10x:VIDEOS_B10X, cnebh:VIDEOS_CNEBH, cne:VIDEOS_CNE,
                 xmt:VIDEOS_XMT}[id] || [];
     var doDrive = (ACERVO[id] || {}).grupos || [];
@@ -2211,7 +2127,6 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       mdv: {remessas: REMESSAS_MDV, videos: videosDoProduto("mdv"), funis: FUNIS_MDV},
       rgv: {remessas: REMESSAS_RGV, videos: videosDoProduto("rgv"), funis: FUNIS_RGV},
       mqv: {remessas: REMESSAS_MQV, videos: videosDoProduto("mqv"), funis: FUNIS_MQV},
-      met: {remessas: REMESSAS_MET, videos: videosDoProduto("met"), funis: FUNIS_MET},
       b10x:{remessas: REMESSAS_B10X, videos: videosDoProduto("b10x"), funis: FUNIS_B10X},
       cnebh:{remessas: REMESSAS_CNEBH, videos: videosDoProduto("cnebh"), funis: FUNIS_CNEBH},
       cne:  {remessas: REMESSAS_CNE,   videos: videosDoProduto("cne"),   funis: FUNIS_CNE},
