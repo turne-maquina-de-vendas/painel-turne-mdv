@@ -55,7 +55,8 @@ const PASTAS_ARTE = {
           r03: "1Ibjz4_DSgvrnk3Hz21saIUMi5Z8LOyK3",
           r04: "1ckCo-m08Sy5jQH9XkGDwQ67rfUwKEKpK",
           r05: "1g5J6t01J37zEn_Bxvl6j3gKqsoSeDcvZ" },
-  cnebh:{ r01: "13lEBHTbK7Sp4HybwyUKn-6MyaCEwuIBx" },
+  cnebh:{ r01: "13lEBHTbK7Sp4HybwyUKn-6MyaCEwuIBx",
+          r02: "1MOpgdkVg_lDMKkZb0snxScSRGtaHlC48" },
   /* a Convocação separa por cidade antes da remessa: o mapa de AD→pasta
      sai da varredura, aqui fica só a raiz dos estáticos */
   cne:  { r0: "1yyCHfzPOAm6Ahnv7H952P4povx6VyIep" },
