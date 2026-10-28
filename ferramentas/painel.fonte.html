@@ -122,6 +122,36 @@
 @media (max-width:640px){ .topo-home img{height:24px} }
 
 
+/* Tema do Caixa Forte · Empresa Forte, tirado dos próprios anúncios: o
+   verde-petróleo quase preto do fundo e o dourado fosco do letreiro. */
+:root[data-produto="cfef"]{
+  --ink:#011C27;
+  --ink-2:#04131E;
+  --surface:#0A2430;
+  --surface-2:#0E2C39;
+  --surface-3:#163B49;
+
+  --line:rgba(255,255,255,.14);
+  --line-soft:rgba(255,255,255,.07);
+  --paper:#FFFFFF;
+  --dim:rgba(255,255,255,.66);
+  --dim-2:rgba(255,255,255,.42);
+
+  --gold:#C2B581;
+  --gold-dim:rgba(194,181,129,.34);
+  --sage:#8FA39B;
+  --no-acento:#0B1208;
+
+  --ok:#2FA84F;
+  --ok-bg:rgba(47,168,79,.14);
+  --ok-line:rgba(47,168,79,.36);
+  --bad:#E4564B;
+  --bad-bg:rgba(228,86,75,.14);
+  --bad-line:rgba(228,86,75,.38);
+
+  --grad-gold:linear-gradient(100deg,#A8995F 0%,#DCCE98 48%,#B5A66E 100%);
+}
+
 /* Tema do Xeque-Mate Tributário, tirado da ricardonunes.grupor1.com/xequemate:
    preto de fundo, o off-white do texto e o ouro mais fechado da página, com
    o vinho dela no lugar do vermelho puro — numa página sobre imposto o
@@ -2016,6 +2046,49 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   ];
 
 
+  /* Caixa Forte · Empresa Forte. Imagem em feed, o padrão da casa.
+     Na remessa 02 o número da pasta não bate com o código do AD: o
+     código vem do nome do arquivo, que é o que a equipe usa. */
+  var REMESSAS_CFEF = [
+    {id:"r01", nome:"Remessa 01",
+     drive:"https://drive.google.com/drive/folders/1JSPtos5jfWrcXyuibxHEMtdFHRy2MQnX?usp=share_link",
+     artes:[
+      {id:"ad01",code:"AD01",tipo:"IMG",files:["arts/cfef1_ad01.jpg"]},
+      {id:"ad02",code:"AD02",tipo:"IMG",files:["arts/cfef1_ad02.jpg"]},
+      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/cfef1_ad03.jpg"]},
+      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/cfef1_ad04.jpg"]},
+      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/cfef1_ad05.jpg"]},
+      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/cfef1_ad06.jpg"]},
+      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/cfef1_ad07.jpg"]},
+      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/cfef1_ad08.jpg"]},
+      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/cfef1_ad09.jpg"]},
+      {id:"ad10",code:"AD10",tipo:"IMG",files:["arts/cfef1_ad10.jpg"]},
+      {id:"ad11",code:"AD11",tipo:"IMG",files:["arts/cfef1_ad11.jpg"]},
+      {id:"ad12",code:"AD12",tipo:"IMG",files:["arts/cfef1_ad12.jpg"]},
+      {id:"ad13",code:"AD13",tipo:"IMG",files:["arts/cfef1_ad13.jpg"]},
+      {id:"ad14",code:"AD14",tipo:"IMG",files:["arts/cfef1_ad14.jpg"]},
+      {id:"ad15",code:"AD15",tipo:"IMG",files:["arts/cfef1_ad15.jpg"]},
+      {id:"ad16",code:"AD16",tipo:"IMG",files:["arts/cfef1_ad16.jpg"]}
+    ]},
+    {id:"r02", nome:"Remessa 02",
+     drive:"https://drive.google.com/drive/folders/1lxgUfGfw_9ouhVPHeHhOs_lPXhv-eJFQ?usp=share_link",
+     artes:[
+      {id:"ad03",code:"AD03",tipo:"IMG",files:["arts/cfef2_ad03.jpg"]},
+      {id:"ad04",code:"AD04",tipo:"IMG",files:["arts/cfef2_ad04.jpg"]},
+      {id:"ad05",code:"AD05",tipo:"IMG",files:["arts/cfef2_ad05.jpg"]},
+      {id:"ad06",code:"AD06",tipo:"IMG",files:["arts/cfef2_ad06.jpg"]},
+      {id:"ad07",code:"AD07",tipo:"IMG",files:["arts/cfef2_ad07.jpg"]},
+      {id:"ad08",code:"AD08",tipo:"IMG",files:["arts/cfef2_ad08.jpg"]},
+      {id:"ad09",code:"AD09",tipo:"IMG",files:["arts/cfef2_ad09.jpg"]},
+      {id:"ad12",code:"AD12",tipo:"IMG",files:["arts/cfef2_ad12.jpg"]}
+    ]}
+  ];
+
+  /* ainda sem vídeo e sem página: nascem aqui para a varredura cair em algo */
+  var VIDEOS_CFEF = [];
+  var FUNIS_CFEF = [];
+
+
   var PRODUTOS = {
     mdv: {id:"mdv", nome:"Turnê Máquina de Vendas", curto:"Turnê MDV",
           capa:"arts/produto-mdv.jpg",
@@ -2050,6 +2123,10 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
           driveVideos:"https://drive.google.com/drive/folders/1lOEv6xltbi3YBZxFn35-2jC7V0AUmIIN?usp=share_link",
           /* os estáticos vêm em feed; os vídeos, em stories */
           formatoVideo:{nome:"Stories", proporcao:"9 : 16", css:"9/16"}},
+    cfef: {id:"cfef", nome:"Caixa Forte", curto:"Caixa Forte",
+          capa:"arts/produto-cfef.jpg",
+          drive:"https://drive.google.com/drive/folders/15RbdC77UgAdffbiI-3jD1UnvkYEpnMwe?usp=share_link",
+          formatoVideo:{nome:"Stories", proporcao:"9 : 16", css:"9/16"}},
     b10x: {id:"b10x", nome:"Black Friday 10X", curto:"Black 10X",
           capa:"arts/produto-b10x.jpg", drive:null,
           driveVideos:"https://drive.google.com/drive/folders/1vKkMAcVznyJ2iNRycxLK-j-qewAgdRFb?usp=sharing",
@@ -2057,7 +2134,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
                  {nome:"Termo de Abertura", url:"https://black10xtap.netlify.app"}],
           formatoVideo:{nome:"Feed", proporcao:"4 : 5", css:"4/5"}}
   };
-  var ORDEM_PRODUTOS = ["mdv", "rgv", "xmt", "cne", "cnebh", "b10x", "mqv"];  // entregues por último
+  var ORDEM_PRODUTOS = ["mdv", "rgv", "cfef", "xmt", "cne", "cnebh", "b10x", "mqv"];  // entregues por último
 
   var produto = null;                       // null = tela de escolha
   var REMESSAS = [], VIDEOS = [], FUNIS = [];
@@ -2076,7 +2153,7 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
   function videosDoProduto(id){
     var base = {mdv:VIDEOS_MDV, rgv:VIDEOS_RGV, mqv:VIDEOS_MQV,
                 b10x:VIDEOS_B10X, cnebh:VIDEOS_CNEBH, cne:VIDEOS_CNE,
-                xmt:VIDEOS_XMT}[id] || [];
+                xmt:VIDEOS_XMT, cfef:VIDEOS_CFEF}[id] || [];
     var doDrive = (ACERVO[id] || {}).grupos || [];
     if(!doDrive.length) return base;
 
@@ -2130,7 +2207,8 @@ table.paginas .nota.vazia{color:var(--dim-2);border-color:var(--line);background
       b10x:{remessas: REMESSAS_B10X, videos: videosDoProduto("b10x"), funis: FUNIS_B10X},
       cnebh:{remessas: REMESSAS_CNEBH, videos: videosDoProduto("cnebh"), funis: FUNIS_CNEBH},
       cne:  {remessas: REMESSAS_CNE,   videos: videosDoProduto("cne"),   funis: FUNIS_CNE},
-      xmt:  {remessas: REMESSAS_XMT,   videos: videosDoProduto("xmt"),   funis: FUNIS_XMT}
+      xmt:  {remessas: REMESSAS_XMT,   videos: videosDoProduto("xmt"),   funis: FUNIS_XMT},
+      cfef: {remessas: REMESSAS_CFEF,  videos: videosDoProduto("cfef"),  funis: FUNIS_CFEF}
     }[id] || {remessas: [], videos: [], funis: []};
     REMESSAS = acervo.remessas;
     VIDEOS   = acervo.videos;

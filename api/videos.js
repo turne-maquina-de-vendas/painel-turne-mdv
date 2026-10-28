@@ -60,6 +60,8 @@ const PASTAS_ARTE = {
   /* a Convocação separa por cidade antes da remessa: o mapa de AD→pasta
      sai da varredura, aqui fica só a raiz dos estáticos */
   cne:  { r0: "1yyCHfzPOAm6Ahnv7H952P4povx6VyIep" },
+  cfef: { r01: "1JSPtos5jfWrcXyuibxHEMtdFHRy2MQnX",
+          r02: "1lxgUfGfw_9ouhVPHeHhOs_lPXhv-eJFQ" },
   xmt:  { r01: "1GRJ08fnIha7SkhRrL7CJyDEeMhzLY-_9",
           r02: "1M8EyTaJLJ1lqIl5O07gvmNT5ZUH7BQO5" },
 };
