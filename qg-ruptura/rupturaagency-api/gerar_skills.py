@@ -6,11 +6,15 @@ base = pathlib.Path.home() / '.claude/skills'
 arquivos = ['reels-viral/SKILL.md', 'reels-viral/references/dna-reels.md', 'reels-viral/references/crescimento-perfil.md', 'reels-viral/references/primal-branding.md',
             'carrossel-viral/SKILL.md', 'carrossel-viral/references/dna-lucasfigueiredoart.md',
             'washington-olivetto/SKILL.md', 'washington-olivetto/references/repertorio.md']
-partes = [f'<documento nome="{a}">\n{(base / a).read_text().strip()}\n</documento>' for a in arquivos]
-texto = '\n\n'.join(partes)
-design = (base / 'high-end-visual-design/SKILL.md').read_text().strip()
-pathlib.Path(__file__).with_name('lib').joinpath('skills.js').write_text('// Gerado por gerar_skills.py. Não editar à mão.\nexport const SKILLS = ' + json.dumps(texto, ensure_ascii=False) + ';\nexport const SKILL_DESIGN = ' + json.dumps(design, ensure_ascii=False) + ';\n')
-print(len(texto), 'caracteres')
+# Sem as skills nesta máquina, mantém o lib/skills.js atual e gera só o lib/site.js.
+if all((base / a).exists() for a in arquivos) and (base / 'high-end-visual-design/SKILL.md').exists():
+    partes = [f'<documento nome="{a}">\n{(base / a).read_text().strip()}\n</documento>' for a in arquivos]
+    texto = '\n\n'.join(partes)
+    design = (base / 'high-end-visual-design/SKILL.md').read_text().strip()
+    pathlib.Path(__file__).with_name('lib').joinpath('skills.js').write_text('// Gerado por gerar_skills.py. Não editar à mão.\nexport const SKILLS = ' + json.dumps(texto, ensure_ascii=False) + ';\nexport const SKILL_DESIGN = ' + json.dumps(design, ensure_ascii=False) + ';\n')
+    print(len(texto), 'caracteres')
+else:
+    print('Skills não encontradas: lib/skills.js mantido como está.')
 
 # Prompts e DNA: uma fonte só, o agencia-3d/index.html.
 html = pathlib.Path(__file__).parent.parent.joinpath('agencia-3d/index.html').read_text()

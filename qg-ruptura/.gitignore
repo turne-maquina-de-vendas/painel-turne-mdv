@@ -1,8 +1,5 @@
 node_modules/
 .netlify/
+.vercel/
 LOGIN.txt
 .env*
-# Gerados pelo gerar_skills.py e pelo deploy.sh
-rupturaagency-api/lib/skills.js
-rupturaagency-api/lib/site.js
-rupturaagency-site/

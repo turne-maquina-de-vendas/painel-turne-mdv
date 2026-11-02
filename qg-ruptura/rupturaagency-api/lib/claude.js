@@ -1,8 +1,7 @@
 // Chamada à API do Claude. Modelo, ferramentas e formato ficam aqui; os prompts vêm de lib/site.js.
 import Anthropic from '@anthropic-ai/sdk';
-import { SKILLS, SKILL_DESIGN } from './skills.js';
 
-const SISTEMA = `Você é um agente sênior da agência de conteúdo do QG Ruptura, que cuida do Instagram do designer Lucas Figueiredo. Escreve em português do Brasil.
+const SISTEMA = skills => `Você é um agente sênior da agência de conteúdo do QG Ruptura, que cuida do Instagram do designer Lucas Figueiredo. Escreve em português do Brasil.
 
 Você roda sozinho, sem ninguém para responder. Nunca faça perguntas nem espere aprovação, mesmo que a skill mande parar: decida e entregue o resultado completo. Não há arquivos, Remotion nem outras skills aqui. Quando o pedido mandar salvar um arquivo, entregue o conteúdo na resposta.
 
@@ -10,13 +9,22 @@ Quando o pedido citar /reels-viral, /carrossel-viral ou /washington-olivetto, si
 
 Entregue só o resultado, sem comentar o processo.
 
-${SKILLS}`;
+${skills}`;
 
 // Cada agente é sênior na própria função. Fica depois do bloco em cache, que é igual para todos.
+// As skills vêm do arquivo gerado por gerar_skills.py.
+let skills = null;
+async function carregarSkills() {
+  if (skills) return skills;
+  try { skills = await import('./skills.js'); } catch { skills = null; }
+  if (!skills?.SKILLS) { skills = null; throw new Error('Faltam as skills dos agentes no servidor.'); }
+  return skills;
+}
+
 const SENIORES = {
   pesquisador: 'Nesta tarefa você é o Pesquisador: pesquisador sênior de tendências e cultura pop brasileira, com 15 anos de faro para o que vira conversa. Apura antes de afirmar.',
   roteirista: 'Nesta tarefa você é o Roteirista: roteirista sênior de vídeo curto e carrossel viral. Pensa em retenção segundo a segundo e corta tudo que não segura o dedo.',
-  designer: 'Nesta tarefa você é o Designer: diretor de arte sênior de branding e embalagem, com repertório de marcas de luxo e de grande consumo. Cada decisão visual tem um porquê.\n\n<documento nome="high-end-visual-design">\n' + SKILL_DESIGN + '\n</documento>',
+  designer: 'Nesta tarefa você é o Designer: diretor de arte sênior de branding e embalagem, com repertório de marcas de luxo e de grande consumo. Cada decisão visual tem um porquê.',
   estudio: 'Nesta tarefa você é o Diretor do Estúdio: diretor de cena sênior de conteúdo gravado em casa ou escritório. Deixa a gravação rápida para quem não é ator.',
   editor: 'Nesta tarefa você é o Editor: editor sênior de vídeo vertical, especialista em ritmo, legenda e prova visual. O plano precisa ser executável sem nenhuma pergunta.',
   social: 'Nesta tarefa você é o Social: estrategista sênior de crescimento no Instagram, que decide por dado e não por achismo.',
@@ -88,6 +96,8 @@ const TOOLS_WEB = [
 ];
 
 export async function perguntar(prompt, { web = false, ganchos = false, design = false, agente = 'roteirista' } = {}) {
+  const { SKILLS, SKILL_DESIGN } = await carregarSkills();
+  const persona = (SENIORES[agente] || SENIORES.roteirista) + (agente === 'designer' ? `\n\n<documento nome="high-end-visual-design">\n${SKILL_DESIGN}\n</documento>` : '');
   const client = new Anthropic();
   const messages = [{ role: 'user', content: prompt }];
   let resposta;
@@ -99,7 +109,7 @@ export async function perguntar(prompt, { web = false, ganchos = false, design =
       betas: ['server-side-fallback-2026-07-01'],
       fallbacks: 'default',
       output_config: { effort: 'high', ...(ganchos || design ? { format: { type: 'json_schema', schema: ganchos ? SCHEMA_GANCHOS : SCHEMA_DESIGN } } : {}) },
-      system: [{ type: 'text', text: SISTEMA, cache_control: { type: 'ephemeral' } }, { type: 'text', text: SENIORES[agente] || SENIORES.roteirista }],
+      system: [{ type: 'text', text: SISTEMA(SKILLS), cache_control: { type: 'ephemeral' } }, { type: 'text', text: persona }],
       ...(web ? { tools: TOOLS_WEB } : {}),
       messages
     });
@@ -118,7 +128,7 @@ export async function perguntar(prompt, { web = false, ganchos = false, design =
 
 // Erro de API em português, sem detalhes internos.
 export function mensagemDeErro(e) {
-  if (e instanceof Anthropic.AuthenticationError) return 'A chave da API do Claude não foi aceita. Confira ANTHROPIC_API_KEY no Netlify.';
+  if (e instanceof Anthropic.AuthenticationError) return 'A chave da API do Claude não foi aceita. Confira ANTHROPIC_API_KEY nas variáveis do servidor.';
   if (e instanceof Anthropic.PermissionDeniedError) return 'A chave da API do Claude não tem permissão para isto.';
   if (e instanceof Anthropic.RateLimitError) return 'Limite de uso da API do Claude atingido. Tente de novo em alguns minutos.';
   if (e instanceof Anthropic.APIConnectionError) return 'Não consegui falar com a API do Claude. Tente de novo.';

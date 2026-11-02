@@ -66,4 +66,9 @@ const ps = await fetch(U + '/_pedidos').then(x => x.json());
 console.log(ps.length, 'chamadas', JSON.stringify(ps.slice(0, 3)));
 ok(ps.every(p => p.model === 'claude-opus-5-5' && p.fallbacks === 'default' && p.esforco === 'high'), 'modelo, fallback e esforço');
 ok(ps.filter(p => p.web).every(p => /Aprofunde|Pesquisa da semana/.test(p.inicio)) && ps.some(p => p.web), 'só a pesquisa usa web');
+if (process.env.TESTE_VERCEL) {
+  ok((await fetch(U + '/api/semanal')).status === 401, 'cron sem segredo é recusado');
+  ok((await fetch(U + '/api/semanal', { headers: { authorization: 'Bearer cron-teste' } })).status === 200, 'cron dispara a pesquisa');
+  ok((await fetch(U + '/api/agente-background', { method: 'POST', body: '{"acao":"semana"}' })).status === 401, 'agente em segundo plano pede token');
+}
 process.exit(process.exitCode || 0);

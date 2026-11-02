@@ -1,5 +1,6 @@
 // A esteira autônoma: cada etapa roda um agente, grava no card e passa para o próximo. Para onde depende de gente (gravar, editar).
 import { perguntar, mensagemDeErro } from './claude.js';
+import { disparar } from './disparar.js';
 import { atualizarEstado, lerEstado, loja } from './estado.js';
 import { FLUXO, usarEstado, promptDe, lerPesquisa, contexto, arroba } from './site.js';
 
@@ -116,28 +117,40 @@ async function planejarEdicao(c) {
 }
 
 // so: refaz só um passo (ganchos, roteiro, legenda). Sem ele, anda até precisar de gente.
-export async function rodarCard(id, so) {
+const PASSOS = [
+  [c => c.etapa === 'pauta', 'pesquisador', pesquisar],
+  [c => c.etapa === 'gancho' && !c.ganchos?.length, 'roteirista', criarGanchos],
+  [c => c.etapa === 'gancho', 'roteirista', escreverRoteiro],
+  [c => c.etapa === 'design' && !c.design, 'designer', criarDesign],
+  [c => c.etapa === 'gravar' && !c.planoGravacao, 'estudio', planejarGravacao],
+  [c => c.etapa === 'edicao' && !c.briefEdicao && c.formato !== 'Carrossel', 'editor', planejarEdicao],
+  [c => c.etapa === 'postar' && !c.legenda, 'social', escreverLegenda]
+];
+
+// so: refaz só um passo. Sem ele, anda até precisar de gente.
+// Na Vercel cada passo vira uma chamada nova, porque o tempo de cada Function é menor que a esteira inteira.
+export async function rodarCard(id, so, origem) {
   let quem = 'pesquisador';
   try {
     if (so === 'ganchos') { quem = 'roteirista'; await criarGanchos({ id }); await escreverRoteiro({ id }); }
     else if (so === 'roteiro') { quem = 'roteirista'; await escreverRoteiro({ id }); }
     else if (so === 'legenda') { quem = 'social'; await escreverLegenda({ id }); }
-    else if (so === 'design') { quem = 'designer'; await mudarCard(id, x => { x.mockup = true; }); await criarDesign({ id, ...(await lerCard(id)) }); }
+    else if (so === 'design') { quem = 'designer'; await mudarCard(id, x => { x.mockup = true; }); await criarDesign({ id }); }
     else if (so === 'plano') { quem = 'estudio'; await planejarGravacao({ id }); }
     else if (so === 'edicao') { quem = 'editor'; await planejarEdicao({ id }); }
     else {
-      let c = await lerCard(id);
-      if (c?.etapa === 'pauta') { await pesquisar(c); c = await lerCard(id); }
-      if (c?.etapa === 'gancho') {
-        quem = 'roteirista';
-        if (!c.ganchos?.length) await criarGanchos(c);
-        await escreverRoteiro(c);
-        c = await lerCard(id);
+      for (let volta = 0; volta < PASSOS.length + 1; volta++) {
+        const c = await lerCard(id);
+        const passo = c && PASSOS.find(([precisa]) => precisa(c));
+        if (!passo) break;
+        quem = passo[1];
+        await passo[2](c);
+        if (process.env.VERCEL && origem) {
+          const r = await disparar(origem, { cardId: id });
+          if (!r.ok) throw new Error('Não consegui passar para o próximo agente. Tente de novo.');
+          return;
+        }
       }
-      if (c?.etapa === 'design' && !c.design) { quem = 'designer'; await criarDesign(c); c = await lerCard(id); }
-      if (c?.etapa === 'gravar' && !c.planoGravacao) { quem = 'estudio'; await planejarGravacao(c); c = await lerCard(id); }
-      if (c?.etapa === 'edicao' && !c.briefEdicao && c.formato !== 'Carrossel') { quem = 'editor'; await planejarEdicao(c); c = await lerCard(id); }
-      if (c?.etapa === 'postar' && !c.legenda) { quem = 'social'; await escreverLegenda(c); }
     }
     await mudarCard(id, x => { delete x.agente; });
   } catch (e) {

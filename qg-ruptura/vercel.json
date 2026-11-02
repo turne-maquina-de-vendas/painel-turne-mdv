@@ -1,0 +1,16 @@
+{
+  "buildCommand": "",
+  "outputDirectory": "rupturaagency-site",
+  "functions": {
+    "api/agente-background.js": { "maxDuration": 300 }
+  },
+  "crons": [
+    { "path": "/api/semanal", "schedule": "0 12 * * 2" }
+  ],
+  "headers": [
+    { "source": "/(.*)", "headers": [
+      { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+      { "key": "X-Content-Type-Options", "value": "nosniff" }
+    ] }
+  ]
+}

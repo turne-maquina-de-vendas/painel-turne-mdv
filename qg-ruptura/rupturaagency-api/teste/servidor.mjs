@@ -6,11 +6,17 @@ import { join } from 'node:path';
 import { BlobsServer } from '@netlify/blobs/server';
 
 const PORTA = Number(process.env.PORT || 8765);
+const VERCEL = !!process.env.TESTE_VERCEL;
+if (VERCEL) await iniciarSupabaseSimulado();
+else await iniciarBlobsLocal();
+
+async function iniciarBlobsLocal() {
 const blobs = new BlobsServer({ directory: mkdtempSync(join(tmpdir(), 'blobs-')), token: 'teste' });
 const { port: portaBlobs } = await blobs.start();
 process.env.NETLIFY_BLOBS_CONTEXT = Buffer.from(JSON.stringify({ edgeURL: `http://localhost:${portaBlobs}`, uncachedEdgeURL: `http://localhost:${portaBlobs}`, primaryRegion: 'us-east-1', apiURL: `http://localhost:${portaBlobs}`, siteID: 'teste', token: 'teste' })).toString('base64');
 
 // O servidor local de Blobs não devolve ETag na leitura (o Netlify devolve). Sem isto a gravação condicional não seria testada.
+globalThis.__x = 0;
 const fetchOriginal = globalThis.fetch;
 let filaDeGravacao = Promise.resolve();
 globalThis.fetch = async (url, op = {}) => {
@@ -31,6 +37,35 @@ globalThis.fetch = async (url, op = {}) => {
     return new Response(corpo, { status: r.status, headers: h });
   }
 };
+}
+
+// Supabase simulado: o pedaço do PostgREST e do Storage que o projeto usa.
+async function iniciarSupabaseSimulado() {
+  const kv = new Map(), arquivos = new Map();
+  const sb = http.createServer((req, res) => {
+    const b = []; req.on('data', d => b.push(d)); req.on('end', () => {
+      const u = new URL(req.url, 'http://x'), corpo = Buffer.concat(b), sai = (st, o) => { res.writeHead(st, { 'content-type': 'application/json' }); res.end(JSON.stringify(o)); };
+      if (req.headers.apikey !== 'teste-service') return sai(401, {});
+      if (u.pathname.startsWith('/storage/v1/object/mockups/')) {
+        if (req.method === 'POST') { arquivos.set(u.pathname, [corpo, req.headers['content-type']]); return sai(200, {}); }
+        const a = arquivos.get(u.pathname); if (!a) return sai(400, {});
+        res.writeHead(200, { 'content-type': a[1] }); return res.end(a[0]);
+      }
+      const ch = (u.searchParams.get('chave') || '').replace(/^eq\./, ''), ver = (u.searchParams.get('versao') || '').replace(/^eq\./, '');
+      if (req.method === 'GET') return sai(200, kv.has(ch) ? [kv.get(ch)] : []);
+      const d = JSON.parse(corpo);
+      if (req.method === 'PATCH') { const l = kv.get(ch); if (!l || String(l.versao) !== ver) return sai(200, []); const n = { chave: ch, ...d }; kv.set(ch, n); return sai(200, [n]); }
+      if (kv.has(d.chave) && /ignore/.test(req.headers.prefer)) return sai(201, []);
+      kv.set(d.chave, d); sai(201, [d]);
+    });
+  });
+  await new Promise(r => sb.listen(0, r));
+  process.env.SUPABASE_URL = `http://localhost:${sb.address().port}/`;
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'teste-service';
+  process.env.VERCEL = '1';
+  process.env.CRON_SECRET = 'cron-teste';
+}
+
 // API do Claude simulada: responde em SSE conforme o pedido e guarda o que recebeu.
 const pedidos = [];
 const claude = http.createServer((req, res) => {
@@ -59,7 +94,16 @@ process.env.ANTHROPIC_API_KEY = 'teste';
 process.env.RUPTURA_SENHA = 'teste-local';
 process.env.SESSAO_SEGREDO = 'segredo-local-so-para-teste-0123456789';
 
-const rotas = {
+const web = m => r => m.default.fetch(r);
+const rotas = VERCEL ? {
+  '/api/login': web(await import('../../api/login.js')),
+  '/api/estado': web(await import('../../api/estado.js')),
+  '/api/agente': web(await import('../../api/agente.js')),
+  '/api/metricas': web(await import('../../api/metricas.js')),
+  '/api/mockup': web(await import('../../api/mockup.js')),
+  '/api/semanal': web(await import('../../api/semanal.js')),
+  '/api/agente-background': web(await import('../../api/agente-background.js'))
+} : {
   '/api/login': (await import('../netlify/functions/login.js')).default,
   '/api/estado': (await import('../netlify/functions/estado.js')).default,
   '/api/agente': (await import('../netlify/functions/agente.js')).default,
@@ -75,7 +119,7 @@ http.createServer(async (req, res) => {
   if (!f) { res.setHeader('content-type', 'text/html; charset=utf-8'); return res.end(readFileSync(new URL('../../rupturaagency-site/index.html', import.meta.url))); }
   const b = []; for await (const d of req) b.push(d);
   const pedido = new Request(url, { method: req.method, headers: req.headers, ...(b.length ? { body: Buffer.concat(b) } : {}) });
-  if (url.pathname.includes('background')) { f(pedido).catch(console.error); res.statusCode = 202; return res.end(); }
+  if (url.pathname.includes('background') && !VERCEL) { f(pedido).catch(console.error); res.statusCode = 202; return res.end(); }
   const r = await f(pedido);
   res.statusCode = r.status; r.headers.forEach((v, k) => res.setHeader(k, v));
   res.end(Buffer.from(await r.arrayBuffer()));

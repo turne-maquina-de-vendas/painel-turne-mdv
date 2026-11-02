@@ -4,7 +4,7 @@
 import { loja, atualizarEstado } from '../../lib/estado.js';
 import { lerSessao, json, naoAutorizado } from '../../lib/sessao.js';
 
-const LIMITE = 5 * 1024 * 1024;
+const LIMITE = 4 * 1024 * 1024; // a Vercel recusa corpo acima de 4,5 MB
 const TIPOS = { 255: ['image/jpeg', 'jpg'], 137: ['image/png', 'png'], 82: ['image/webp', 'webp'] };
 
 export default async (request) => {
@@ -23,7 +23,7 @@ export default async (request) => {
   const card = u.searchParams.get('card') || '', peca = Number(u.searchParams.get('peca'));
   if (!/^[\w-]+$/.test(card) || !Number.isInteger(peca) || peca < 0) return json({ erro: 'Pedido inválido.' }, 400);
   const dados = await request.arrayBuffer();
-  if (dados.byteLength > LIMITE) return json({ erro: 'A imagem passa de 5 MB.' }, 413);
+  if (dados.byteLength > LIMITE) return json({ erro: 'A imagem passa de 4 MB.' }, 413);
   const tipo = TIPOS[new Uint8Array(dados)[0]];
   if (!tipo) return json({ erro: 'Envie JPG, PNG ou WebP.' }, 415);
 

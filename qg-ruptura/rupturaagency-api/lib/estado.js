@@ -1,8 +1,10 @@
 // Estado do QG no Netlify Blobs. Toda gravação usa etag: se outro salvou no meio, relê e tenta de novo.
 import { getStore } from '@netlify/blobs';
+import { lojaSupabase } from './supabase.js';
 
 const CHAVE = 'estado';
-export const loja = () => getStore({ name: 'ruptura', consistency: 'strong' });
+// Com SUPABASE_URL (Vercel) usa o Supabase; sem ela (Netlify) segue no Netlify Blobs.
+export const loja = () => process.env.SUPABASE_URL ? lojaSupabase() : getStore({ name: 'ruptura', consistency: 'strong' });
 
 export async function lerEstado() {
   const r = await loja().getWithMetadata(CHAVE, { type: 'json' });

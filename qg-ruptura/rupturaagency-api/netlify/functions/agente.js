@@ -17,7 +17,7 @@ export default async (request) => {
   const chave = !!process.env.ANTHROPIC_API_KEY;
   if (request.method === 'GET') return json({ chave });
   if (request.method !== 'POST') return json({ erro: 'Método não permitido.' }, 405);
-  if (!chave) return json({ erro: 'Falta a chave da API do Claude no Netlify.' }, 503);
+  if (!chave) return json({ erro: 'Falta a chave da API do Claude no servidor.' }, 503);
 
   let corpo = {};
   try { corpo = await request.json(); } catch {}

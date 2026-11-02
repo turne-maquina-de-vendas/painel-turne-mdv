@@ -1421,7 +1421,7 @@ function preencherGaveta(id){
           ${agenteHTML(semana, `<button class="btn min" data-ac="geral" data-acao="semana">Tentar de novo</button>`)}
           <div class="bts">${ocupado(semana)?'':`<button class="btn min prim" data-ac="geral" data-acao="semana">Buscar pautas agora</button>`}<button class="btn min" data-ac="nova">Pauta avulsa</button></div>
           <details class="manual"><summary>Fazer manualmente</summary>${manual}</details></div>`
-        : `<div class="secao ciclo"><h3>Ciclo de terça · próxima pesquisa ${proximaTerca()}</h3>${nuvem.on?'<p class="dica-card">Agentes desligados: falta a chave da API do Claude no Netlify.</p>':''}${manual}</div>`;
+        : `<div class="secao ciclo"><h3>Ciclo de terça · próxima pesquisa ${proximaTerca()}</h3>${nuvem.on?'<p class="dica-card">Agentes desligados: falta a chave da API do Claude no servidor.</p>':''}${manual}</div>`;
     }
     h += `<div class="secao"><h3>Na mesa (${cs.length})</h3>${cs.length?cs.map(c=>cardHTML(c,id)).join(''):`<div class="vazio">${id==='estudio'?'Nada para gravar agora.':id==='editor'?'Sem bruto esperando edição.':id==='designer'?'Nenhum carrossel ou mockup esperando.':id==='roteirista'?'Nenhum assunto esperando gancho. Mande uma pauta do Pesquisador.':'Sem pauta. Rode a pesquisa da semana e cole o resultado acima.'}</div>`}</div>`;
     h += `<p class="skill">Skill sugerida: <code>${m.skill}</code></p>`;

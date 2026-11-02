@@ -1,0 +1,1694 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QG Ruptura</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Layout: andar corporativo em 3D ocupando a tela; vidro fosco clínico nos controles (marca no topo, barra do fluxo embaixo, ficha da mesa à direita / bottom sheet no celular) */
+:root{
+  --void:#060a18;            /* céu da noite */
+  --glass:rgba(13,14,19,.72);
+  --glass-solid:#121318;
+  --panel:#181a20;
+  --ink:#f4efe8;  --ink2:#9b958e;  --line:rgba(255,255,255,.1);
+  --lumon:#ff4423;           /* cor da marca */
+  --signal:#ff7a5c;          /* neon */
+  --onair:#ff4423;
+  --serif:"Instrument Serif", Georgia, serif;
+  --sans:"Geist", "SF Pro Text", system-ui, sans-serif;
+  --mono:"Geist Mono", ui-monospace, Menlo, monospace;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--void);color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+#cena{position:fixed;inset:0;display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+#cena.arrastando{cursor:grabbing}
+#cena.sobre{cursor:pointer}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--lumon);outline-offset:2px}
+.vidro{background:var(--glass);backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2);border:1px solid rgba(255,255,255,.6);box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 18px 50px rgba(5,12,8,.28)}
+
+.hud{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));pointer-events:none;z-index:5}
+.hud>*{pointer-events:auto}
+.marca{border-radius:14px;padding:12px 16px 11px;display:flex;align-items:center;gap:12px}
+.selo{width:30px;height:30px;border-radius:50%;background:var(--lumon);display:grid;place-items:center;flex:none}
+.selo::after{content:"";width:10px;height:10px;border-radius:50%;border:2px solid var(--signal);box-shadow:0 0 10px var(--signal)}
+.marca h1{margin:0;font-size:16px;font-weight:600;letter-spacing:-.01em;line-height:1.1}
+.arroba{background:none;border:0;padding:0;font-family:var(--mono);font-size:11.5px;color:var(--ink2);text-align:left;margin-top:2px}
+.arroba:hover{color:var(--ink)}
+.acoes{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.btn{border:1px solid var(--line);background:var(--glass-solid);padding:10px 15px;border-radius:11px;font-weight:500;font-size:13px;white-space:nowrap;color:var(--ink)}
+.btn:hover{background:#fff}
+.btn.prim{background:var(--lumon);border-color:var(--lumon);color:#f3f6f2}
+.btn.prim:hover{background:#174d38}
+.hud .btn{backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);background:var(--glass)}
+.hud .btn.prim{background:var(--lumon)}
+.btn.min{padding:7px 11px;font-size:12px;border-radius:9px}
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
+
+.fluxo{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);display:flex;justify-content:center;gap:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));z-index:4;pointer-events:none}
+.fluxo>*{pointer-events:auto}
+.fluxo ol{list-style:none;margin:0;padding:5px;display:flex;gap:2px;border-radius:14px;overflow-x:auto;max-width:100%;min-width:0}
+.fluxo li{display:flex;align-items:center}
+.fluxo li+li::before{content:"";width:14px;height:1px;background:var(--ink2);opacity:.4;margin:0 2px}
+.etapa{background:none;border:0;border-radius:10px;padding:7px 11px;display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.etapa:hover,.etapa.ativa{background:rgba(29,92,67,.1)}
+.etapa small{font-size:11px;color:var(--ink2)}
+.etapa strong{font-size:13.5px;font-weight:500;white-space:nowrap;display:flex;align-items:baseline;gap:6px}
+.etapa strong i{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--lumon);font-variant-numeric:tabular-nums}
+.chip-ass{border-radius:14px;border:0;padding:0 16px;display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:500;flex:none}
+.chip-ass .ponto{width:8px;height:8px;border-radius:50%;background:#9aa69f}
+.chip-ass.cobrando .ponto{background:var(--signal);box-shadow:0 0 0 0 rgba(63,224,176,.6);animation:pulsa 1.8s infinite}
+.chip-ass small{font-family:var(--mono);font-size:11.5px;color:var(--ink2)}
+@keyframes pulsa{70%{box-shadow:0 0 0 9px rgba(63,224,176,0)}100%{box-shadow:0 0 0 0 rgba(63,224,176,0)}}
+
+.gaveta{position:fixed;top:calc(env(safe-area-inset-top,0px) + 82px);right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 92px);width:min(410px,calc(100% - 32px));border-radius:18px;z-index:6;display:flex;flex-direction:column;overflow:hidden;transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.gaveta.fechada{transform:translateX(24px);opacity:0;pointer-events:none}
+.gav-topo{padding:18px 18px 16px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.gav-topo>div{flex:1;min-width:0}
+.olho{margin:0 0 6px;font-family:var(--mono);font-size:11.5px;color:var(--ink2);display:flex;align-items:center;gap:8px}
+.olho::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--c,var(--lumon))}
+.gav-topo h2{margin:0 0 6px;font-size:24px;font-weight:500;letter-spacing:-.02em;line-height:1.1;text-wrap:balance}
+.gav-topo p{margin:0;color:var(--ink2);font-size:13.5px;line-height:1.5}
+.x{background:rgba(15,29,22,.06);border:0;border-radius:9px;width:32px;height:32px;font-size:14px;flex:none}
+.x:hover{background:rgba(15,29,22,.12)}
+.gav-corpo{overflow-y:auto;padding:16px 18px 20px;display:flex;flex-direction:column;gap:18px}
+.secao{display:flex;flex-direction:column;gap:9px}
+.secao h3{margin:0;font-size:13px;font-weight:500;color:var(--ink2)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px;display:flex;flex-direction:column;gap:9px}
+.card .linha{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.card h4{margin:0;font-size:15px;font-weight:500;line-height:1.35;flex:1;min-width:0}
+.pill{font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:6px;background:rgba(15,29,22,.05);color:var(--ink2)}
+.pill.fmt{background:rgba(29,92,67,.1);color:var(--lumon)}
+.pill.ex{background:none;border:1px dashed var(--line)}
+.card p{margin:0;font-size:13px;color:var(--ink2);line-height:1.45}
+.bts{display:flex;gap:6px;flex-wrap:wrap}
+.card label[for^="v-"]{max-width:140px}
+.card textarea,.ciclo textarea{width:100%;box-sizing:border-box;font-size:13px}
+.vazio{border:1px dashed rgba(15,29,22,.2);border-radius:12px;padding:16px;color:var(--ink2);font-size:13px;line-height:1.5}
+.skill{font-family:var(--mono);font-size:12px;color:var(--ink2);margin:0;line-height:1.5}
+.pill.serie{background:color-mix(in srgb,var(--sc) 14%,transparent);color:var(--sc)}
+.series-lista{display:flex;flex-direction:column;gap:8px}
+.serie-l{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 11px;display:flex;flex-direction:column;gap:6px;font-size:12.5px;line-height:1.45}
+.serie-l .topo{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.serie-l b{font-weight:600}
+.serie-l .meta{font-family:var(--mono);font-size:11.5px;color:var(--ink2);white-space:nowrap}
+.serie-l .trilho{height:6px;border-radius:3px;background:rgba(15,29,22,.07);position:relative;overflow:hidden}
+.serie-l .trilho i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--sc)}
+.serie-l .trilho em{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink)}
+.serie-l small{color:var(--ink2)}
+.lista-dna{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:12.5px;line-height:1.45}
+.bio{background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 12px;font-size:13px;line-height:1.5;white-space:pre-line}
+.tab-skills{width:100%;border-collapse:collapse;font-size:12px}
+.tab-skills td{padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+.tab-skills td:first-child{font-weight:500;white-space:nowrap;padding-right:10px}
+.tab-skills code{font-family:var(--mono);font-size:11.5px}
+.skill code{color:var(--ink);background:rgba(15,29,22,.06);padding:1px 5px;border-radius:4px}
+.zapmsg{background:#0f1d16;color:#d6f5ea;border-radius:14px 14px 14px 4px;padding:14px;font-size:13.5px;line-height:1.55;white-space:pre-wrap;border:1px solid rgba(63,224,176,.25)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 11px}
+.kpi small{display:block;font-size:11.5px;color:var(--ink2)}
+.kpi strong{font-family:var(--mono);font-size:18px;font-weight:500;font-variant-numeric:tabular-nums}
+textarea.fallback{width:100%;min-height:90px;font-family:var(--mono);font-size:12px}
+
+.modal{position:fixed;inset:0;background:rgba(6,12,9,.45);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:10;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.modal form{border-radius:18px;padding:22px;width:min(440px,100%);display:flex;flex-direction:column;gap:13px;background:var(--glass-solid)}
+.modal h2{margin:0;font-size:20px;font-weight:500;letter-spacing:-.01em}
+label{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--ink2);font-weight:500}
+input,select,textarea{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 11px;font:inherit;font-size:14px}
+.modal .bts{justify-content:flex-end}
+.md{white-space:normal!important;font-size:13px;line-height:1.55;color:var(--ink)}
+.md p{margin:0 0 8px}.md p:last-child{margin-bottom:0}
+.md h5{margin:12px 0 4px;font-size:12.5px;font-weight:600}.md h5:first-child{margin-top:0}
+.md ul{margin:0 0 8px;padding-left:18px}.md li{margin-bottom:4px}
+.md code{font-family:var(--mono);font-size:11.5px}
+.rot{display:flex;flex-direction:column;gap:10px}
+.rot-topo{display:flex;flex-wrap:wrap;gap:6px}
+.rot-abas{display:flex;gap:2px;padding:3px;border-radius:10px;background:rgba(255,255,255,.05)}
+.rot-abas button{flex:1;min-height:32px;border:0;border-radius:8px;background:transparent;color:var(--ink2);font:inherit;font-size:12.5px;cursor:pointer;padding:0 4px}
+.rot-abas button[aria-selected="true"]{background:rgba(255,255,255,.12);color:var(--ink);font-weight:500}
+.rot-abas button:focus-visible{outline:2px solid var(--signal);outline-offset:1px}
+.mock{width:100%;border-radius:8px;display:block}
+.rot-aviso{font-size:12.5px;line-height:1.45;padding:8px 10px;border-radius:9px;background:rgba(232,162,58,.12);border:1px solid rgba(232,162,58,.35);color:var(--ink)}
+.rot-aviso button{all:unset;cursor:pointer;text-decoration:underline;color:inherit}
+.falas{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.falas li{display:grid;grid-template-columns:58px 1fr;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.falas li:first-child{border-top:0;padding-top:2px}
+.falas time,.cena time{font-family:var(--mono);font-size:11px;color:var(--ink2);padding-top:3px}
+.falas q{quotes:none;font-size:15px;line-height:1.4;color:var(--ink)}
+.falas .semfala{font-size:12.5px;color:var(--ink2);font-style:italic}
+.fase{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;margin:0 0 6px;color:var(--signal)}
+.cena{border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:7px}
+.cena-topo{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline}
+.cena-topo time{padding:0;color:var(--ink);font-weight:500}
+.cena-topo small{font-size:11px;color:var(--ink2)}
+.cena q{quotes:none;font-size:14px;line-height:1.4}
+.cena dl{margin:0;display:grid;grid-template-columns:52px 1fr;gap:5px 8px;font-size:12.5px;line-height:1.45}
+.cena dt{color:var(--ink2)}.cena dd{margin:0}
+.rot-sec{border:1px solid var(--line);border-radius:10px;padding:10px}
+.rot-sec-topo{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.rot-sec h4{margin:0;font-size:13px;font-weight:600}
+.agente-st{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:12.5px;line-height:1.45;padding:8px 10px;border-radius:10px;border:1px solid var(--line);color:var(--ink)}
+.agente-st .pulso{width:8px;height:8px;border-radius:50%;background:#1fae7a;animation:agpulso 1.2s ease-in-out infinite}
+.agente-st.erro{border-color:#b3261e;color:inherit}
+.agente-st.erro .pulso{background:#b3261e;animation:none}
+@keyframes agpulso{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.agente-st .pulso{animation:none}}
+.manual summary{cursor:pointer;font-size:12px;color:var(--ink2);padding:2px 0}
+.manual[open] summary{margin-bottom:8px}
+.modal .sub{margin:-4px 0 0;font-size:13px;color:var(--ink2);line-height:1.45}
+.modal .erro{margin:0;font-size:12.5px;color:#b3261e}
+
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 100px);transform:translateX(-50%);background:var(--ink);color:#f3f6f2;padding:10px 15px;border-radius:11px;font-size:13px;z-index:12}
+.dica{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 26px);font-size:11.5px;color:rgba(243,246,242,.55);z-index:2;font-family:var(--mono)}
+
+.pesq{border:1px solid var(--line);border-radius:10px;background:rgba(15,29,22,.025)}
+.pesq summary{cursor:pointer;padding:8px 10px;font-size:12.5px;font-weight:500;color:var(--ink2)}
+.pesq div{padding:0 10px 10px;font-size:13px;line-height:1.5;white-space:pre-wrap;color:var(--ink)}
+.dica-card{margin:0;font-size:12.5px;color:var(--ink2);line-height:1.5}
+.dica-card code{font-family:var(--mono);font-size:11.5px;background:rgba(15,29,22,.06);padding:1px 4px;border-radius:4px}
+.passos{display:flex;flex-direction:column;gap:8px}
+.passos p{margin:0;font-size:12.5px;color:var(--ink2)}
+.ganchos{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;counter-reset:g}
+.gch{flex-direction:row;align-items:flex-start;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;cursor:pointer;color:var(--ink);font-weight:400}
+.gch:hover{border-color:rgba(29,92,67,.4)}
+.gch.on{border-color:var(--lumon);background:rgba(29,92,67,.07);box-shadow:0 0 0 1px var(--lumon) inset}
+.gch input{margin-top:3px;accent-color:var(--lumon);padding:0}
+.gch span{display:flex;flex-direction:column;gap:4px;min-width:0}
+.gch b{font-weight:500;font-size:13.5px;line-height:1.4}
+.gch i.pill{font-style:normal;align-self:flex-start}
+.gch em{font-style:normal;font-size:12px;color:var(--ink2);line-height:1.4}
+.escolhido{border-left:3px solid #e8a23a;padding:6px 0 6px 10px;font-size:14px;font-weight:500;line-height:1.4}
+.escolhido small{display:block;font-size:11.5px;color:var(--ink2);font-weight:400}
+.ciclo{background:rgba(127,108,242,.07);border:1px solid rgba(127,108,242,.25);border-radius:12px;padding:12px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.prompter{position:fixed;inset:0;z-index:20;background:#050806;color:#eef6f1;display:flex;flex-direction:column;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.p-topo{display:flex;align-items:center;gap:10px;padding-block:calc(env(safe-area-inset-top,0px) + 16px) 12px;font-family:var(--mono);font-size:12.5px;color:rgba(238,246,241,.6)}
+.p-topo #p-titulo{flex:1;min-width:0}
+.p-topo .x{background:rgba(255,255,255,.1);color:#eef6f1}
+.rec{width:10px;height:10px;border-radius:50%;background:var(--onair);box-shadow:0 0 12px var(--onair)}
+.p-in{overflow-y:auto;max-width:900px;width:100%;margin:0 auto;padding-block:4vh 10vh}
+.p-in small{font-family:var(--mono);font-size:13px;color:#e8a23a}
+.p-in h2{margin:6px 0 4vh;font-size:clamp(28px,4.6vw,56px);font-weight:500;line-height:1.15;letter-spacing:-.02em;text-wrap:balance}
+#p-roteiro .p-fala{margin:0 0 1.1em}#p-roteiro .p-fala small{display:block;font-family:var(--mono);font-size:13px;opacity:.55;margin-bottom:2px}
+#p-roteiro{white-space:pre-wrap;font-size:clamp(20px,2.8vw,34px);line-height:1.5;color:rgba(238,246,241,.88)}
+@media (max-width:900px){.dica{display:none}}
+@media (max-width:700px){
+  .marca{padding:10px 12px}
+  .marca h1{font-size:14.5px}
+  .btn{padding:9px 12px}
+  #geral{display:none}
+  .gaveta{top:auto;left:0;right:0;width:auto;bottom:0;height:70%;border-radius:20px 20px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
+  .gaveta.fechada{transform:translateY(40px)}
+  .etapa small{display:none}
+  .fluxo{justify-content:flex-start;flex-direction:column;align-items:stretch}
+  .chip-ass{padding:10px 14px;align-self:flex-start}
+}
+@media (prefers-reduced-motion:reduce){.chip-ass.cobrando .ponto{animation:none}.gaveta{transition:none}}
+/* QG noturno: superfícies escuras e pílulas como no QG 3D */
+.vidro{border:1px solid rgba(255,255,255,.08);box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 18px 50px rgba(0,0,0,.5)}
+.marca h1{font-family:var(--serif);font-weight:400;font-size:22px;letter-spacing:0}
+.selo::after{border-color:#fff;box-shadow:0 0 10px var(--lumon)}
+.btn{background:var(--glass-solid)}
+.btn:hover{background:#1e2028}
+.btn.prim:hover{background:#e63a1c}
+.hud .btn[aria-pressed="true"]{border-color:var(--lumon);color:#fff}
+.card,.serie-l,.bio,.kpi,input,select,textarea{background:var(--panel)}
+.pill{background:rgba(255,255,255,.06)}
+.pill.fmt{background:rgba(255,68,35,.14);color:#ff7a5c}
+.x{background:rgba(255,255,255,.06)}.x:hover{background:rgba(255,255,255,.12)}
+.etapa:hover,.etapa.ativa{background:rgba(255,68,35,.12)}
+.etapa strong i{color:#ff7a5c}
+.gch.on{background:rgba(255,68,35,.08)}
+.pesq{background:rgba(255,255,255,.02)}
+.skill code,.dica-card code{background:rgba(255,255,255,.08)}
+.serie-l .trilho{background:rgba(255,255,255,.08)}
+.serie-l .trilho em{background:#fff}
+.vazio{border-color:rgba(255,255,255,.15)}
+.modal{background:rgba(2,4,10,.6)}
+.toast{background:#f4efe8;color:#111}
+.gav-topo h2{font-family:var(--serif);font-weight:400;font-size:32px;letter-spacing:0}
+.legenda{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 100px);text-align:center;z-index:4;pointer-events:none;width:min(560px,calc(100% - 32px));text-shadow:0 2px 20px rgba(0,0,0,.8)}
+.legenda small{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#ff7a5c}
+.legenda h2{margin:4px 0 6px;font-family:var(--serif);font-weight:400;font-size:clamp(40px,6vw,64px);line-height:1;color:#fff}
+.legenda p{margin:0;font-size:14.5px;color:rgba(244,239,232,.85);line-height:1.5}
+@media (prefers-reduced-motion:no-preference){.legenda:not([hidden]){animation:sobe .6s cubic-bezier(.2,.8,.2,1)}@keyframes sobe{from{opacity:0;transform:translate(-50%,12px)}}}
+@media (max-width:700px){#pausa{display:none}.legenda{bottom:calc(env(safe-area-inset-bottom,0px) + 150px)}.legenda h2{font-size:40px}}
+</style>
+</head>
+<body>
+<canvas id="cena" aria-label="QG 3D da agência suspenso na Av. Paulista. Arraste para girar, role para aproximar, clique numa mesa para abrir."></canvas>
+
+<header class="hud">
+  <div class="marca vidro">
+    <span class="selo" aria-hidden="true"></span>
+    <div>
+      <h1>QG Ruptura</h1>
+      <button class="arroba" id="arroba" title="Trocar o @ e o nicho">@seuperfil</button>
+    </div>
+  </div>
+  <div class="acoes">
+    <button class="btn" id="pausa" aria-pressed="false" title="Pausar ou retomar o movimento do escritório">Pausar</button>
+    <button class="btn" id="tour" aria-pressed="false">▶ Tour</button>
+    <button class="btn" id="estrat">Estratégia</button>
+    <button class="btn" id="geral">Visão do andar</button>
+    <button class="btn prim" id="nova">Nova pauta</button>
+  </div>
+</header>
+
+<nav class="fluxo" aria-label="Fluxo do conteúdo">
+  <ol id="fluxo" class="vidro"></ol>
+  <button class="chip-ass vidro" id="chip-ass"></button>
+</nav>
+
+<aside class="gaveta vidro fechada" id="gaveta" aria-live="polite">
+  <div class="gav-topo">
+    <div>
+      <p class="olho" id="g-olho"></p>
+      <h2 id="g-titulo"></h2>
+      <p id="g-faz"></p>
+    </div>
+    <button class="x" id="g-fechar" aria-label="Fechar">✕</button>
+  </div>
+  <div class="gav-corpo" id="g-corpo"></div>
+</aside>
+
+<div class="modal" id="modal" hidden>
+  <form id="form-pauta" class="vidro">
+    <h2>Nova pauta</h2>
+    <label for="f-titulo">Assunto<input id="f-titulo" required maxlength="120" placeholder="Ex.: Como seria o design do Chaves no Instagram?"></label>
+    <label for="f-formato">Formato
+      <select id="f-formato"><option>Reel</option><option>Carrossel</option><option>Stories</option></select>
+    </label>
+    <label for="f-serie">Série
+      <select id="f-serie"></select>
+    </label>
+    <label for="f-nota">Pesquisa<textarea id="f-nota" rows="4" maxlength="2000" placeholder="Por que está quente, o que já deu resultado, o gap"></textarea></label>
+    <div class="bts"><button type="button" class="btn" id="f-cancelar">Cancelar</button><button class="btn prim">Enviar ao Pesquisador</button></div>
+  </form>
+</div>
+
+<div class="modal" id="modal-arroba" hidden>
+  <form id="form-arroba" class="vidro">
+    <h2>Seu perfil</h2>
+    <label for="f-arroba">@ do Instagram<input id="f-arroba" maxlength="40" placeholder="seuperfil"></label>
+    <label for="f-nicho">Nicho<input id="f-nicho" maxlength="80" placeholder="Ex.: branding descomplicado, identidade visual e arquétipos"></label>
+    <div class="bts"><button type="button" class="btn" id="a-cancelar">Cancelar</button><button class="btn prim">Salvar</button></div>
+  </form>
+</div>
+
+<div class="modal" id="modal-login" hidden>
+  <form id="form-login" class="vidro">
+    <h2>Entrar no QG</h2>
+    <p class="sub">Com a senha, as pautas ficam guardadas no servidor e aparecem em qualquer navegador.</p>
+    <label for="f-senha">Senha<input id="f-senha" type="password" autocomplete="current-password" required></label>
+    <p class="erro" id="l-erro" role="alert" hidden></p>
+    <div class="bts"><button type="button" class="btn" id="l-depois">Agora não</button><button class="btn prim" id="l-entrar">Entrar</button></div>
+  </form>
+</div>
+
+<div class="prompter" id="prompter" hidden role="dialog" aria-label="Modo gravação">
+  <div class="p-topo"><span class="rec"></span><span id="p-titulo"></span><button class="x" id="p-fechar" aria-label="Fechar modo gravação">✕</button></div>
+  <div class="p-in"><small>Abre com</small><h2 id="p-gancho"></h2><div id="p-roteiro"></div></div>
+</div>
+
+<div class="legenda" id="legenda" hidden aria-live="polite"><small id="lg-olho"></small><h2 id="lg-nome"></h2><p id="lg-faz"></p></div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Dados ---------- */
+const ETAPAS = {
+  pauta:{nome:'Pauta', curto:'Pauta', mesa:'pesquisador'},
+  gancho:{nome:'Gancho e roteiro', curto:'Gancho', mesa:'roteirista'},
+  design:{nome:'Design', curto:'Design', mesa:'designer'},
+  gravar:{nome:'Gravar', curto:'Gravar', mesa:'estudio'},
+  edicao:{nome:'Edição', curto:'Edição', mesa:'editor'},
+  postar:{nome:'Pronto p/ postar', curto:'Postar', mesa:'social'},
+  noar:{nome:'No ar', curto:'No ar', mesa:'social'}
+};
+const FLUXO = {
+  Reel:['pauta','gancho','design','gravar','edicao','postar','noar'],
+  Carrossel:['pauta','gancho','design','postar','noar'],
+  Stories:['pauta','gancho','design','gravar','postar','noar']
+};
+const ORDEM = ['pauta','gancho','design','gravar','edicao','postar','noar'];
+
+const POD_X = -5, STU_X = 11;
+const MESAS = [
+  {id:'pesquisador', nome:'Pesquisador', papel:'Pesquisa da semana', css:'#7f6cf2', cor:0x7f6cf2, q:[-1,-1],
+   faz:'Toda terça caça personagens, marcas e criativos que o Brasil está vendo (janela de 24 a 72 h), com foco em identidade visual, branding descomplicado, arquétipos e criatividade. Cada assunto já sai com a série, o formato e o gap que ninguém cobriu, respeitando a proporção da linha editorial.',
+   etapas:['pauta'], skill:'/reels-viral (pautas da semana) · /carrossel-viral (motores) · content-strategy', terno:0x1b2433, cabelo:0x2a1c14, pele:0xe2b28f},
+  {id:'roteirista', nome:'Roteirista', papel:'Ganchos e roteiro', css:'#e8a23a', cor:0xe8a23a, q:[1,-1],
+   faz:'Reel passa pelo /reels-viral (formato F1–F10, nota viral, 5 ganchos e roteiro cena a cena). Carrossel passa pelo /carrossel-viral (motor, 5 capas e 10 painéis). Oferta do Raio-X, case do studio, contramão e bordão passam pelo /washington-olivetto.',
+   etapas:['gancho'], skill:'/reels-viral · /carrossel-viral · /washington-olivetto', terno:0x2a2f3a, cabelo:0x16110e, pele:0xc98e6a},
+  {id:'designer', nome:'Designer', papel:'Direção de arte', css:'#f2c14e', cor:0xf2c14e,
+   faz:'Diretor de arte sênior. No carrossel, define a direção e desenha painel a painel. Em pauta como "e se a Bombril fosse marca de luxo", cria o conceito e os mockups de embalagem no Magnific.',
+   etapas:['design'], skill:'high-end-visual-design · /carrossel-viral (design) · Magnific Nano Banana 2.1', terno:0x3a2f24, cabelo:0x1c1410, pele:0xd6a07a},
+  {id:'social', nome:'Social', papel:'Análise do perfil', css:'#d8417f', cor:0xd8417f, q:[-1,1],
+   faz:'Escreve a legenda com o CTA da série, posta na melhor janela (sexta, 15h às 17h) e analisa o perfil contra o Raio-X: o que segurou, o que flopou e se a proporção das séries está certa.',
+   etapas:['postar','noar'], skill:'/reels-viral (crescimento de perfil) · Raio-X do perfil', terno:0x1d2230, cabelo:0x5a4636, pele:0xd7a27c},
+  {id:'editor', nome:'Editor', papel:'Edição', css:'#2f9ee8', cor:0x2f9ee8, q:[1,1],
+   faz:'Reel: monta no Remotion com o visual do formato escolhido (legenda por whisper, 1080×1920). Carrossel: diagrama os painéis com a camada de design do /carrossel-viral (grid 1080×1350, corte 3:4 da capa, 60-30-10).',
+   etapas:['edicao'], skill:'/reels-viral (produção) · /carrossel-viral (design)', terno:0x20262e, cabelo:0x0e0b0a, pele:0x8d5a3b},
+  {id:'assistente', nome:'Assistente', papel:'Cobra no WhatsApp', css:'#1fae7a', cor:0x1fae7a,
+   faz:'Fica no seu WhatsApp lembrando você de gravar. Monta a mensagem de cobrança com tudo que está parado na sua fila.',
+   etapas:[], skill:'rotina agendada diária', terno:0x2d5f6c, cabelo:0x9b3d1f, pele:0xf0c7a8},
+  {id:'estudio', nome:'Estúdio', papel:'Você grava', css:'#ff4d3d', cor:0xff4d3d,
+   faz:'Sua cabine. Aqui chega o gancho escolhido e o roteiro em tópicos. Você só abre o modo gravação e fala para a câmera.',
+   etapas:['gravar'], skill:'modo gravação', terno:0x111214, cabelo:0x241a14, pele:0xe0ad88}
+];
+const M = Object.fromEntries(MESAS.map(m=>[m.id,m]));
+
+/* ---------- DNA do perfil: Raio-X de 31/10/2026 + linha editorial ---------- */
+const RAIOX_URL = 'https://analiseperfillucas.netlify.app';
+const DNA = {
+  posicionamento:'Branding descomplicado: eu dou marca a qualquer coisa.',
+  bio:'Lucas Figueiredo · Branding descomplicado\nEu dou marca a qualquer coisa: personagens, arquétipos e criatividade\nRaio-X do seu Instagram em segundos · Studio de marcas 👇',
+  bordoes:['A IA faz o logo. A marca é outra história.','Toda marca conta uma história. Qual é a sua?','Me diz quem é, que eu te dou uma marca.'],
+  produtos:[
+    {nome:'Raio-X do seu Instagram ou do seu negócio', tipo:'low ticket perpétuo, faz o caixa', desc:'Para profissional liberal e empresa. Diagnóstico em segundos do perfil e da marca, com o que trava a venda: o que funciona, público que engaja, séries, melhor horário, arquétipo da marca e linha editorial. O painel analiseperfillucas.netlify.app é a demonstração. Tráfego pago nos posts "Raio-X" que performarem, order bump de plano de 30 dias e upsell com consultoria.'},
+    {nome:'Identidade visual no studio', tipo:'high ticket', desc:'Identidade visual para consultório, escritório, clínica e loja, com poucas vagas por mês. Chega pela palavra-chave MARCA, por cases e pela análise de rebrand.'}
+  ],
+  series:[
+    {id:'personagem', nome:'Se tivesse Instagram', editoria:'Personagens', funil:'Topo · alcance', meta:25, cor:'#7f6cf2', skill:'/carrossel-viral (V1) · /reels-viral (F3)', cta:'"Qual o próximo personagem?" para alcance; no fim: "Quer a sua marca assim? Comente MARCA." (ímã para o studio)', ref:'o campeão do perfil (5,1× os outros temas)'},
+    {id:'arquetipo', nome:'Arquétipo de quem?', editoria:'Branding descomplicado', funil:'Meio · autoridade e salvamento', meta:20, cor:'#e8a23a', skill:'/carrossel-viral (A3, V3) · /reels-viral (F7, F10)', cta:'"Comente ARQUÉTIPO que eu te digo o da sua marca" (ímã que leva ao Raio-X)', ref:'arquétipo, cor, tipografia e posicionamento explicados com personagem ou marca que todo mundo conhece'},
+    {id:'contramao', nome:'Contramão', editoria:'Identidade visual e criatividade', funil:'Topo · alcance e envio', meta:15, cor:'#d8417f', skill:'/washington-olivetto (contramão) · /reels-viral (F4, F9) · /carrossel-viral (V2)', cta:'envio para alcance; no fim: "Comente MARCA para ver a sua do jeito certo" (ímã para o studio)', ref:'@designfromhuman "Hermès se fosse marca de pobre" (362 mil views) e a refação do logo polêmico'},
+    {id:'criativa', nome:'Mente criativa', editoria:'Criatividade', funil:'Meio · identificação e envio', meta:10, cor:'#9a6cf2', skill:'/reels-viral (F7 "esse cara + protocolo") · /washington-olivetto', cta:'"Comente MÉTODO que eu te mando o passo a passo" (ímã de nutrição)', ref:'@henriarmelin, método da Julia Cameron (1 mi de views); criativos e designers famosos e o método deles'},
+    {id:'raiox', nome:'Raio-X', editoria:'Raio-X de perfis', funil:'Meio · ponte para o Raio-X', meta:20, cor:'#2f9ee8', skill:'/reels-viral (F5 breakdown, F10) · /carrossel-viral (A2, A3)', cta:'"Comente RAIO-X que eu te mando o link" (ímã de venda do low ticket)', ref:'o Raio-X do perfil de uma marca, personagem ou seguidor: arquétipo, identidade visual, o que funciona e o que falta'},
+    {id:'fundo', nome:'Feito com o método', editoria:'Prova e oferta', funil:'Fundo · caixa e studio', meta:10, cor:'#1fae7a', skill:'/washington-olivetto (oferta e bordão) · /carrossel-viral (A2)', cta:'alterna por semana: "Comente RAIO-X" ou "Aplicações abertas" (studio)', ref:'antes e depois de quem usou o Raio-X numa semana, case do studio na outra'}
+  ],
+  referencias:[
+    ['@fernandomiranda777 (1,1 mi)','curiosidade de negócio com marcas do dia a dia; capa com foto real e título em tarja caixa alta ("O que aconteceu com…").'],
+    ['@henriarmelin','"esse cara + protocolo": o método da Julia Cameron fez 1 mi de views. Criativo famoso + método prático.'],
+    ['@designfromhuman','"Hermès se fosse marca de pobre", 362 mil views: exercício de branding pela contramão, leve e divertido.'],
+    ['@stevenxzuber','talking head cinematográfico de 13 a 16 s, luz quente, frase forte em amarelo condensado, palavra-chave no comentário.']
+  ],
+  regras:[
+    'Uma peça, dois posts: todo post de personagem ou arquétipo gera um par "Raio-X" (o perfil daquela marca ou pessoa analisado), que mostra o produto funcionando e chama para o Raio-X.',
+    'Público que compra: profissionais liberais (médico, dentista, advogado, arquiteto, psicólogo) e empresas (clínica, escritório, loja). Foco em venda: todo post é ímã de lead e termina numa palavra-chave (RAIO-X, ARQUÉTIPO, MARCA, MÉTODO) que a automação do direct responde.',
+    'Porta pop, destino ofício: entra por algo que o Brasil já conhece e termina em identidade visual, branding ou criatividade.',
+    'A IA entra a serviço da identidade visual (moodboard, paleta, variações, mockups), nunca como "você não precisa de designer". A IA acerta o desenho; a marca é estratégia.',
+    'Toda legenda termina com pergunta de 1 palavra ou palavra-chave para o direct.',
+    'Branding descomplicado: um conceito por post (arquétipo, cor, tipografia, posicionamento), explicado com um personagem ou uma marca que todo mundo conhece, sem jargão.',
+    'Uma contramão por semana: "e se [marca] fosse…" ou a refação do logo polêmico, mostrando em vez de só opinar.',
+    'Visual de diretor de arte: capa com rosto ou foto real, título curto em caixa alta, um destaque de cor; talking head com luz quente e enquadramento de cinema.',
+    'Série que volta igual cai: toda volta traz um elemento novo.',
+    'O fundo do funil alterna por semana: case do studio numa, prova do Raio-X na outra. Nunca as duas chamadas no mesmo post.',
+    'No mínimo 4 posts por semana; os virais vieram dos meses de 20 a 30 posts. Melhor janela: sexta, das 15h às 17h.'
+  ],
+  numeros:[
+    ['Seguidores','51.429'],['Posts desde nov/2022','199'],['Personagem × outros temas','5,1×'],
+    ['Views medianas de rebrand','11.371'],['Pergunta na legenda','1,6×'],['Público de 25 a 44 anos','71%'],
+    ['Pulo nos 3 s (reels recentes)','48%'],['Saldo de seguidores em 30 dias','−374'],['Dias sem postar (31/10)','63']
+  ]
+};
+const SERIE = Object.fromEntries(DNA.series.map(x=>[x.id,x]));
+const serieDe = c => c && SERIE[c.serie];
+function contexto(c){
+  const sr = serieDe(c);
+  return `\n\n--- DNA do perfil ${arroba()} (fonte: Raio-X ${RAIOX_URL}) ---
+Posicionamento: "${DNA.posicionamento}" Designer e estrategista de marcas que descomplica branding com personagens, arquétipos e criatividade.
+Produtos: ${DNA.produtos.map(x=>`${x.nome} (${x.tipo}): ${x.desc}`).join(' | ')}
+Séries e proporção dos posts: ${DNA.series.map(x=>`${x.nome} (${x.editoria}, ${x.funil}, ${x.meta}%)`).join('; ')}.${sr?`\nEste post é da série "${sr.nome}" (${sr.editoria}, ${sr.funil}). Referência da série: ${sr.ref}. CTA da série: ${sr.cta}.`:''}
+Referências de formato: ${DNA.referencias.map(([a,b])=>`${a}: ${b}`).join(' ')}
+Regras: ${DNA.regras.join(' ')}
+Números: ${DNA.numeros.map(([a,b])=>`${a}: ${b}`).join('; ')}. Público: 47% homens, 39% mulheres, 95% no Brasil (SP, RJ, Goiânia, BH).
+Bordões do perfil: ${DNA.bordoes.join(' / ')}`;
+}
+
+const GANCHOS_EX = [
+  ['F4 polêmica + refação','[Marca] mudou o logo e o Brasil odiou. Eu refiz.','Polêmica do dia com posição e a refação como prova visual.'],
+  ['F5 breakdown','A [marca] gastou milhões num logo novo. O problema não é o desenho.','Nome conhecido, número e virada no primeiro terço.'],
+  ['F9 experimento','Olha o logo novo da [marca]. Agora o mesmo, mudando só uma coisa.','O A×B mostra o poder do design em 20 segundos.'],
+  ['V3 estratégia','A IA acertou o desenho e errou a marca.','Usa o bordão do perfil e coloca a IA a serviço da identidade visual.'],
+  ['F1 POV','Designer vendo o logo novo da [marca].','Texto fixo identitário, o formato que já fez 12 mi no perfil.']
+].map(([angulo,texto,motivo])=>({angulo,texto,motivo}));
+function semente(){
+  const h = Date.now();
+  return {arroba:'lucasfigueiredoart', nicho:'branding descomplicado, identidade visual, arquétipos, personagens e criatividade', cards:[
+    {id:'e1', titulo:'Como seria o design do Seu Madruga no Instagram?', formato:'Carrossel', serie:'personagem', etapa:'pauta', exemplo:true, criado:h,
+     pesquisa:'Por que está quente: Chaves voltou aos streamings e os cortes estão no topo do TikTok.\nO que já deu resultado: Seu Madruga é o carrossel campeão do perfil.\nGap: ninguém mostrou o arquétipo por trás da marca dele.\nPar de Raio-X: "Raio-X do Instagram do Seu Madruga" (série Raio-X).'},
+    {id:'e9', titulo:'Qual o arquétipo do Seu Madruga? (e o da sua marca)', formato:'Carrossel', serie:'arquetipo', etapa:'pauta', exemplo:true, criado:h,
+     pesquisa:'Branding descomplicado: os 12 arquétipos explicados com a Vila do Chaves. Seu Madruga = Bobo/Cara comum, Dona Florinda = Governante, Professor Girafales = Sábio.\nO que já deu resultado: educativo salvável do perfil (cores de Divertidamente).\nGap: arquétipo sempre é explicado com marca gringa; ninguém usa personagem brasileiro.'},
+    {id:'e10', titulo:'Hermès se fosse marca de 1,99', formato:'Reel', serie:'contramao', etapa:'pauta', exemplo:true, criado:h,
+     pesquisa:'Referência: @designfromhuman "Hermès se fosse marca de pobre" (362 mil views).\nÂngulo: contramão com humor, mostrando o que muda em logo, cor, embalagem e loja quando o arquétipo muda.\nGap: versão brasileira, com marca que todo mundo conhece.'},
+    {id:'e2', titulo:'Raio-X do Instagram da Boca Rosa em 30 segundos', formato:'Reel', serie:'raiox', etapa:'pauta', exemplo:true, criado:h,
+     pesquisa:'Breakdown rápido: arquétipo, paleta, tipografia, séries que funcionam e o que falta no perfil.\nMostra o Raio-X funcionando na tela.\nCTA: "Comente RAIO-X que eu te mando o link".'},
+    {id:'e4', titulo:'Refiz o logo mais criticado da semana', formato:'Reel', serie:'contramao', etapa:'gancho', exemplo:true, criado:h,
+     pesquisa:'Por que está quente: troca de logo com repercussão negativa nas últimas 72 h.\nGap: todo mundo opina, quase ninguém mostra a refação com o porquê.', ganchos:GANCHOS_EX, escolhido:null, roteiro:''},
+    {id:'e3', titulo:'Rodei o Raio-X no perfil de uma seguidora', formato:'Stories', serie:'fundo', etapa:'gravar', exemplo:true, criado:h,
+     ganchos:[{angulo:'prova', texto:'Rodei o Raio-X no perfil de uma seguidora. Em 30 segundos apareceu o erro que travava tudo.', motivo:'Prova concreta do Raio-X.'}], escolhido:0,
+     roteiro:'• Gancho (0–3 s): Rodei o Raio-X no perfil de uma seguidora. Em 30 segundos apareceu o erro que travava tudo.\n• Mostrar o painel na tela.\n• O que ela mudou: série, horário e arquétipo da marca.\n• CTA: "Comente RAIO-X que eu te mando o link".'},
+    {id:'e5', titulo:'O método da Paula Scher: a marca do Citibank num guardanapo', formato:'Reel', serie:'criativa', etapa:'edicao', nota:'Bruto já no Drive. Formato "esse cara + protocolo".', exemplo:true, criado:h},
+    {id:'e6', titulo:'Como eu fiz a marca de [cliente do studio]', formato:'Carrossel', serie:'fundo', etapa:'postar', nota:'Painéis prontos, falta a legenda.', exemplo:true, criado:h},
+    {id:'e7', titulo:'Como seria o design do Chaves no Instagram?', formato:'Carrossel', serie:'personagem', etapa:'noar', views:52809, exemplo:true, criado:h},
+    {id:'e8', titulo:'Qual personagem faltou? (Turma do Chaves)', formato:'Carrossel', serie:'personagem', etapa:'noar', views:48292, exemplo:true, criado:h}
+  ]};
+}
+const LS = 'agencia-feed-v3';
+function carregar(){
+  try{ const s = JSON.parse(localStorage.getItem(LS)); if(s && Array.isArray(s.cards)) return s; }catch(e){}
+  const s = semente();
+  ['agencia-feed-v2','agencia-feed-v1'].forEach(k=>{ try{ const v = JSON.parse(localStorage.getItem(k)); if(v && Array.isArray(v.cards)){ if(v.arroba && v.arroba!=='seuperfil') s.arroba = v.arroba; if(v.nicho) s.nicho = v.nicho; const meus = v.cards.filter(c=>!c.exemplo && !s.cards.some(x=>x.id===c.id)); s.cards = meus.concat(s.cards); } }catch(e){} });
+  return s;
+}
+let S = carregar();
+function salvarLocal(){ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} }
+function salvar(){ S.atualizadoEm = Date.now(); salvarLocal(); nuvemAgendar(); }
+
+/* ---------- Nuvem (Netlify Functions + Blobs): localStorage fica como cópia offline ---------- */
+const LS_NUVEM = 'agencia-nuvem-v1'; // { migrado, sujo } deste navegador
+const nuvem = { on:false, chave:false, timer:null, enviando:false, deNovo:false, versao:0, tique:0, pedidos:new Set() };
+const espera = ms => new Promise(r=>setTimeout(r,ms));
+function nuvemMeta(m){ try{ if(m){ localStorage.setItem(LS_NUVEM, JSON.stringify(m)); return m; } return JSON.parse(localStorage.getItem(LS_NUVEM)) || {}; }catch(e){ return m || {}; } }
+const nuvemMarca = campos => nuvemMeta(Object.assign(nuvemMeta(), campos));
+function nuvemAgendar(){ nuvem.versao++; nuvemMarca({sujo:true}); if(!nuvem.on) return; clearTimeout(nuvem.timer); nuvem.timer = setTimeout(nuvemEnviar, 900); }
+async function nuvemEnviar(){
+  if(!nuvem.on) return;
+  if(nuvem.enviando){ nuvem.deNovo = true; return; }
+  nuvem.enviando = true;
+  const versao = nuvem.versao;
+  try{
+    const corpo = JSON.stringify({estado:S, base:nuvemMeta().base||0});
+    const r = await fetch('/api/estado', {method:'PUT', headers:{'Content-Type':'application/json'}, body:corpo, credentials:'same-origin', keepalive: corpo.length < 60000});
+    if(r.status===401){ nuvem.on = false; pedirLogin(); }
+    else if(r.ok){
+      const j = await r.json();
+      nuvemMarca({base:j.atualizadoEm});
+      if(versao===nuvem.versao){ nuvemMarca({sujo:false}); if(j.estado){ S = j.estado; salvarLocal(); render(); } }
+    }
+  }catch(e){ /* sem rede: fica marcado como sujo e reenvia quando voltar */ }
+  nuvem.enviando = false;
+  if(nuvem.deNovo){ nuvem.deNovo = false; nuvemEnviar(); }
+}
+async function nuvemDescarregar(){ clearTimeout(nuvem.timer); if(nuvemMeta().sujo) await nuvemEnviar(); while(nuvem.enviando) await espera(100); }
+// Junta o que estava só neste navegador com o que já está no servidor, sem perder pauta.
+function juntar(srv, loc){
+  const m = Object.assign({}, srv, {cards: srv.cards.slice()});
+  if((!m.arroba || m.arroba==='seuperfil') && loc.arroba && loc.arroba!=='seuperfil') m.arroba = loc.arroba;
+  if(!m.nicho && loc.nicho) m.nicho = loc.nicho;
+  const ids = new Set(m.cards.map(c=>c.id));
+  m.cards = loc.cards.filter(c=>!c.exemplo && !ids.has(c.id)).concat(m.cards);
+  return m;
+}
+async function nuvemPuxar(primeira){
+  let r;
+  try{ r = await fetch('/api/estado', {credentials:'same-origin', cache:'no-store'}); }catch(e){ return; }
+  if(r.status===401){ nuvem.on = false; pedirLogin(); return; }
+  if(!r.ok) return;
+  const {estado, atualizadoEm} = await r.json(); const meta = nuvemMeta();
+  nuvem.on = true;
+  if(primeira){ metricasPuxar(); try{ const a = await fetch('/api/agente', {credentials:'same-origin', cache:'no-store'}); if(a.ok) nuvem.chave = !!(await a.json()).chave; }catch(e){} }
+  if(!estado || !Array.isArray(estado.cards)){ await nuvemEnviar(); if(primeira) toast('Pautas guardadas no servidor'); nuvemMarca({migrado:true}); }
+  else if(!meta.migrado){
+    const antes = S.cards.filter(c=>!c.exemplo).length;
+    S = juntar(estado, S); S.atualizadoEm = Date.now(); salvarLocal(); nuvemMarca({base:atualizadoEm, migrado:true}); nuvem.versao++; await nuvemEnviar();
+    if(antes) toast('Pautas deste navegador enviadas ao servidor');
+  }
+  else if(meta.sujo) await nuvemEnviar(); // o servidor mantém o que os agentes escreveram e devolve o resultado
+  else if(atualizadoEm > (meta.base||0)){
+    const rodando = S.cards.filter(c=>ocupado(c.agente));
+    S = estado; salvarLocal(); nuvemMarca({base:atualizadoEm});
+    const pronta = rodando.map(a=>S.cards.find(c=>c.id===a.id)).find(c=>c && !c.agente);
+    if(pronta) toast(`Agentes terminaram: ${pronta.titulo}`);
+    else if(!primeira && !rodando.length) toast('Pautas atualizadas');
+  }
+  else if(!primeira) return;
+  render(); varrer();
+}
+/* ---------- Agentes (a esteira roda no servidor, mesmo com a aba fechada) ---------- */
+const agentesLigados = () => nuvem.on && nuvem.chave;
+const ocupado = a => !!a && a.status==='rodando' && Date.now()-a.em < 16*60000;
+async function agenteChamar(corpo, marcar){
+  await nuvemDescarregar();
+  if(marcar){ marcar({status:'rodando', quem:({legenda:'social',design:'designer',plano:'estudio',edicao:'editor'})[corpo.so]||'roteirista', faz:'Na fila', em:Date.now()}); render(); }
+  try{
+    const r = await fetch('/api/agente', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(corpo), credentials:'same-origin'});
+    if(!r.ok && r.status!==409){ const j = await r.json().catch(()=>({})); toast(j.erro || 'Não consegui acordar o agente.'); }
+  }catch(e){ toast('Sem conexão. Tente de novo.'); }
+  await nuvemPuxar(false);
+  render();
+}
+function agenteDoCard(c, so){ nuvem.pedidos.add(c.id); return agenteChamar(so?{cardId:c.id, so}:{cardId:c.id}, a=>{ c.agente = a; }); }
+// Toda pauta parada que um agente pode resolver entra na esteira sozinha. Erro fica no card e só volta com "Tentar de novo".
+function varrer(){
+  if(!agentesLigados()) return;
+  const falta = c => c.etapa==='pauta' ? !c.pesquisado : c.etapa==='gancho' ? (!c.ganchos||!c.ganchos.length||(c.escolhido!=null&&!c.roteiro)) : c.etapa==='postar' ? !c.legenda : c.etapa==='design' ? !c.design : c.etapa==='gravar' ? (!!c.roteiro && !c.planoGravacao) : c.etapa==='edicao' ? (c.formato!=='Carrossel' && !c.briefEdicao) : false;
+  S.cards.filter(c=>!c.exemplo && !c.agente && !nuvem.pedidos.has(c.id) && falta(c)).slice(0,3).forEach(c=>agenteDoCard(c));
+}
+function agenteHTML(a, botao){
+  if(!a) return '';
+  const nome = (M[a.quem]||{}).nome || 'Agente';
+  if(ocupado(a)) return `<div class="agente-st"><span class="pulso"></span><span><b>${esc(nome)}</b> · ${esc(a.faz||'Trabalhando')}…</span></div>`;
+  return `<div class="agente-st erro"><span class="pulso"></span><span><b>${esc(nome)}</b> · ${esc(a.status==='erro' ? a.msg : 'A tarefa parou sem terminar.')}</span>${botao||''}</div>`;
+}
+function relatorioHTML(chave, titulo){
+  const r = (S.relatorios||{})[chave];
+  return agenteHTML((S.agentes||{})[chave], `<button class="btn min" data-ac="geral" data-acao="${chave}">Tentar de novo</button>`) + (r ? `<details class="pesq"><summary>${esc(titulo)} · ${new Date(r.em).toLocaleDateString('pt-BR')}</summary><div class="md">${mdHTML(r.texto)}</div></details>` : '');
+}
+function pedirLogin(){ try{ if(sessionStorage.getItem('agencia-login-depois')) return; }catch(e){} $('l-erro').hidden = true; $('form-login').reset(); $('modal-login').hidden = false; setTimeout(()=>$('f-senha').focus(),30); }
+async function metricasPuxar(){
+  try{
+    const r = await fetch('/api/metricas', {credentials:'same-origin', cache:'no-store'});
+    if(!r.ok) return;
+    const {metricas:m} = await r.json();
+    if(m && (!metricas || m.em!==metricas.em)){ metricas = m; try{ localStorage.setItem(LS_METRICAS, JSON.stringify(m)); }catch(e){} painelNumeros.redesenha(); }
+  }catch(e){}
+}
+async function nuvemIniciar(){
+  let r; try{ r = await fetch('/api/login', {credentials:'same-origin', cache:'no-store'}); }catch(e){ return; }
+  if(!(r.headers.get('content-type')||'').includes('json')) return; // fora do Netlify (artifact): só localStorage
+  if(r.ok) nuvemPuxar(true); else if(r.status===401) pedirLogin();
+}
+const naEtapa = e => S.cards.filter(c=>c.etapa===e);
+const daMesa = id => S.cards.filter(c=>M[id].etapas.includes(c.etapa));
+// Em vídeo, o Designer só entra quando a pauta pede mockup.
+const fluxoDe = c => FLUXO[c.formato].filter(e=>e!=='design' || c.formato==='Carrossel' || c.mockup || c.etapa==='design');
+const proxima = c => { const f = fluxoDe(c); const i = f.indexOf(c.etapa); if(i>=0) return f[i+1] || null; const o = ORDEM.indexOf(c.etapa); return f.find(e=>ORDEM.indexOf(e)>o) || null; };
+const anterior = c => { const f = fluxoDe(c); const i = f.indexOf(c.etapa); if(i>=0) return i>0 ? f[i-1] : null; const o = ORDEM.indexOf(c.etapa); return f.filter(e=>ORDEM.indexOf(e)<o).pop() || null; };
+const contaMesa = id => id==='assistente' ? naEtapa('gravar').length : daMesa(id).length;
+const ganchoEscolhido = c => c.ganchos && c.escolhido!=null ? c.ganchos[c.escolhido] : null;
+function proximaTerca(){ const d = new Date(); const k = (2 - d.getDay() + 7) % 7; d.setDate(d.getDate() + k); return k===0 ? 'hoje' : d.toLocaleDateString('pt-BR',{weekday:'long', day:'2-digit', month:'2-digit'}); }
+
+/* ---------- Prompts ---------- */
+const arroba = () => '@' + (S.arroba || 'seuperfil');
+const nicho = () => S.nicho ? ` (nicho: ${S.nicho})` : '';
+function promptDe(mesa, c, tipo){
+  const t = c ? `"${c.titulo}"` : '';
+  const pesq = c ? (c.pesquisa || c.nota || '—') : '';
+  const sr = serieDe(c);
+  const olivetto = sr && ['fundo','contramao','criativa'].includes(sr.id);
+  switch(mesa){
+    case 'pesquisador': return c
+      ? `Aprofunde a pesquisa do assunto ${t}${sr?` (série "${sr.nome}")`:''} para o Instagram ${arroba()}${nicho()}. Use /reels-viral e /carrossel-viral como régua. Busque no YouTube, TikTok, Reddit, fóruns e notícias dos últimos 7 dias e traga: o que as pessoas estão falando agora, os conteúdos que já deram resultado (com link e números), os ângulos saturados, o gap que ninguém cobriu, a porta pop e o destino ofício. Diga também qual post "Raio-X" (perfil analisado) faz par com este. Leia o assunto pela lente do Primal Branding (Patrick Hanlon; /reels-viral §4b): até 3 peças do código primal em jogo, em uma linha "Código primal: peça → o que aparece no caso → ângulo que abre", e o gap de crença. Só use peça que apareça de fato. Se precisar de mais método, pesquise resumos e resenhas do Primal Branding, com fonte. Nenhum fato sem fonte. O que já temos: ${pesq}${contexto(c)}`
+      : `/reels-viral e /carrossel-viral — Pesquisa da semana para o Instagram ${arroba()}${nicho()}.
+Vasculhe YouTube, TikTok, Reddit, fóruns e notícias dos últimos 3 a 7 dias atrás do que o Brasil está vendo com marca, cor, personagem ou criatividade no meio (personagem em alta, lançamento de logo, rebrand, campanha, criativo famoso, meme do dia), com prioridade para identidade visual, branding descomplicado, arquétipos, personagens e criatividade. Traga 6 assuntos distribuídos pela proporção das séries. Escreva uma seção por assunto, começando com "## " e o nome do assunto, contendo:
+- Série: (um destes nomes exatos: ${DNA.series.map(x=>x.nome).join(', ')})
+- Formato sugerido (Reel, Carrossel ou Stories) e motor/formato da skill (V1–V3, A1–A3 ou F1–F10)
+- Por que está quente agora (fontes e links)
+- O que já deu resultado (conteúdos que performaram, com números)
+- O gap do mercado: o que ninguém falou ainda
+- Par de Raio-X: o perfil de marca, personagem ou pessoa que vale analisar a partir deste
+- Código primal: até 3 peças do Primal Branding (Patrick Hanlon; /reels-viral §4b) em jogo, no formato "peça → o que aparece no caso → ângulo que abre", só se aparecerem de fato
+Se precisar de mais método, pesquise resumos e resenhas do Primal Branding, com fonte.
+Salve como pesquisa-da-semana.md.${contexto(null)}`;
+    case 'roteirista': {
+      const g = ganchoEscolhido(c);
+      if(tipo==='roteiro') return c.formato==='Carrossel'
+        ? `/carrossel-viral — Etapas 6 a 8 para o carrossel ${t} de ${arroba()}, com a capa escolhida: "${g ? g.texto : ''}".
+Construa os painéis pela fórmula Provocação → Curiosidade → Contexto → Tensão → Revelação → Aprendizado → Ação (painel 2 funcionando como segunda capa), mostre a tabela painel a painel e depois entregue o bloco limpo (CAPA, PAINEL 2…, LEGENDA).${olivetto?'\nUse /washington-olivetto para o bordão e a oferta do último painel (três caminhos, recomende um).':''}
+Pesquisa do assunto: ${pesq}${contexto(c)}`
+        : `/reels-viral — Etapa 5 para o ${c.formato} ${t} de ${arroba()}, abrindo com este gancho: "${g ? g.texto : ''}".
+Roteiro cena a cena em tabela (Tempo · Fala · Texto na tela · Imagem/b-roll · Áudio), marcando o mecanismo narrativo de cada parte e a progressão Atenção → Interesse → Desejo → Ação. Linguagem falada, frases curtas, nada de "oi gente". Depois: legenda, CTA da série, capa (frame + até 5 palavras) e áudio sugerido.${olivetto?'\nUse /washington-olivetto para o bordão e a oferta do fechamento (três caminhos, recomende um).':''}
+Pesquisa do assunto: ${pesq}${contexto(c)}`;
+      return c.formato==='Carrossel'
+        ? `/carrossel-viral — Etapas 1 a 5 para o assunto ${t} no Instagram ${arroba()}${nicho()}.
+Material, briefing (público, objetivo, motor, porta pop e destino ofício, promessa), diagnóstico com nota viral 0–100, otimização e 5 capas.${olivetto?'\nUse também /washington-olivetto: o conceito nasce da contramão do mercado e o bordão passa no teste do bar.':''}
+No fim, liste as 5 capas exatamente neste formato, uma por linha:
+1. [motor] texto da capa — por que funciona
+Pesquisa: ${pesq}${contexto(c)}`
+        : `/reels-viral — Modo Criar, etapas 1 a 4, para o assunto ${t} no Instagram ${arroba()}${nicho()}. Formato: ${c.formato}.
+Briefing (vida real → valor → viral, formato F1–F10 + formato de produção, curto visual ou longo narrado), diagnóstico com nota viral 0–100 e 5 ganchos.${olivetto?'\nUse também /washington-olivetto para o conceito e o bordão (contramão do mercado, teste do bar).':''}
+No fim, liste os 5 ganchos exatamente neste formato, uma linha por gancho:
+1. [formato] gancho falado ou texto fixo na tela — por que funciona
+Pesquisa: ${pesq}${contexto(c)}`;
+    }
+    case 'estudio': return c.roteiro || `Gancho: ${(ganchoEscolhido(c)||{}).texto||''}`;
+    case 'editor': {
+      const g = ganchoEscolhido(c);
+      return c.formato==='Carrossel'
+        ? `/carrossel-viral — Monte o carrossel ${t} de ${arroba()} com a camada sênior de design: 1080×1350, margens de 80 px nas laterais e 100 px em cima e embaixo, capa segura no corte 3:4 do grid, no máximo 2 famílias tipográficas, 60-30-10 na cor, um destaque por painel, avatar e numeração fixos. Capa: "${g?g.texto:''}". Mostre a prévia antes de exportar.${c.roteiro?`\nPainéis: ${c.roteiro}`:''}${contexto(c)}`
+        : `/reels-viral — Etapa 7 (produção) do ${c.formato} ${t} de ${arroba()}: Remotion 1080×1920 a 30 fps, legenda por whisper, visual do formato escolhido (§7 da skill), margem segura (topo 220 px, base 380 px), gancho "${g?g.texto:''}" nos 3 primeiros segundos e prova visual no 1º segundo. Áudio sem picote e trilha instrumental. Mostre a prévia antes do final. Bruto: [cole o link].${c.roteiro?`\nRoteiro: ${c.roteiro}`:''}${contexto(c)}`;
+    }
+    case 'social': return c && c.etapa==='postar'
+      ? `Escreva a legenda do post ${t} (${c.formato}) para ${arroba()} pelas regras de legenda e CTA do ${c.formato==='Carrossel'?'/carrossel-viral (§5)':'/reels-viral (§8)'}: 1ª linha é o CTA ou a piada, pergunta respondível em 2 s ou palavra-chave para o direct, nada de parágrafo explicativo antes da pergunta. Inclua o plano da primeira hora (responder os 20 primeiros comentários, repost nos stories com enquete). Janela de postagem: sexta, das 15h às 17h, salvo se o assunto tiver prazo de 72 h.${contexto(c)}`
+      : `/reels-viral — Modo Crescer o perfil para ${arroba()}. Compare o que está no ar com o Raio-X (${RAIOX_URL}).
+No ar: ${S.cards.filter(x=>x.etapa==='noar').map(x=>`${x.titulo} [${(serieDe(x)||{}).nome||'sem série'}] = ${x.views||0} views`).join('; ')||'sem dados ainda'}.
+Diga: o padrão dos que foram bem, o que parar de fazer, se a proporção das séries está certa e 3 pautas para repetir o que funcionou (com o par de Raio-X de cada uma).${contexto(null)}`;
+    case 'estrategia':
+      if(tipo==='olivetto') return `/washington-olivetto — Briefing completo para pular a Fase 1.
+Produto: Raio-X do seu Instagram ou do seu negócio, em segundos. Diagnóstico do perfil (o que funciona, público que engaja, séries, melhor horário, arquétipo da marca e linha editorial), low ticket perpétuo vendido pelo Instagram ${arroba()}. Demonstração: ${RAIOX_URL}.
+Público: profissionais liberais e empresas (médico, dentista, advogado, arquiteto, clínica, loja), 25 a 44 anos, que postam sem saber o que funciona e não vendem pelo Instagram.
+Contramão do mercado: todo mundo vende "mais conteúdo"; aqui o designer mostra em segundos o que parar de fazer e qual é a marca por trás do perfil.
+Entregue: três caminhos de campanha, o filme de 30 s e o anúncio de feed do recomendado, a oferta (com order bump de plano de 30 dias e garantia) e dez bordões ranqueados pelo teste do bar.${contexto(null)}`;
+      return `/reels-viral (modo Crescer o perfil) e /carrossel-viral — Monte o plano das próximas 4 semanas para ${arroba()}: 4 posts por semana na proporção das séries, cada post com título, série, formato (F1–F10 ou motor V/A), gancho e o par de Raio-X. Alterne o fundo do funil por semana (case do studio numa, prova do Raio-X na outra) e marque as sextas, das 15h às 17h, para os posts mais fortes.${contexto(null)}`;
+  }
+  return '';
+}
+function msgZap(){
+  const g = naEtapa('gravar');
+  if(!g.length) return `Bom dia! Nada parado na sua fila de gravação hoje. A próxima pesquisa do Pesquisador sai ${proximaTerca()}.`;
+  const linhas = g.map((c,i)=>{ const gc = ganchoEscolhido(c); return `${i+1}. ${c.titulo} (${c.formato})${gc?`\n   Abre com: "${gc.texto}"`:''}`; }).join('\n');
+  const p = naEtapa('postar').length;
+  return `Bom dia! Passando pra lembrar 👀\n\nVocê tem ${g.length} ${g.length>1?'conteúdos':'conteúdo'} esperando gravação, gancho e roteiro já prontos:\n${linhas}\n\nLiga o ring light e grava ${g.length>1?'pelo menos o primeiro':'agora'}, leva 10 minutos. Me manda o bruto que eu passo pro editor.${p?`\n\nE tem ${p} pronto pra postar parado com o Social.`:''}`;
+}
+
+/* ---------- Leitura do que vem do Claude ---------- */
+const limpa = s => s.replace(/[*_`]/g,'').trim();
+function lerPesquisa(txt){
+  let itens = txt.split(/^#{2,3}\s+/m).slice(1).map(p=>{ const [t,...r] = p.split('\n'); return {titulo:limpa(t.replace(/^(assunto\s*)?\d+\s*[\.\):\-–]\s*/i,'')), pesquisa:r.join('\n').trim()}; });
+  if(!itens.length) itens = txt.split('\n').filter(l=>/^\s*\d+[\.\)]\s+/.test(l)).map(l=>({titulo:limpa(l.replace(/^\s*\d+[\.\)]\s+/,'')), pesquisa:''}));
+  const serieDoTexto = t => { const m = t.match(/s[ée]rie\s*:\s*(.+)/i); if(!m) return null; const v = m[1].toLowerCase(); const x = DNA.series.find(x=>v.includes(x.nome.toLowerCase())); return x ? x.id : null; };
+  return itens.filter(i=>i.titulo).map(i=>({...i, serie: serieDoTexto(i.pesquisa), formato: /carross/i.test(i.pesquisa) ? 'Carrossel' : /stories/i.test(i.pesquisa) ? 'Stories' : 'Reel'}));
+}
+function lerGanchos(txt){
+  const out = [];
+  txt.split('\n').forEach(l=>{
+    const m = l.match(/^\s*(?:\*\*)?\d{1,2}\s*[\.\)\-–]\s*(.+)$/);
+    if(m){
+      let r = limpa(m[1]), angulo = '', motivo = '';
+      const a = r.match(/^\[([^\]]+)\]\s*/) || r.match(/^\(([^)]+)\)\s*/) || r.match(/^([A-Za-zÀ-ú ]{3,20}):\s+/);
+      if(a){ angulo = a[1].trim(); r = r.slice(a[0].length); }
+      const sp = r.split(/\s+[—–]\s+|\s+-\s+(?=motivo|por qu)/i);
+      if(sp.length>1){ r = sp[0]; motivo = sp.slice(1).join(' — ').replace(/^(motivo|por qu[eê])\s*:\s*/i,''); }
+      out.push({texto:r.replace(/^["“]|["”]$/g,'').trim(), angulo, motivo});
+    } else if(out.length && /^\s*[-•]?\s*(motivo|por qu[eê])\s*:/i.test(l)){ out[out.length-1].motivo = limpa(l.replace(/^\s*[-•]?\s*(motivo|por qu[eê])\s*:\s*/i,'')); }
+  });
+  return out.filter(g=>g.texto).slice(0,10);
+}
+
+/* ---------- Renderer ---------- */
+const canvas = document.getElementById('cena');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene();
+const ceu = (()=>{ const cv = document.createElement('canvas'); cv.width = 16; cv.height = 512; const g = cv.getContext('2d'); const gr = g.createLinearGradient(0,0,0,512); gr.addColorStop(0,'#0b1230'); gr.addColorStop(.4,'#2a2552'); gr.addColorStop(.66,'#7a3a5e'); gr.addColorStop(.82,'#e8744a'); gr.addColorStop(1,'#ffc58a'); g.fillStyle = gr; g.fillRect(0,0,16,512); const t = new THREE.CanvasTexture(cv); t.encoding = THREE.sRGBEncoding; return t; })();
+scene.background = ceu;
+scene.fog = new THREE.Fog(0x4a3352, 110, 300);
+const camera = new THREE.PerspectiveCamera(32, 1, .1, 600);
+
+const MARCA = 0xff4423, MARCA_CSS = '#ff4423', QUENTE = 0xffc58a;
+scene.add(new THREE.HemisphereLight(0xffc9a8, 0x1c1d26, .5));
+const lua = new THREE.DirectionalLight(0xffa26b, .85);
+lua.position.set(-50, 30, 34); lua.castShadow = true;
+lua.shadow.mapSize.set(2048,2048);
+Object.assign(lua.shadow.camera,{left:-42,right:42,top:34,bottom:-34,near:1,far:160});
+lua.shadow.bias = -.0005; lua.shadow.radius = 3;
+scene.add(lua);
+
+const mats = {};
+function mat(c, o={}){ const k = c+JSON.stringify(o); return mats[k] || (mats[k] = new THREE.MeshStandardMaterial(Object.assign({color:c, roughness:.7, metalness:.02}, o))); }
+function malha(geo, m, x,y,z, parent, sombra=true){ const o = new THREE.Mesh(geo, m); o.position.set(x,y,z); o.castShadow = o.receiveShadow = sombra; parent.add(o); return o; }
+const box = (w,h,d,c,x,y,z,p,o) => malha(new THREE.BoxGeometry(w,h,d), o&&o.isMaterial?o:mat(c,o), x,y,z,p);
+const cil = (rt,rb,h,c,x,y,z,p,seg=24,o) => malha(new THREE.CylinderGeometry(rt,rb,h,seg), mat(c,o), x,y,z,p);
+function telaTex(w,h,desenha){ const cv = document.createElement('canvas'); cv.width=w; cv.height=h; const t = new THREE.CanvasTexture(cv); t.encoding = THREE.sRGBEncoding; t.anisotropy = 8; const f = ()=>{ const g = cv.getContext('2d'); g.clearRect(0,0,w,h); g.textAlign = 'left'; g.textBaseline = 'alphabetic'; g.shadowBlur = 0; desenha(g,w,h); t.needsUpdate = true; }; f(); return {tex:t, redesenha:f}; }
+const FONTE = '"Geist", "SF Pro Text", system-ui, sans-serif', MONO = '"Geist Mono", ui-monospace, monospace', SERIF = '"Instrument Serif", Georgia, serif';
+const neon = c => new THREE.MeshBasicMaterial({color:c, toneMapped:false});
+const plano = (mat_) => mat_; // legibilidade
+
+/* ---------- O prédio ---------- */
+const BW = 30, BD = 20, BH = 5;
+const X0 = -BW/2, X1 = BW/2, Z0 = -BD/2, Z1 = BD/2;
+const piso = telaTex(512,512,(g,w,h)=>{ g.fillStyle='#2a2320'; g.fillRect(0,0,w,h); for(let i=0;i<8;i++){ g.fillStyle = i%2?'#2e2622':'#28211e'; g.fillRect(0,i*64,w,64); g.fillStyle='rgba(0,0,0,.35)'; g.fillRect(0,i*64,w,2); } const img = g.getImageData(0,0,w,h), d = img.data; for(let i=0;i<d.length;i+=4){ const n = (Math.random()-.5)*10; d[i]+=n; d[i+1]+=n; d[i+2]+=n; } g.putImageData(img,0,0); });
+piso.tex.wrapS = piso.tex.wrapT = THREE.RepeatWrapping; piso.tex.repeat.set(6,4);
+box(BW, .3, BD, 0, 0, -.15, 0, scene, new THREE.MeshStandardMaterial({map:piso.tex, roughness:.55, metalness:.05}));
+// paredes do fundo e da esquerda, escuras, com lambri
+const paredeMat = mat(0x1b1d24,{roughness:.85});
+box(BW, BH, .3, 0, 0, BH/2, Z0-.15, scene, paredeMat);
+box(.3, BH, BD, 0, X0-.15, BH/2, 0, scene, paredeMat);
+for(let i=0;i<14;i++) box(.06, BH-.4, .05, 0x23262f, X0+1+i*2.1, BH/2, Z0+.03, scene);
+// vidro na frente e à direita
+const vidro = new THREE.MeshPhysicalMaterial({color:0xcfe0ff, transparent:true, opacity:.08, roughness:.05, metalness:0, depthWrite:false});
+malha(new THREE.BoxGeometry(BW, BH, .06), vidro, 0, BH/2, Z1, scene, false);
+malha(new THREE.BoxGeometry(.06, BH, BD), vidro, X1, BH/2, 0, scene, false);
+// esquadrias
+const esq = mat(0x0d0e12,{roughness:.4, metalness:.6});
+for(let i=0;i<=6;i++) box(.08, BH, .1, 0, X0+i*BW/6, BH/2, Z1, scene, esq);
+for(let i=0;i<=4;i++) box(.1, BH, .08, 0, X1, BH/2, Z0+i*BD/4, scene, esq);
+// laje de cima (só a borda, para ver dentro) e neon na cor da marca
+[[BW+.4,.35,.6,0,BH+.17,Z1],[BW+.4,.35,.6,0,BH+.17,Z0],[.6,.35,BD+.4,X0,BH+.17,0],[.6,.35,BD+.4,X1,BH+.17,0]].forEach(([w,h,d,x,y,z])=>box(w,h,d,0x111318,x,y,z,scene,{roughness:.5}));
+const neonMarca = neon(MARCA);
+[[BW+.42,.05,.05,0,BH+.02,Z1+.31],[BW+.42,.05,.05,0,.02,Z1+.42],[.05,.05,BD+.42,X1+.31,BH+.02,0],[.05,.05,BD+.42,X1+.42,.02,0]].forEach(([w,h,d,x,y,z])=>malha(new THREE.BoxGeometry(w,h,d), neonMarca, x,y,z, scene, false));
+[[X0,Z1],[X1,Z1],[X1,Z0]].forEach(([x,z])=>malha(new THREE.BoxGeometry(.05,BH,.05), neonMarca, x+(x>0?.32:-.32), BH/2, z+(z>0?.32:-.32), scene, false));
+// letreiro
+const letreiro = telaTex(1600,300,(g,w,h)=>{
+  g.fillStyle='#ffffff'; g.font=`400 150px ${SERIF}`; g.textAlign='center'; g.textBaseline='middle';
+  g.shadowColor='rgba(255,68,35,.85)'; g.shadowBlur=28; g.fillText('QG Ruptura', w/2, 120);
+  g.shadowBlur=0; g.fillStyle=MARCA_CSS; g.font=`500 44px ${MONO}`; g.fillText(arroba()+' · agência de conteúdo', w/2, 240);
+});
+const letreiroM = malha(new THREE.PlaneGeometry(13,2.44), new THREE.MeshBasicMaterial({map:letreiro.tex, transparent:true, toneMapped:false, depthWrite:false}), 0, BH+1.75, Z0-.1, scene, false);
+
+// luz quente de dentro: luminárias lineares + pontos de luz
+const luzLin = neon(0xffd7a8);
+[[-7,-2.9],[-7,3.1],[5,6.5],[9.5,-5]].forEach(([x,z])=>{ box(5,.06,.18,0x15161a,x,4.62,z,scene); malha(new THREE.BoxGeometry(4.8,.03,.12), luzLin, x,4.58,z, scene, false); cil(.01,.01,.4,0x111,x-2,4.85,z,scene,4); cil(.01,.01,.4,0x111,x+2,4.85,z,scene,4); });
+[[-7,0],[5,5.5],[9.5,-5],[-11,7.5]].forEach(([x,z],i)=>{ const l = new THREE.PointLight(QUENTE, i===2?.9:1.25, 15, 1.6); l.position.set(x,4.2,z); scene.add(l); });
+
+/* ---------- Av. Paulista: o QG suspenso (releitura do MASP) ---------- */
+const EL = 5.2, CHAO = -EL;
+// laje de concreto do prédio e núcleo de circulação
+box(BW+.8, .9, BD+.8, 0x6f6c66, 0, -.6, 0, scene, {roughness:.9});
+box(3, EL-.9, 2.4, 0x1d1e22, -2, CHAO+(EL-.9)/2, 0, scene, {roughness:.6});
+malha(new THREE.BoxGeometry(2.6, EL-1.2, .04), new THREE.MeshPhysicalMaterial({color:0xcfe0ff, transparent:true, opacity:.25, roughness:.1}), -2, CHAO+(EL-1.2)/2, 1.22, scene, false);
+// pórticos vermelhos: 4 pilares e 2 vigas sobre a cobertura
+const vermelho = mat(0xe0281e,{roughness:.55});
+const PX = BW/2+.9, PZ = BD/2+.6, TOPO = BH+1.7;
+[[-PX,-PZ],[PX,-PZ],[-PX,PZ],[PX,PZ]].forEach(([x,z])=>box(1.3, TOPO-CHAO, 1.3, 0, x, (TOPO+CHAO)/2, z, scene, vermelho));
+[-PZ,PZ].forEach(z=>box(BW+3.1, 1.5, 1.3, 0, 0, TOPO-.75, z, scene, vermelho));
+[-PX,PX].forEach(x=>box(1.3, .5, BD+2.5, 0, x, CHAO+.25, 0, scene, vermelho));
+
+// chão: vão livre, calçada, avenida com ciclovia no canteiro
+const calcadaTex = telaTex(256,256,(g,w,h)=>{ g.fillStyle='#55534f'; g.fillRect(0,0,w,h); for(let i=0;i<16;i++) for(let j=0;j<16;j++){ g.fillStyle = (i+j)%2 ? '#5d5a55' : '#4f4d49'; g.fillRect(i*16,j*16,15,15); } });
+calcadaTex.tex.wrapS = calcadaTex.tex.wrapT = THREE.RepeatWrapping; calcadaTex.tex.repeat.set(60,60);
+box(320, .2, 320, 0, 0, CHAO-.1, 0, scene, new THREE.MeshStandardMaterial({map:calcadaTex.tex, roughness:.95}));
+box(BW+8, .04, BD+6, 0x8d8a83, 0, CHAO+.02, 0, scene, {roughness:.85});
+const AV = Z1+14, LARG = 16;
+box(320, .06, LARG, 0x232429, 0, CHAO+.03, AV, scene, {roughness:.9});
+box(320, .12, 1.8, 0x5c5a56, 0, CHAO+.06, AV, scene);
+box(320, .02, 1.3, 0xb8402e, 0, CHAO+.13, AV, scene, {roughness:.8});
+[AV-LARG/2, AV+LARG/2].forEach(z=>box(320, .22, .3, 0x9a968e, 0, CHAO+.11, z, scene));
+const faixaMat = neon(0xd9d6cf);
+for(let x=-155;x<155;x+=6){ [AV-4.4, AV+4.4].forEach(z=>malha(new THREE.BoxGeometry(2.6,.02,.14), faixaMat, x, CHAO+.07, z, scene, false)); }
+for(let i=0;i<9;i++) malha(new THREE.BoxGeometry(.7,.02,LARG-.6), faixaMat, -BW/2-8+i*1.3, CHAO+.07, AV, scene, false);
+
+// árvores, postes e semáforos
+function arvore(x,z,s=1){
+  const g = new THREE.Group(); g.position.set(x,CHAO,z); g.scale.setScalar(s); scene.add(g);
+  cil(.18,.26,3.2,0x4a3a2c,0,1.6,0,g,6,{flatShading:true});
+  [[0,3.9,0,1.7],[1,3.4,.4,1.2],[-1,3.5,-.3,1.3],[.3,4.6,-.5,1.1]].forEach(([dx,y,dz,r],k)=>{ const c = malha(new THREE.IcosahedronGeometry(r,0), mat(k%2?0x2f5a2c:0x3b6b34,{roughness:.95,flatShading:true}), dx,y,dz,g); c.rotation.set(k,x,z); });
+}
+for(let x=-100;x<=100;x+=11){ if(Math.abs(x) < BW/2+3) continue; arvore(x, Z1+4.5, .9+Math.abs(Math.sin(x))*.3); }
+for(let x=-104;x<=104;x+=13) arvore(x, AV+LARG/2+3, .85+Math.abs(Math.cos(x))*.3);
+arvore(-BW/2-3.5, Z1-2, 1.1); arvore(BW/2+3.5, Z1-2, 1); arvore(-BW/2-4, Z0+2, 1.05); arvore(BW/2+4, Z0+3, .95);
+const lampMat = neon(0xffd9a0);
+for(let x=-98;x<=98;x+=14){
+  const g = new THREE.Group(); g.position.set(x, CHAO, AV-LARG/2-.9); scene.add(g);
+  cil(.07,.09,6.5,0x2a2b30,0,3.25,0,g,8,{metalness:.5,roughness:.4});
+  box(.08,.08,1.6,0x2a2b30,0,6.4,.8,g); malha(new THREE.BoxGeometry(.5,.12,.3), lampMat, 0,6.32,1.5, g, false);
+}
+[[-BW/2-8.6, AV-LARG/2-.6],[-BW/2-8.6+11, AV+LARG/2+.6]].forEach(([x,z])=>{ const g = new THREE.Group(); g.position.set(x,CHAO,z); scene.add(g); cil(.06,.06,3.6,0x1d1e22,0,1.8,0,g,8); box(.32,.95,.3,0x111215,0,3.9,0,g); [[0xff3b2f,.3],[0xffb020,0],[0x3ecf8e,-.3]].forEach(([c,y],k)=>malha(new THREE.CircleGeometry(.09,12), neon(k===2?c:0x2a2a2a), 0,3.9+y,.16, g, false)); });
+
+// torres da Paulista com janelas acesas
+function fachada(base, vidro){
+  return telaTex(128,256,(g,w,h)=>{
+    g.fillStyle = base; g.fillRect(0,0,w,h);
+    for(let y=6;y<h;y+=12) for(let x=6;x<w;x+=10){ const r = Math.random(); g.fillStyle = r < .26 ? (r < .07 ? '#ffe6c0' : '#f2c27e') : vidro; g.fillRect(x,y,7,8); }
+  });
+}
+const FACHADAS = [fachada('#2b2f38','#1b2433'), fachada('#3a3833','#232733'), fachada('#1d2a3a','#162236'), fachada('#4a463f','#2a2d36')];
+FACHADAS.forEach(f=>{ f.tex.wrapS = f.tex.wrapT = THREE.RepeatWrapping; });
+const matsTorre = FACHADAS.map(f=>new THREE.MeshStandardMaterial({map:f.tex, emissiveMap:f.tex, emissive:0xffffff, emissiveIntensity:.32, roughness:.6, metalness:.2}));
+function torre(x,z,w,d,h,k){
+  const m = malha(new THREE.BoxGeometry(w,h,d), matsTorre[k%4], x, CHAO+h/2, z, scene);
+  box(w+.3,.6,d+.3,0x15161a,x,CHAO+h+.3,z,scene);
+  if(h > 34) malha(new THREE.BoxGeometry(.25,.25,.25), neon(0xff3b2f), x, CHAO+h+3, z, scene, false), cil(.05,.05,3,0x777,x,CHAO+h+1.5,z,scene,6);
+}
+let sorteio = 7; const rnd = () => (sorteio = (sorteio*16807) % 2147483647) / 2147483647;
+for(let x=-120;x<=120;x+=14){ for(const z of [Z0-22, Z0-42, Z0-64]){ const h = 16 + rnd()*48 + (z===Z0-22?0:14); torre(x + (rnd()-.5)*4, z + (rnd()-.5)*6, 9+rnd()*5, 9+rnd()*5, h, Math.floor(rnd()*4)); } }
+for(const lado of [-1,1]) for(let i=0;i<6;i++){ const x = lado*(BW/2+12+i*15); torre(x, Z0+2 + (rnd()-.5)*3, 11+rnd()*3, 13, 18+rnd()*40, Math.floor(rnd()*4)); }
+
+// trânsito: carros e ônibus nas duas mãos
+const transito = [];
+function carro(cor, onibus){
+  const g = new THREE.Group(); scene.add(g);
+  if(onibus){
+    box(6,1.7,1.15, cor, 0,1.05,0, g, {roughness:.5});
+    malha(new THREE.BoxGeometry(5.4,.55,1.17), mat(0x101318,{roughness:.2,metalness:.4}), 0,1.4,0, g);
+    box(6.02,.12,1.17, 0xf2efe8, 0,.7,0, g);
+  } else {
+    box(2.1,.5,.98, cor, 0,.45,0, g, {roughness:.35, metalness:.4});
+    malha(new THREE.BoxGeometry(1.15,.42,.9), mat(0x0e1116,{roughness:.15,metalness:.5}), -.1,.86,0, g);
+  }
+  const L = onibus ? 3 : 1.05;
+  [-1,1].forEach(s=>{ malha(new THREE.BoxGeometry(.04,.1,.18), neon(0xfff6e0), L,.5,s*.32, g, false); malha(new THREE.BoxGeometry(.04,.1,.18), neon(0xff2a1a), -L,.5,s*.32, g, false); });
+  [[-1,-1],[-1,1],[1,-1],[1,1]].forEach(([a,b])=>{ const r = malha(new THREE.CylinderGeometry(.22,.22,.16,12), mat(0x0c0c0e), a*(L-.45),.22,b*.45, g); r.rotation.x = Math.PI/2; });
+  return g;
+}
+const CORES = [0xd9d9d9,0x1f1f22,0x8a1c1c,0xf0f0f0,0x3a4a6a,0xa9a9a9,0x2f4f3f,0xc9c4b8];
+const FAIXAS = [[AV-6,1],[AV-2.8,1],[AV+2.8,-1],[AV+6,-1]];
+for(let i=0;i<16;i++){ const [z,dir] = FAIXAS[i%4]; const onibus = i%6===0; const g = carro(onibus ? 0xc9302c : CORES[i%CORES.length], onibus); g.position.set(-120 + rnd()*240, CHAO+.06, z); g.rotation.y = dir>0 ? 0 : Math.PI; transito.push({g, dir, vel: onibus ? 6 : 8 + rnd()*6}); }
+
+// pedestres na calçada e no vão livre
+const pedestres = [];
+const ROUPAS = [0x2b3a55,0x5a2a2a,0x2f4f3f,0x6b5a3a,0x222226,0x7a3b5c,0xb0a89a,0x3a3f6b];
+for(let i=0;i<14;i++){
+  const b = boneco({pele:[0xe2b28f,0xc98e6a,0x8d5a3b,0xf0c7a8,0x6b4430][i%5], camisa:ROUPAS[i%ROUPAS.length], cabelo:[0x1a1210,0x3b2416,0x6b4a2a,0x0e0b0a][i%4], detalhe:ROUPAS[(i+3)%ROUPAS.length], cabeloLongo:i%3===0});
+  scene.add(b.g); b.g.scale.setScalar(.95);
+  const naPraca = i < 4;
+  const z = naPraca ? Z1-3 - rnd()*4 : (i%2 ? Z1+3.2 : AV+LARG/2+2);
+  const dir = rnd() < .5 ? 1 : -1;
+  b.g.position.set(naPraca ? -12 + rnd()*24 : -70 + rnd()*140, CHAO, z); b.g.rotation.y = dir>0 ? Math.PI/2 : -Math.PI/2;
+  Object.assign(b, {dir, vel: .9 + rnd()*.6, praca: naPraca, passo: rnd()*6});
+  pedestres.push(b);
+}
+
+/* ---------- Telão do fluxo (parede do fundo) ---------- */
+const telao = telaTex(1800,560,(g,w,h)=>{
+  g.fillStyle='#0d0e12'; g.fillRect(0,0,w,h);
+  g.strokeStyle='rgba(255,255,255,.04)'; g.lineWidth=1; for(let x=0;x<w;x+=40){ g.beginPath(); g.moveTo(x,0); g.lineTo(x,h); g.stroke(); }
+  g.fillStyle='#f4efe8'; g.font=`400 64px ${SERIF}`; g.fillText('Fluxo de conteúdo', 70, 110);
+  g.fillStyle='rgba(244,239,232,.5)'; g.font=`400 28px ${MONO}`; g.fillText(arroba()+'  ·  próxima pesquisa: '+proximaTerca(), 70, 158);
+  const cw = (w-140)/ORDEM.length;
+  ORDEM.forEach((e,i)=>{ const x = 70+i*cw, n = naEtapa(e).length;
+    g.fillStyle='rgba(255,255,255,.035)'; g.fillRect(x, 210, cw-30, 290);
+    g.fillStyle = MARCA_CSS; g.fillRect(x, 210, cw-30, 4);
+    g.fillStyle='rgba(244,239,232,.55)'; g.font=`400 24px ${MONO}`; g.fillText(M[ETAPAS[e].mesa].nome.toLowerCase(), x+24, 262);
+    g.fillStyle='#f4efe8'; g.font=`500 38px ${FONTE}`; g.fillText(ETAPAS[e].curto, x+24, 314);
+    g.fillStyle = e==='gravar' && n ? '#ff6a4d' : '#f4efe8'; g.font=`400 130px ${SERIF}`; g.fillText(String(n).padStart(2,'0'), x+20, 470);
+  });
+});
+const telaoG = new THREE.Group(); telaoG.position.set(-6.5, 2.9, Z0+.06); scene.add(telaoG);
+box(10.4, 3.4, .12, 0x08090b, 0,0,0, telaoG);
+malha(new THREE.PlaneGeometry(10, 3.11), new THREE.MeshBasicMaterial({map:telao.tex, toneMapped:false}), 0,0,.07, telaoG, false);
+/* ---------- Painel de números do perfil (parede da esquerda) ---------- */
+const LS_METRICAS = 'agencia-metricas-v1';
+let metricas = null;
+try{ metricas = JSON.parse(localStorage.getItem(LS_METRICAS)); }catch(e){}
+function numerosDoPerfil(m){
+  const num = v => Number(v)||0;
+  const seg = (m.seg||[]).filter(r=>num(r.follows_and_unfollows)>0);
+  const entraram = seg.reduce((a,r)=>a+num(r.follower_count),0);
+  const sairam = seg.reduce((a,r)=>a+Math.max(0,num(r.follows_and_unfollows)-num(r.follower_count)),0);
+  const dias = (m.dias||[]).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  const posts = (m.posts||[]).slice().sort((a,b)=>String(b.timestamp).localeCompare(String(a.timestamp)));
+  const ultimo = posts[0];
+  const titulo = p => { const t = String(p.media_caption||'').split('\n')[0].trim(); return t.length>46 ? t.slice(0,45).trim()+'…' : t || 'Sem legenda'; };
+  const hist = Object.keys(m.historico||{}).sort();
+  return {seguidores:num(m.perfil&&m.perfil.followers_count), entraram, sairam, saldo:entraram-sairam, nSeg:seg.length, dias, views:dias.reduce((a,r)=>a+num(r.views),0), ultimo, melhor:posts.slice().sort((a,b)=>num(b.media_views)-num(a.media_views))[0], titulo,
+    semPostar: ultimo ? Math.max(0,Math.floor((Date.now()-new Date(String(ultimo.timestamp).replace('+0000','Z')).getTime())/864e5)) : null, nHist:hist.length};
+}
+const fmtInt = n => Math.round(n).toLocaleString('pt-BR');
+const painelNumeros = telaTex(1800,540,(g,w,h)=>{
+  g.fillStyle='#0d0e12'; g.fillRect(0,0,w,h);
+  g.strokeStyle='rgba(255,255,255,.04)'; g.lineWidth=1; for(let x=0;x<w;x+=40){ g.beginPath(); g.moveTo(x,0); g.lineTo(x,h); g.stroke(); }
+  g.fillStyle='#f4efe8'; g.font=`400 64px ${SERIF}`; g.textAlign='left'; g.fillText('Números do perfil', 70, 96);
+  g.fillStyle='rgba(244,239,232,.5)'; g.font=`400 26px ${MONO}`; g.fillText(arroba(), 70, 138);
+  if(!metricas){ g.fillStyle='rgba(244,239,232,.6)'; g.font=`500 40px ${FONTE}`; g.fillText('Entre com a senha para ver os números de hoje.', 70, 300); return; }
+  const n = numerosDoPerfil(metricas), d = new Date(metricas.em);
+  g.textAlign='right'; g.fillText('atualizado '+d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' às '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}), w-70, 138); g.textAlign='left';
+  const kpis = [
+    ['seguidores', fmtInt(n.seguidores), `saldo ${n.saldo>0?'+':''}${fmtInt(n.saldo)} em ${n.nSeg} dias`, n.saldo<0],
+    ['views em 30 dias', fmtInt(n.views), 'perfil e posts', false],
+    ['entraram · saíram', `${fmtInt(n.entraram)} · ${fmtInt(n.sairam)}`, `últimos ${n.nSeg} dias com dado`, false],
+    ['dias sem postar', n.semPostar==null?'—':String(n.semPostar), n.ultimo?'último post '+new Date(String(n.ultimo.timestamp).replace('+0000','Z')).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}):'sem post nos últimos 90 dias', n.semPostar==null||n.semPostar>7]
+  ];
+  const cw = (w-140)/4;
+  kpis.forEach(([rot,val,sub,alerta],i)=>{ const x = 70+i*cw;
+    g.fillStyle='rgba(255,255,255,.035)'; g.fillRect(x,170,cw-26,190);
+    g.fillStyle=MARCA_CSS; g.fillRect(x,170,cw-26,4);
+    g.fillStyle='rgba(244,239,232,.55)'; g.font=`400 23px ${MONO}`; g.fillText(rot,x+22,212);
+    g.fillStyle=alerta&&i===3?'#ff6a4d':'#f4efe8'; g.font=`400 ${val.length>9?62:86}px ${SERIF}`; g.fillText(val,x+20,292);
+    g.fillStyle=alerta?'#ff8a70':'rgba(244,239,232,.55)'; g.font=`400 22px ${MONO}`; g.fillText(sub,x+22,338);
+  });
+  // barras de views por dia
+  const bx=70, by=510, bw=w/2-120, bh=110, max=Math.max(1,...n.dias.map(r=>Number(r.views)||0));
+  g.fillStyle='rgba(244,239,232,.55)'; g.font=`400 22px ${MONO}`; g.fillText('views por dia', bx, 392);
+  n.dias.forEach((r,i)=>{ const b = bw/Math.max(1,n.dias.length), a = Math.max(2,(Number(r.views)||0)/max*bh); g.fillStyle = (Number(r.views)||0)===max ? MARCA_CSS : 'rgba(244,239,232,.32)'; g.fillRect(bx+i*b, by-a, Math.max(2,b-3), a); });
+  // posts
+  const px=w/2+10;
+  const linha = (y,rot,p) => { g.fillStyle='rgba(244,239,232,.55)'; g.font=`400 22px ${MONO}`; g.fillText(rot,px,y); if(!p){ g.fillStyle='#f4efe8'; g.font=`500 30px ${FONTE}`; g.fillText('Sem post no período',px,y+40); return; } g.fillStyle='#f4efe8'; g.font=`500 30px ${FONTE}`; g.fillText(n.titulo(p),px,y+40); g.fillStyle=MARCA_CSS; g.textAlign='right'; g.font=`400 44px ${SERIF}`; g.fillText(fmtInt(Number(p.media_views)||0),w-70,y+40); g.textAlign='left'; };
+  linha(392,'último post',n.ultimo); linha(462,'melhor dos últimos 90 dias',n.melhor);
+});
+const painelG = new THREE.Group(); painelG.position.set(X0+.07, 2.75, .2); painelG.rotation.y = Math.PI/2; scene.add(painelG);
+box(12.4, 3.98, .12, 0x08090b, 0,0,0, painelG);
+malha(new THREE.PlaneGeometry(12, 3.6), new THREE.MeshBasicMaterial({map:painelNumeros.tex, toneMapped:false}), 0,0,.07, painelG, false);
+// relógio
+const relogioG = new THREE.Group(); relogioG.position.set(2.6, 3.9, Z0+.05); scene.add(relogioG);
+malha(new THREE.CylinderGeometry(.55,.55,.06,40), mat(0x0e0f13), 0,0,0, relogioG).rotation.x = Math.PI/2;
+malha(new THREE.TorusGeometry(.55,.03,8,40), mat(0x9a958d,{metalness:.8,roughness:.3}), 0,0,.03, relogioG);
+const ponteiroH = box(.04,.3,.02,0xf4efe8,0,.12,.05,relogioG), ponteiroM = box(.03,.44,.02,0xf4efe8,0,.18,.06,relogioG);
+for(let i=0;i<12;i++){ const a = i/12*Math.PI*2; box(.025,.08,.02,0xf4efe8,Math.sin(a)*.45,Math.cos(a)*.45,.04,relogioG).rotation.z = -a; }
+
+/* ---------- Mobília ---------- */
+function cadeira(parent){
+  const c = new THREE.Group(); parent.add(c);
+  for(let i=0;i<5;i++){ const a = i/5*Math.PI*2; const p = box(.05,.04,.36,0x111215,Math.sin(a)*.17,.06,Math.cos(a)*.17,c,{metalness:.5,roughness:.35}); p.rotation.y = a; }
+  cil(.03,.03,.38,0x25272c,0,.27,0,c,8,{metalness:.6,roughness:.3});
+  box(.5,.08,.48,0x1b1c21,0,.5,0,c,{roughness:.6});
+  box(.46,.58,.07,0x1b1c21,0,.86,.27,c,{roughness:.6}).rotation.x = .08;
+  return c;
+}
+function planta(x,z,s=1){ const g = new THREE.Group(); g.position.set(x,0,z); g.scale.setScalar(s); scene.add(g); cil(.3,.24,.7,0xc9a27a,0,.35,0,g,8,{roughness:.8,flatShading:true}); for(let i=0;i<9;i++){ const f = malha(new THREE.ConeGeometry(.08,1.3+(i%3)*.35,5), mat(i%2?0x2f7a5a:0x23614a,{flatShading:true}), Math.cos(i*.7)*.1,1.25,Math.sin(i*.7)*.1, g); f.rotation.set(Math.sin(i*1.7)*.4,0,Math.cos(i*1.3)*.4); } }
+planta(X0+.8,Z0+.8,1.2); planta(X0+.8,Z1-.9,1); planta(X1-.9,Z1-.9,1.1); planta(-1.2,Z0+.8,.9); planta(X1-.9,-.6,.9);
+
+/* ---------- Pessoas (bonecos blocados) ---------- */
+function boneco(m){
+  const raiz = new THREE.Group();
+  const pele = mat(m.pele,{roughness:.6}), roupa = mat(m.camisa,{roughness:.8}), calca = mat(0x1c1e26,{roughness:.85}), cabelo = mat(m.cabelo,{roughness:.9}), sapato = mat(0x0c0c0e,{roughness:.5});
+  const quadril = new THREE.Group(); quadril.position.y = .56; raiz.add(quadril);
+  const pernas = [-1,1].map(s=>{
+    const coxa = new THREE.Group(); coxa.position.set(s*.13,0,0); quadril.add(coxa);
+    malha(new THREE.BoxGeometry(.2,.3,.22), calca, 0,-.15,0, coxa);
+    const canela = new THREE.Group(); canela.position.y = -.3; coxa.add(canela);
+    malha(new THREE.BoxGeometry(.18,.24,.2), calca, 0,-.12,0, canela);
+    malha(new THREE.BoxGeometry(.2,.08,.28), sapato, 0,-.26,.04, canela);
+    return {coxa, canela};
+  });
+  const tronco = new THREE.Group(); tronco.position.y = .56; raiz.add(tronco);
+  malha(new THREE.BoxGeometry(.52,.56,.32), roupa, 0,.3,0, tronco);
+  malha(new THREE.BoxGeometry(.2,.06,.02), mat(m.detalhe,{roughness:.6}), 0,.5,.17, tronco);
+  const bracos = [-1,1].map(s=>{
+    const ombro = new THREE.Group(); ombro.position.set(s*.33,.52,0); tronco.add(ombro);
+    malha(new THREE.BoxGeometry(.14,.3,.16), roupa, 0,-.15,0, ombro);
+    const cotovelo = new THREE.Group(); cotovelo.position.y = -.3; ombro.add(cotovelo);
+    malha(new THREE.BoxGeometry(.13,.24,.14), roupa, 0,-.12,0, cotovelo);
+    malha(new THREE.BoxGeometry(.12,.1,.12), pele, 0,-.28,0, cotovelo);
+    return {ombro, cotovelo};
+  });
+  const cab = new THREE.Group(); cab.position.y = .64; tronco.add(cab);
+  malha(new THREE.BoxGeometry(.5,.48,.46), pele, 0,.24,0, cab);
+  malha(new THREE.BoxGeometry(.54,.16,.5), cabelo, 0,.5,-.01, cab);
+  malha(new THREE.BoxGeometry(.54,.36,.12), cabelo, 0,.33,-.21, cab);
+  if(m.cabeloLongo) malha(new THREE.BoxGeometry(.56,.5,.14), cabelo, 0,.15,-.22, cab);
+  [-1,1].forEach(s=>{ malha(new THREE.BoxGeometry(.06,.07,.02), mat(0x111111), s*.11,.25,.235, cab, false); malha(new THREE.BoxGeometry(.06,.18,.4), cabelo, s*.26,.36,-.02, cab); });
+  if(m.oculos) malha(new THREE.BoxGeometry(.4,.03,.02), mat(0x111111), 0,.29,.24, cab, false);
+  const copo = cil(.05,.04,.13,0xf4efe8,0,-.32,.06,bracos[1].cotovelo,10); copo.visible = false;
+  return {g:raiz, quadril, pernas, tronco, bracos, cab, copo};
+}
+
+/* rotas: corredor da frente z=CZ e corredor do meio x=CX; os destinos dizem por onde chegar */
+const CZ = 6.2, CX = .6;
+const DESTINOS = {
+  agua:{lado:'frente', via:[[11.6,CZ],[11.6,4.75]], olha:Math.PI, acao:'beber', t:[4,7]},
+  cafe:{lado:'frente', via:[[13.1,CZ],[13.1,2.2]], olha:Math.PI/2, acao:'beber', t:[5,8]},
+  banheiro:{lado:'fundo', via:[[CX,-8.6],[4.2,-8.6],[4.2,-9.45]], olha:Math.PI, acao:'sumir', t:[6,10]},
+  sofa:{lado:'frente', via:[[3.3,CZ],[3.3,8.15],[4.4,8.15]], olha:Math.PI, acao:'sofa', t:[7,12]},
+  janela:{lado:'frente', via:[[-4,CZ],[-4,9.25]], olha:0, acao:'olhar', t:[4,7]},
+  telao:{lado:'fundo', via:[[CX,-8.6],[-2,-8.6]], olha:Math.PI, acao:'olhar', t:[3,6]}
+};
+function caminho(p, chave){
+  const d = DESTINOS[chave], pts = [p.assento, ...p.saida], hub = pts[pts.length-1];
+  const noCorredor = Math.abs(hub[1]-CZ) < .01;
+  if(!noCorredor && d.lado==='frente') pts.push([CX,CZ]);
+  if(noCorredor && d.lado==='fundo'){ pts.push([CX,CZ]); }
+  if(!noCorredor && d.lado==='fundo'){ /* já está no corredor do meio */ }
+  pts.push(...d.via);
+  return pts.filter((q,i)=>i===0 || Math.hypot(q[0]-pts[i-1][0], q[1]-pts[i-1][1]) > .05);
+}
+
+const pessoas = [], palcos = {}, telas = {}, holos = {}, hitAlvos = [];
+function rotulo(m){
+  const t = telaTex(640,150,(g,w,h)=>{
+    const n = contaMesa(m.id);
+    const r = 70;
+    g.fillStyle='rgba(12,13,17,.86)'; g.strokeStyle = m.css; g.lineWidth = 4;
+    g.beginPath(); g.moveTo(r,6); g.lineTo(w-r,6); g.arc(w-r,h/2,h/2-6,-Math.PI/2,Math.PI/2); g.lineTo(r,h-6); g.arc(r,h/2,h/2-6,Math.PI/2,Math.PI*1.5); g.closePath(); g.fill(); g.stroke();
+    g.fillStyle = m.css; g.beginPath(); g.arc(62,h/2,13,0,Math.PI*2); g.fill();
+    g.fillStyle='#f4efe8'; g.font=`600 50px ${FONTE}`; g.fillText(m.nome, 96, 70);
+    g.fillStyle='rgba(244,239,232,.6)'; g.font=`400 30px ${MONO}`; g.fillText(m.papel.toLowerCase(), 98, 112);
+    const alerta = (m.id==='assistente'||m.id==='estudio') && n>0;
+    g.fillStyle = alerta ? '#ff6a4d' : 'rgba(244,239,232,.9)'; g.font=`400 76px ${SERIF}`; g.textAlign='right'; g.fillText(String(n).padStart(2,'0'), w-46, 104);
+  });
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({map:t.tex, transparent:true, depthTest:false, toneMapped:false}));
+  sp.scale.set(2.3,.54,1); sp.renderOrder = 10;
+  return {sp, t};
+}
+function telaMonitor(m){
+  return telaTex(512,300,(g,w,h)=>{
+    g.fillStyle='#0b0c10'; g.fillRect(0,0,w,h);
+    g.fillStyle = m.css; g.fillRect(0,0,w,6);
+    g.fillStyle='rgba(244,239,232,.9)'; g.font=`500 26px ${FONTE}`; g.fillText(m.nome, 24, 50);
+    g.fillStyle='rgba(244,239,232,.4)'; g.font=`400 18px ${MONO}`; g.fillText(m.papel.toLowerCase(), 24, 78);
+    for(let i=0;i<6;i++){ const bw = 120+((i*71+m.nome.length*29)%300); g.fillStyle = i%3===0 ? m.css : 'rgba(244,239,232,.16)'; g.fillRect(24, 104+i*28, bw, 12); }
+    g.fillStyle='#f4efe8'; g.font=`400 60px ${SERIF}`; g.textAlign='right'; g.fillText(String(contaMesa(m.id)).padStart(2,'0'), w-24, h-24);
+  });
+}
+function mesaTrabalho(st, m){
+  box(1.9,.06,.95,0x2b2420,0,.78,0,st,{roughness:.55});
+  [[-.88,-.4],[.88,-.4],[-.88,.4],[.88,.4]].forEach(([x,z])=>box(.05,.76,.05,0x111215,x,.38,z,st,{metalness:.6,roughness:.3}));
+  const t = telaMonitor(m); telas[m.id] = t;
+  const mon = new THREE.Group(); mon.position.set(0,.82,-.25); st.add(mon);
+  cil(.02,.02,.3,0x111215,0,.15,0,mon,6); box(.3,.02,.16,0x111215,0,.01,0,mon);
+  [-1,0,1].forEach(k=>{ const sg = new THREE.Group(); sg.position.set(k*.47,.52,k? .06:0); sg.rotation.y = -k*.32; mon.add(sg); box(.48,.32,.03,0x0a0a0c,0,0,0,sg); const pl = malha(new THREE.PlaneGeometry(.45,.29), new THREE.MeshBasicMaterial({map:t.tex, toneMapped:false}), 0,0,.017, sg, false); const u = pl.geometry.attributes.uv; for(let i=0;i<u.count;i++) u.setX(i, (u.getX(i)+k+1)/3); });
+  box(.5,.02,.16,0x1a1b20,0,.82,.12,st); box(.08,.02,.12,0x1a1b20,.4,.82,.12,st);
+  const caneca = cil(.05,.045,.11,[0xf4efe8,0xff4423,0x2b2f3a][m.nome.length%3],-.7,.86,.15,st,10);
+  const luz = malha(new THREE.BoxGeometry(1.7,.02,.02), neon(m.cor), 0,.76,.47, st, false);
+  return {mon, caneca};
+}
+
+const ROSTOS = {
+  pesquisador:{pele:0xe2b28f, camisa:0x3a3f6b, cabelo:0x2a1c14, detalhe:0x7f6cf2, oculos:true},
+  roteirista:{pele:0xc98e6a, camisa:0x5b3a22, cabelo:0x16110e, detalhe:0xe8a23a, cabeloLongo:true},
+  social:{pele:0xd7a27c, camisa:0x6b2440, cabelo:0x5a2e1c, detalhe:0xd8417f, cabeloLongo:true},
+  editor:{pele:0x8d5a3b, camisa:0x1d3e5c, cabelo:0x0e0b0a, detalhe:0x2f9ee8},
+  assistente:{pele:0xf0c7a8, camisa:0x1f5446, cabelo:0x9b3d1f, detalhe:0x1fae7a, cabeloLongo:true},
+  estudio:{pele:0xe0ad88, camisa:0x111214, cabelo:0x241a14, detalhe:0xff4423}
+};
+const POSTOS = {
+  pesquisador:{x:-10, z:-3}, roteirista:{x:-4.5, z:-3},
+  social:{x:-10, z:2.6}, editor:{x:-4.5, z:2.6}, designer:{x:-6, z:8.1},
+  assistente:{x:-11, z:8.1}
+};
+MESAS.forEach(m=>{
+  if(m.id==='estudio') return;
+  const ps = POSTOS[m.id];
+  const st = new THREE.Group(); st.position.set(ps.x, 0, ps.z); scene.add(st); palcos[m.id] = st;
+  mesaTrabalho(st, m);
+  const cadeiraP = new THREE.Group(); cadeiraP.position.set(0,0,.85); st.add(cadeiraP); cadeira(cadeiraP);
+  const b = boneco(Object.assign({}, ROSTOS[m.id])); scene.add(b.g);
+  const lb = rotulo(m); lb.sp.position.set(0,2.55,0); b.g.add(lb.sp); holos[m.id] = lb;
+  const assento = [ps.x, ps.z+.85];
+  // como sair da mesa até um corredor
+  const saida = m.id==='assistente' ? [[-9.5, ps.z+.85],[-9.5,CZ]] : ps.z < 0 ? [[ps.x,-1.2],[CX,-1.2]] : [[ps.x,CZ]];
+  Object.assign(b, {mesa:m.id, assento, saida, estado:'sentado', timer: 5 + Math.random()*14, rota:null, olha:Math.PI});
+  pessoas.push(b);
+  if(m.id==='pesquisador'){ for(let i=0;i<3;i++) box(.32,.015,.24,[0xf5d36b,0xffffff,0xc9c2ff][i],.6,.82+i*.015,.15,st).rotation.y = i*.3; }
+  if(m.id==='roteirista'){ for(let i=0;i<8;i++) box(.16,.008,.05,0xf5d36b,.55+(i%2)*.18,.815,(.0+Math.floor(i/2)*.07),st); }
+  if(m.id==='editor'){ box(.36,.22,.03,0x111,-.55,.95,-.05,st).rotation.y = .4; }
+  if(m.id==='assistente'){ const cel = box(.12,.015,.24,0x0d0f0e,.6,.795,.12,st,{roughness:.2}); st.userData.cel = cel; const brilho = malha(new THREE.PlaneGeometry(.1,.2), neon(0x1fae7a), .6,.805,.12, st, false); brilho.rotation.x = -Math.PI/2; st.userData.celTela = brilho; }
+  const anel = malha(new THREE.RingGeometry(1.25,1.32,64), new THREE.MeshBasicMaterial({color:m.cor, transparent:true, opacity:0, toneMapped:false}), 0,.02,.4, st, false); anel.rotation.x = -Math.PI/2; st.userData.anel = anel;
+  const hit = new THREE.Mesh(new THREE.BoxGeometry(2.4,2.6,2.6), new THREE.MeshBasicMaterial({visible:false})); hit.position.set(0,1.3,.4); hit.userData.mesa = m.id; st.add(hit); hitAlvos.push(hit);
+  st.userData.foco = new THREE.Vector3(ps.x, 1.2, ps.z+.6);
+});
+// divisória baixa entre as duas fileiras
+box(10,.9,.06,0x15161a,-7.25,.45,-.1,scene,{roughness:.6}); malha(new THREE.BoxGeometry(10,.02,.02), neonMarca, -7.25,.91,-.06, scene, false);
+
+/* ---------- Estúdio de vidro ---------- */
+(function(){
+  const m = M.estudio;
+  const st = new THREE.Group(); st.position.set(9.6, 0, -5.2); scene.add(st); palcos.estudio = st;
+  const LW = 8.4, LD = 7.2, LH = 4.4;
+  box(LW, .1, LD, 0x101114, 0, .05, 0, st, {roughness:.5});
+  for(let i=0;i<7;i++) for(let j=0;j<3;j++) box(1.05,1.15,.12,0x1c1d22,-3.4+i*1.13,.9+j*1.25,-LD/2+.25,st,{roughness:1});
+  const v = new THREE.MeshPhysicalMaterial({color:0xdfe7ff, transparent:true, opacity:.1, roughness:.05, depthWrite:false});
+  const quinas = new THREE.LineBasicMaterial({color:0xff6a4d, transparent:true, opacity:.6});
+  [[LW,LH,.04,0,LH/2,LD/2],[.04,LH,LD,-LW/2,LH/2,0]].forEach(([w,h,d,x,y,z])=>{ const vm = malha(new THREE.BoxGeometry(w,h,d), v, x,y+.05,z, st, false); vm.add(new THREE.LineSegments(new THREE.EdgesGeometry(vm.geometry), quinas)); });
+  const onair = telaTex(256,80,(g,w,h)=>{ g.fillStyle='#1a0b09'; g.fillRect(0,0,w,h); g.fillStyle='#ff4423'; g.font=`600 40px ${FONTE}`; g.textAlign='center'; g.fillText('NO AR',w/2,55); });
+  const onairM = malha(new THREE.PlaneGeometry(1.3,.4), new THREE.MeshBasicMaterial({map:onair.tex, toneMapped:false}), -1.6, 3.9, LD/2+.04, st, false); st.userData.onair = onairM;
+  cil(.3,.28,.07,0x1b1c21,0,.86,-1.2,st); cil(.04,.04,.8,0x777,0,.43,-1.2,st,8,{metalness:.6});
+  const b = boneco(ROSTOS.estudio); b.g.position.set(9.6,0,-6.4); b.g.rotation.y = 0; scene.add(b.g);
+  b.quadril.position.y = .9; b.tronco.position.y = .9; b.pernas.forEach(p=>{ p.coxa.rotation.x = -1.45; p.canela.rotation.x = 1.45; });
+  b.bracos.forEach(x=>{ x.ombro.rotation.x = -.2; x.cotovelo.rotation.x = -.9; });
+  Object.assign(b, {mesa:'estudio', estudio:true, estado:'fixo'}); pessoas.push(b);
+  const lb = rotulo(m); lb.sp.position.set(0,2.9,0); b.g.add(lb.sp); holos.estudio = lb;
+  const rl = new THREE.Group(); rl.position.set(0,0,1.1); st.add(rl);
+  cil(.025,.025,2.4,0x111,0,1.2,0,rl,8);
+  const anelLuz = malha(new THREE.TorusGeometry(.55,.05,16,64), neon(0xfff4e6), 0,2.45,0, rl, false); st.userData.anelLuz = anelLuz;
+  const luzRL = new THREE.PointLight(0xfff2e3, 1.1, 6, 2); luzRL.position.set(0,2.4,-.4); rl.add(luzRL);
+  const camG = new THREE.Group(); camG.position.set(1.5,0,1.5); camG.rotation.y = -.5; st.add(camG);
+  [0,2.1,4.2].forEach(a=>{ const pe = cil(.02,.02,1.6,0x111,Math.sin(a)*.3,.75,Math.cos(a)*.3,camG,6); pe.rotation.set(Math.cos(a)*.22,0,-Math.sin(a)*.22); });
+  box(.34,.3,.56,0x121314,0,1.62,0,camG,{roughness:.4}); cil(.11,.13,.38,0x0c0c0c,0,1.62,-.42,camG,20).rotation.x = Math.PI/2;
+  malha(new THREE.BoxGeometry(.06,.06,.02), neon(0xff2a1a), .12,1.8,.29, camG, false);
+  const sb = new THREE.Group(); sb.position.set(-2.4,0,.2); sb.rotation.y = .7; st.add(sb);
+  cil(.025,.025,2.8,0x111,0,1.4,0,sb,8); box(1.1,1.4,.45,0x0e0f12,0,2.8,0,sb);
+  malha(new THREE.PlaneGeometry(1,1.3), neon(0xfaf6ee), 0,2.8,.23, sb, false);
+  const anel = malha(new THREE.RingGeometry(2.6,2.7,72), new THREE.MeshBasicMaterial({color:m.cor, transparent:true, opacity:0, toneMapped:false}), 0,.12,0, st, false); anel.rotation.x = -Math.PI/2; st.userData.anel = anel;
+  const hit = new THREE.Mesh(new THREE.BoxGeometry(LW,LH,LD), new THREE.MeshBasicMaterial({visible:false})); hit.position.y = LH/2; hit.userData.mesa = 'estudio'; st.add(hit); hitAlvos.push(hit);
+  st.userData.foco = new THREE.Vector3(9.6, 1.6, -4.2);
+})();
+
+/* ---------- Copa, banheiro e lounge ---------- */
+// bebedouro
+(function(){
+  const g = new THREE.Group(); g.position.set(11.6,0,3.7); scene.add(g);
+  box(.5,1,.45,0xe9e6df,0,.5,0,g,{roughness:.4}); cil(.22,.22,.5,0x9fd3ff,0,1.27,0,g,16,{transparent:true, opacity:.55, roughness:.1});
+  box(.12,.06,.04,0x2a5ea8,0,.75,.24,g);
+})();
+// bancada do café
+(function(){
+  const g = new THREE.Group(); g.position.set(14.1,0,2.2); scene.add(g);
+  box(.7,.9,2.6,0x2b2420,0,.45,0,g,{roughness:.55}); box(.75,.05,2.65,0xd8d2c8,0,.92,0,g,{roughness:.3});
+  box(.4,.5,.34,0x111215,0,1.2,.5,g,{metalness:.4,roughness:.35}); malha(new THREE.BoxGeometry(.05,.05,.02), neon(0xff4423), -.2,1.3,.5, g, false);
+  for(let i=0;i<3;i++) cil(.05,.045,.1,0xf4efe8,-.1,1.0,-.5+i*.16,g,10);
+  box(.03,.8,1.6,0x111215,.33,2.2,0,g); for(let i=0;i<2;i++) box(.25,.03,1.5,0x2b2420,.2,1.95+i*.5,0,g);
+})();
+// porta do banheiro
+(function(){
+  box(1.3,2.6,.08,0x2b2420,4.2,1.3,Z0+.05,scene,{roughness:.5});
+  box(.06,.06,.1,0xc9a27a,4.65,1.25,Z0+.12,scene,{metalness:.8,roughness:.3});
+  const wc = telaTex(128,64,(g,w,h)=>{ g.fillStyle='#0e0f13'; g.fillRect(0,0,w,h); g.fillStyle='#f4efe8'; g.font=`500 34px ${FONTE}`; g.textAlign='center'; g.fillText('WC',w/2,45); });
+  malha(new THREE.PlaneGeometry(.5,.25), new THREE.MeshBasicMaterial({map:wc.tex, toneMapped:false}), 4.2,2.95,Z0+.1, scene, false);
+})();
+const portaWC = new THREE.Vector3(4.2, 0, Z0+.3);
+// lounge: tapete, sofá e mesinha
+malha(new THREE.CylinderGeometry(2.4,2.4,.02,40), mat(0x3a2c26,{roughness:1}), 5.2,.01,7.4, scene);
+(function(){
+  const g = new THREE.Group(); g.position.set(5.2,0,8.6); scene.add(g);
+  box(3.2,.42,.95,0x5a3a2c,0,.3,0,g,{roughness:.9}); box(3.2,.6,.25,0x5a3a2c,0,.75,.38,g,{roughness:.9}); box(.25,.55,.95,0x4e3226,-1.6,.5,0,g); box(.25,.55,.95,0x4e3226,1.6,.5,0,g);
+  [-.8,.8].forEach(x=>box(1.4,.12,.8,0x6b4636,x,.57,-.05,g,{roughness:.95}));
+})();
+cil(.55,.55,.05,0x2b2420,5.2,.45,6.6,scene,24); cil(.04,.04,.42,0x111,5.2,.22,6.6,scene,6);
+box(.25,.18,.18,0xf4efe8,5.0,.56,6.6,scene); // livro de marca
+// caminha do gato
+malha(new THREE.TorusGeometry(.38,.13,10,24), mat(0x7a5a48,{roughness:1}), 7.6,.12,8.4, scene).rotation.x = Math.PI/2;
+malha(new THREE.CylinderGeometry(.36,.36,.06,20), mat(0xb59a86,{roughness:1}), 7.6,.06,8.4, scene);
+
+/* ---------- O gato ---------- */
+const gato = (function(){
+  const g = new THREE.Group(); scene.add(g);
+  const pelo = mat(0xd98a3d,{roughness:.9}), listra = mat(0xb06a2a,{roughness:.9}), branco = mat(0xf2ebe1,{roughness:.9});
+  const corpo = new THREE.Group(); corpo.position.y = .3; g.add(corpo);
+  malha(new THREE.BoxGeometry(.3,.26,.58), pelo, 0,0,0, corpo);
+  for(let i=0;i<3;i++) malha(new THREE.BoxGeometry(.31,.04,.06), listra, 0,.12,-.15+i*.15, corpo);
+  malha(new THREE.BoxGeometry(.26,.12,.3), branco, 0,-.08,.12, corpo);
+  const cab = new THREE.Group(); cab.position.set(0,.16,.33); corpo.add(cab);
+  malha(new THREE.BoxGeometry(.28,.24,.24), pelo, 0,0,0, cab);
+  malha(new THREE.BoxGeometry(.14,.08,.06), branco, 0,-.06,.13, cab);
+  [-1,1].forEach(s=>{ const o = malha(new THREE.ConeGeometry(.06,.12,4), pelo, s*.09,.16,-.02, cab); o.rotation.y = Math.PI/4; malha(new THREE.BoxGeometry(.04,.04,.02), mat(0x7ec850), s*.07,.03,.12, cab, false); });
+  const patas = [[-.1,.2],[.1,.2],[-.1,-.2],[.1,-.2]].map(([x,z])=>{ const p = new THREE.Group(); p.position.set(x,.18,z); g.add(p); malha(new THREE.BoxGeometry(.08,.18,.08), z>0?branco:pelo, 0,-.09,0, p); return p; });
+  const cauda = new THREE.Group(); cauda.position.set(0,.06,-.3); corpo.add(cauda);
+  let seg = cauda; const segs = [];
+  for(let i=0;i<4;i++){ const s = new THREE.Group(); s.position.z = i? -.11 : 0; seg.add(s); malha(new THREE.BoxGeometry(.06,.06,.12), i===3?listra:pelo, 0,0,-.06, s); segs.push(s); seg = s; }
+  g.position.set(7.6,0,8.4);
+  return {g, corpo, cab, patas, segs, estado:'deitado', timer:4, rota:null, alvo:null};
+})();
+const LUGARES_GATO = [[7.6,8.4,'deitar'],[5.2,7.6,'sentar'],[-7,1.2,'sentar'],[11.1,5.3,'sentar'],[-4,8.9,'sentar'],[13,6.6,'sentar'],[6,8.55,'sofa'],[-1,4.4,'sentar']];
+
+/* ---------- Câmera orbital ---------- */
+const GERAL = {theta:-.38, phi:1.1, r:72, alvo:new THREE.Vector3(2,-1.5,6)};
+const cam = {theta:GERAL.theta, phi:GERAL.phi, r:GERAL.r, alvo:GERAL.alvo.clone()};
+const des = {theta:cam.theta, phi:cam.phi, r:cam.r, alvo:cam.alvo.clone()};
+const limTheta = t => Math.max(-1.3, Math.min(1.3, t));
+function aplicarCam(){ const sp = Math.sin(cam.phi); camera.position.set(cam.alvo.x + cam.r*sp*Math.sin(cam.theta), cam.alvo.y + cam.r*Math.cos(cam.phi), cam.alvo.z + cam.r*sp*Math.cos(cam.theta)); camera.lookAt(cam.alvo); }
+function irPara(d){ if(d.theta!=null) des.theta = limTheta(d.theta); if(d.phi!=null) des.phi = d.phi; if(d.r!=null) des.r = d.r; if(d.alvo) des.alvo.copy(d.alvo); if(reduz){ Object.assign(cam,{theta:des.theta,phi:des.phi,r:des.r}); cam.alvo.copy(des.alvo); } }
+function focarMesa(id){
+  const r = innerWidth<700 ? 34 : (id==='estudio'?30:26), th = des.theta;
+  const a = palcos[id].userData.foco.clone();
+  if(innerWidth>=700) a.add(new THREE.Vector3(Math.cos(th),0,-Math.sin(th)).multiplyScalar(r*.2));
+  else a.add(new THREE.Vector3(Math.sin(th),0,Math.cos(th)).multiplyScalar(r*.22));
+  irPara({alvo:a, r, phi:.82});
+}
+
+const ptrs = new Map(); let arrasto = 0, pinca = 0;
+canvas.addEventListener('pointerdown', e=>{ canvas.setPointerCapture(e.pointerId); ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY}); arrasto = 0; if(ptrs.size===2){ const [a,b]=[...ptrs.values()]; pinca = Math.hypot(a.x-b.x,a.y-b.y); } });
+canvas.addEventListener('pointermove', e=>{
+  const p = ptrs.get(e.pointerId);
+  if(!p){ hover(e); return; }
+  const dx = e.clientX-p.x, dy = e.clientY-p.y; p.x=e.clientX; p.y=e.clientY;
+  if(ptrs.size===2){ const [a,b]=[...ptrs.values()]; const d = Math.hypot(a.x-b.x,a.y-b.y); des.r = Math.max(12,Math.min(110,des.r*(pinca/d))); pinca = d; arrasto = 99; return; }
+  arrasto += Math.abs(dx)+Math.abs(dy);
+  if(arrasto>4){ canvas.classList.add('arrastando'); des.theta = limTheta(des.theta - dx*.005); des.phi = Math.max(.42,Math.min(1.42,des.phi - dy*.004)); if(reduz){cam.theta=des.theta;cam.phi=des.phi;} }
+});
+function soltar(e){ const era = ptrs.has(e.pointerId); ptrs.delete(e.pointerId); canvas.classList.remove('arrastando'); if(era && arrasto<=4 && e.type==='pointerup'){ const id = pick(e); if(id) abrir(id); } }
+canvas.addEventListener('pointerup', soltar); canvas.addEventListener('pointercancel', soltar);
+canvas.addEventListener('wheel', e=>{ e.preventDefault(); des.r = Math.max(12,Math.min(110,des.r*(1+e.deltaY*.0012))); if(reduz) cam.r = des.r; }, {passive:false});
+const ray = new THREE.Raycaster(), mv = new THREE.Vector2();
+function pick(e){ const r = canvas.getBoundingClientRect(); mv.set((e.clientX-r.left)/r.width*2-1, -(e.clientY-r.top)/r.height*2+1); ray.setFromCamera(mv,camera); const h = ray.intersectObjects(hitAlvos); return h[0] ? h[0].object.userData.mesa : null; }
+let sobre = null;
+function hover(e){ sobre = pick(e); canvas.classList.toggle('sobre', !!sobre); }
+
+/* pacote de luz entre mesas */
+const voos = [];
+const voo = new THREE.SphereGeometry(.16,16,12);
+function voar(de, para){
+  const a = palcos[de].userData.foco, b = palcos[para].userData.foco;
+  const m = malha(voo, new THREE.MeshBasicMaterial({color:0xffd2c4, toneMapped:false}), a.x,a.y+1.5,a.z, scene, false);
+  const halo = malha(new THREE.SphereGeometry(.42,16,12), new THREE.MeshBasicMaterial({color:M[para].cor, transparent:true, opacity:.35, blending:THREE.AdditiveBlending, depthWrite:false, toneMapped:false}), 0,0,0, m, false);
+  voos.push({m, a:new THREE.Vector3(a.x,2.6,a.z), b:new THREE.Vector3(b.x,2.6,b.z), t:0});
+}
+
+/* ---------- UI ---------- */
+const $ = id => document.getElementById(id);
+let aberta = null;
+function render(){
+  $('fluxo').innerHTML = ORDEM.map(e=>`<li><button class="etapa${aberta===ETAPAS[e].mesa?' ativa':''}" data-mesa="${ETAPAS[e].mesa}"><small>${M[ETAPAS[e].mesa].nome}</small><strong>${ETAPAS[e].nome}<i>${naEtapa(e).length}</i></strong></button></li>`).join('');
+  const n = naEtapa('gravar').length;
+  $('chip-ass').className = 'chip-ass vidro' + (n?' cobrando':'');
+  $('chip-ass').innerHTML = `<span class="ponto"></span>Assistente <small>${n ? n+(n>1?' cobranças':' cobrança') : 'em dia'}</small>`;
+  $('arroba').textContent = arroba();
+  Object.values(telas).forEach(t=>t.redesenha());
+  Object.values(holos).forEach(h=>h.t.redesenha());
+  telao.redesenha(); letreiro.redesenha(); painelNumeros.redesenha();
+  if(aberta) preencherGaveta(aberta);
+}
+$('fluxo').addEventListener('click', e=>{ const b = e.target.closest('.etapa'); if(b) abrir(b.dataset.mesa); });
+$('chip-ass').addEventListener('click', ()=>abrir('assistente'));
+
+function abrir(id){ if(tourAtual) pararTour(); aberta = id; if(id==='estrategia') irPara(GERAL); else focarMesa(id); preencherGaveta(id); $('gaveta').classList.remove('fechada'); render(); }
+function fechar(){ aberta = null; $('gaveta').classList.add('fechada'); render(); }
+$('g-fechar').addEventListener('click', ()=>{ fechar(); irPara(GERAL); });
+$('geral').addEventListener('click', ()=>{ fechar(); irPara(GERAL); });
+addEventListener('keydown', e=>{ if(e.key!=='Escape') return; if(!$('prompter').hidden) $('prompter').hidden = true; else if(!$('modal').hidden) $('modal').hidden = true; else if(!$('modal-arroba').hidden) $('modal-arroba').hidden = true; else if(!$('modal-login').hidden) $('l-depois').click(); else { fechar(); irPara(GERAL); } });
+
+const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtN = n => (n||0).toLocaleString('pt-BR');
+
+function ganchosHTML(c){
+  if(!c.ganchos || !c.ganchos.length){
+    const manual = `<div class="passos"><p><b>1.</b> Copie o prompt e rode no Claude. <b>2.</b> Cole a resposta abaixo.</p>
+    <textarea id="g-${c.id}" rows="4" placeholder="Cole aqui os 10 ganchos (1. [ângulo] gancho — motivo)"></textarea>
+    <div class="bts"><button class="btn min" data-ac="prompt" data-id="${c.id}">Copiar prompt dos 10 ganchos</button><button class="btn min prim" data-ac="lerganchos" data-id="${c.id}">Ler ganchos</button></div></div>`;
+    if(!agentesLigados()) return manual;
+    return `${c.agente?'':`<div class="bts"><button class="btn min prim" data-ac="agente" data-id="${c.id}">Gerar ganchos e roteiro</button></div>`}<details class="manual"><summary>Fazer manualmente</summary>${manual}</details>`;
+  }
+  const lista = c.ganchos.map((g,i)=>`<li><label class="gch${i===c.escolhido?' on':''}"><input type="radio" name="gc-${c.id}" data-ac="escolher" data-id="${c.id}" data-i="${i}"${i===c.escolhido?' checked':''}><span><b>${esc(g.texto)}</b>${g.angulo?`<i class="pill">${esc(g.angulo)}</i>`:''}${g.motivo?`<em>${esc(g.motivo)}</em>`:''}</span></label></li>`).join('');
+  const dica = agentesLigados() ? 'O Roteirista marcou o favorito. Troque se preferir outro e peça para reescrever o roteiro.' : c.escolhido==null ? 'Escolha o gancho que vai abrir o vídeo.' : 'Gancho escolhido. Agora gere o roteiro.';
+  let h = `${c.diagnostico?`<details class="pesq"><summary>Diagnóstico</summary><div class="md">${mdHTML(c.diagnostico)}</div></details>`:''}<p class="dica-card">${dica}</p><ol class="ganchos">${lista}</ol>`;
+  if(c.escolhido!=null && c.roteiro) h += roteiroHTML(c,'fala');
+  if(c.escolhido!=null) h += `<details class="manual"${c.roteiro?'':' open'}><summary>Editar o texto do roteiro</summary><label for="r-${c.id}">Roteiro em tópicos<textarea id="r-${c.id}" data-ac="roteiro" data-id="${c.id}" rows="6" placeholder="Cole aqui o roteiro que o Claude escreveu">${esc(c.roteiro||'')}</textarea></label></details>
+    <div class="bts">${agentesLigados()&&!ocupado(c.agente)?`<button class="btn min prim" data-ac="agente" data-so="roteiro" data-id="${c.id}">Reescrever roteiro</button>`:''}<button class="btn min" data-ac="promptroteiro" data-id="${c.id}">Copiar prompt do roteiro</button><button class="btn min" data-ac="refazer" data-id="${c.id}">Refazer ganchos</button></div>`;
+  return h;
+}
+/* ---------- Roteiro legível: o texto do Claude vira Fala, Cenas, Postar e Notas ---------- */
+const semMd = t => String(t||'').replace(/<br\s*\/?>/gi,' ').replace(/\*\*|__|`/g,'').replace(/\s+/g,' ').trim();
+const inlineMd = t => esc(t).replace(/&lt;br\s*\/?&gt;/gi,'<br>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<i>$2</i>').replace(/`([^`]+)`/g,'<code>$1</code>');
+const celulas = l => l.trim().replace(/^\||\|$/g,'').split('|').map(x=>x.trim());
+const ehTabela = l => /^\s*\|/.test(l);
+const ehRegua = l => /^\s*\|?[\s:|-]+\|?\s*$/.test(l) && l.includes('-');
+function mdHTML(txt){
+  const ls = String(txt||'').split('\n'); let h = '', lista = false, tab = null;
+  const fechaL = () => { if(lista){ h += '</ul>'; lista = false; } };
+  const fechaT = () => { if(tab){ tab.linhas.forEach(r=>{ h += `<p>${r.map((v,i)=>tab.cab[i]?`<b>${inlineMd(semMd(tab.cab[i]))}:</b> ${inlineMd(v)}`:inlineMd(v)).join('<br>')}</p>`; }); tab = null; } };
+  ls.forEach(l=>{
+    if(ehTabela(l)){ fechaL(); if(ehRegua(l)) return; const c = celulas(l); if(!tab) tab = {cab:c, linhas:[]}; else tab.linhas.push(c); return; }
+    fechaT();
+    const t = l.trim();
+    if(!t){ fechaL(); return; }
+    let m;
+    if((m = t.match(/^#{1,6}\s+(.+)/))){ fechaL(); h += `<h5>${inlineMd(m[1])}</h5>`; return; }
+    if((m = t.match(/^(?:[-*•]|\d+[.)])\s+(.+)/))){ if(!lista){ h += '<ul>'; lista = true; } h += `<li>${inlineMd(m[1])}</li>`; return; }
+    fechaL(); h += `<p>${inlineMd(t)}</p>`;
+  });
+  fechaL(); fechaT();
+  return h;
+}
+function lerRoteiro(txt){
+  const r = {titulo:'', cenas:[], secoes:[], colunaDePainel:false};
+  const ls = String(txt||'').split('\n');
+  let sec = {nome:'', linhas:[]}; r.secoes.push(sec);
+  for(let i=0;i<ls.length;i++){
+    const l = ls[i], t = l.trim();
+    if(!r.titulo && /^#\s+/.test(t)){ r.titulo = semMd(t.replace(/^#\s+/,'')); continue; }
+    const h = t.match(/^#{2,6}\s+(.+)/) || t.match(/^\*\*([^*]+?):?\*\*:?$/);
+    if(h){ sec = {nome:semMd(h[1]).replace(/:$/,''), linhas:[]}; r.secoes.push(sec); continue; }
+    // A primeira tabela com coluna de fala ou texto é o roteiro.
+    if(ehTabela(l) && !r.cenas.length && ls[i+1] && ehRegua(ls[i+1])){
+      const cab = celulas(l).map(x=>semMd(x).toLowerCase());
+      const col = re => cab.findIndex(x=>re.test(x));
+      const cF = col(/fala|\bvo\b|voz|narra|texto do painel|copy/), cT = col(/texto na tela|na tela|tela|texto/), cI = col(/imagem|b-roll|visual/), cA = col(/[áa]udio|som/), cP = col(/tempo|cena|painel/);
+      if(cF>=0 || cT>=0){
+        r.colunaDePainel = cP>=0 && /painel/.test(cab[cP]);
+        i += 2;
+        for(; i<ls.length && ehTabela(ls[i]); i++){
+          const c = celulas(ls[i]);
+          const pedacos = String(c[cP<0?0:cP]||'').split(/<br\s*\/?>|\s+·\s+/i).map(semMd).filter(Boolean);
+          const fase = pedacos.find(x=>/^(aten[cç][aã]o|interesse|desejo|a[cç][aã]o)\b/i.test(x)) || '';
+          r.cenas.push({tempo:pedacos[0]||'', fase:fase.toUpperCase().split(' ')[0], mec:pedacos.filter(x=>x!==pedacos[0]&&x!==fase).join(' · '),
+            fala:semMd(c[cF>=0?cF:cT]).replace(/^["“”]|["“”]$/g,''), tela:cT>=0&&cT!==cF?semMd(c[cT]):'', imagem:cI>=0?semMd(c[cI]):'', audio:cA>=0?semMd(c[cA]):''});
+        }
+        i--;
+        continue;
+      }
+    }
+    sec.linhas.push(l);
+  }
+  r.secoes = r.secoes.map(x=>({nome:x.nome, texto:x.linhas.join('\n').trim()})).filter(x=>x.texto);
+  return r;
+}
+const RE_POSTAR = /legenda|coment[aá]rio|cta|capa|[aá]udio/i;
+const RE_AVISO = /antes de publicar|fica fora|n[aã]o verifiquei/i;
+const semFala = f => !f || /^(—|-|sem fala|\(.*sem fala.*\)|\(.*texto fixo.*\))$/i.test(f);
+const abaRoteiro = {};
+function falasHTML(r){ return `<ol class="falas">${r.cenas.map(x=>`<li><time>${esc(x.tempo)}</time>${semFala(x.fala)?`<span class="semfala">Sem fala. Só imagem.</span>`:`<q>${esc(x.fala)}</q>`}</li>`).join('')}</ol>`; }
+function cenasHTML(r){
+  let fase = '';
+  return r.cenas.map(x=>{
+    const f = x.fase && x.fase!==fase ? `<p class="fase">${esc(x.fase)}</p>` : ''; if(x.fase) fase = x.fase;
+    const dl = [['Tela',x.tela],['Imagem',x.imagem],['Áudio',x.audio]].filter(([,v])=>v).map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join('');
+    return `${f}<div class="cena"><div class="cena-topo"><time>${esc(x.tempo)}</time>${x.mec?`<small>${esc(x.mec)}</small>`:''}</div>${semFala(x.fala)?'':`<q>${esc(x.fala)}</q>`}${dl?`<dl>${dl}</dl>`:''}</div>`;
+  }).join('');
+}
+function secoesHTML(c, lista){ return lista.map(x=>`<section class="rot-sec"><div class="rot-sec-topo"><h4>${esc(x.nome||'Ficha')}</h4><button class="btn min" data-ac="copiarsec" data-id="${c.id}" data-nome="${esc(x.nome)}">Copiar</button></div><div class="md">${mdHTML(x.texto)}</div></section>`).join(''); }
+function roteiroHTML(c, padrao){
+  const r = lerRoteiro(c.roteiro);
+  if(!r.cenas.length) return `<details class="pesq" open><summary>Roteiro</summary><div class="md">${mdHTML(c.roteiro)}</div></details>`;
+  const postar = r.secoes.filter(x=>x.nome && RE_POSTAR.test(x.nome) && !RE_AVISO.test(x.nome));
+  const notas = r.secoes.filter(x=>!postar.includes(x));
+  const avisos = notas.filter(x=>RE_AVISO.test(x.nome));
+  const abas = [['fala', r.colunaDePainel?'Texto':'Fala'],['cenas', r.colunaDePainel?'Painéis':'Cenas'],['postar','Postar'],['notas','Notas']];
+  const aba = abaRoteiro[c.id] || padrao;
+  const fim = (r.cenas[r.cenas.length-1].tempo.match(/(\d+(?:[.,]\d+)?)\s*s/)||[])[1];
+  const corpo = aba==='fala' ? falasHTML(r) : aba==='cenas' ? cenasHTML(r) : aba==='postar' ? (postar.length?secoesHTML(c,postar):'<div class="vazio">Sem legenda nem capa neste roteiro.</div>') : secoesHTML(c,notas);
+  return `<div class="rot">
+    <div class="rot-topo">${fim?`<span class="pill">${esc(fim)} s</span>`:''}<span class="pill">${r.cenas.length} ${r.colunaDePainel?'painéis':'cenas'}</span></div>
+    ${avisos.length&&aba!=='notas'?`<div class="rot-aviso">Tem pontos para conferir antes de publicar. <button data-ac="rotaba" data-id="${c.id}" data-aba="notas">Ver em Notas</button></div>`:''}
+    <div class="rot-abas" role="tablist" aria-label="Partes do roteiro">${abas.map(([k,n])=>`<button role="tab" aria-selected="${k===aba}" data-ac="rotaba" data-id="${c.id}" data-aba="${k}">${n}</button>`).join('')}</div>
+    <div role="tabpanel" class="rot">${corpo}</div>
+  </div>`;
+}
+const MAGNIFIC_URL = 'https://magnific.com/';
+function designHTML(c){
+  const d = c.design; if(!d) return '';
+  const pecas = (d.pecas||[]).map((x,i)=>`<div class="cena">${x.img?`<img class="mock" src="${esc(x.img)}" alt="${esc(x.nome)}" loading="lazy">`:''}<div class="cena-topo"><time>${esc(x.nome)}</time><small>${esc(x.proporcao)} · ${esc(x.uso)}</small></div>${x.img?'':`<div class="bts"><button class="btn min" data-ac="copiarpeca" data-id="${c.id}" data-i="${i}">Copiar prompt</button><a class="btn min" href="${MAGNIFIC_URL}" target="_blank" rel="noopener">Abrir o Magnific</a></div>`}</div>`).join('');
+  const paineis = (d.paineis||[]).map((x,i)=>`<div class="cena"><div class="cena-topo"><time>Painel ${i+1}</time><small>${esc(x.titulo)}</small></div><q>${esc(x.texto)}</q><dl><dt>Layout</dt><dd>${esc(x.layout)}</dd></dl></div>`).join('');
+  const prontas = (d.pecas||[]).filter(x=>x.img).length;
+  return `<div class="rot"><div class="rot-topo"><span class="pill">Design</span>${(d.pecas||[]).length?`<span class="pill">${prontas} de ${d.pecas.length} imagens</span>`:''}</div>
+    ${paineis}${pecas}
+    <details class="pesq"><summary>Direção de arte</summary><div class="md">${mdHTML(d.direcao)}</div></details>
+    ${d.avisos?`<div class="rot-aviso">${inlineMd(d.avisos)}</div>`:''}</div>`;
+}
+function cardHTML(c, mesa){
+  const prox = proxima(c), ant = anterior(c);
+  const trava = (c.etapa==='gancho' && c.escolhido==null) || ocupado(c.agente);
+  const av = prox ? `<button class="btn min prim" data-ac="avancar" data-id="${c.id}"${trava?' disabled':''}>${prox==='noar'?'Marcar como postado':'Enviar para '+M[ETAPAS[prox].mesa].nome}</button>` : '';
+  const g = ganchoEscolhido(c);
+  let corpo = agenteHTML(c.agente, `<button class="btn min" data-ac="agente" data-id="${c.id}">Tentar de novo</button>`);
+  if(c.nota) corpo += `<p>${esc(c.nota)}</p>`;
+  if(c.pesquisa && (c.etapa==='pauta' || c.etapa==='gancho')) corpo += `<details class="pesq"${c.etapa==='pauta'?' open':''}><summary>Pesquisa</summary><div class="md">${mdHTML(c.pesquisa)}</div></details>`;
+  if(c.etapa==='gancho') corpo += ganchosHTML(c);
+  if(g && c.etapa!=='gancho' && c.etapa!=='noar') corpo += `<div class="escolhido"><small>Abre com</small>${esc(g.texto)}</div>`;
+  if(c.design) corpo += designHTML(c);
+  if(c.planoGravacao && c.etapa==='gravar') corpo += `<details class="pesq"><summary>Plano de gravação</summary><div class="md">${mdHTML(c.planoGravacao)}</div></details>`;
+  if(c.briefEdicao && c.etapa==='edicao') corpo += `<details class="pesq" open><summary>Plano de edição</summary><div class="md">${mdHTML(c.briefEdicao)}</div></details>`;
+  if(c.roteiro && (c.etapa==='gravar' || c.etapa==='edicao' || c.etapa==='design')) corpo += roteiroHTML(c, c.etapa==='gravar'?'fala':'cenas');
+  if(c.legenda && c.etapa==='postar') corpo += `<details class="pesq" open><summary>Legenda e plano da primeira hora</summary><div class="md">${mdHTML(c.legenda)}</div></details><div class="bts"><button class="btn min" data-ac="copiarlegenda" data-id="${c.id}">Copiar legenda</button></div>`;
+  if(c.etapa==='noar') corpo += `<label for="v-${c.id}">Views<input type="number" min="0" id="v-${c.id}" data-ac="views" data-id="${c.id}" value="${c.views||''}" placeholder="0"></label>`;
+  let extra = '';
+  if(c.etapa==='pauta') extra = `${agentesLigados()&&!c.agente&&!c.exemplo?`<button class="btn min prim" data-ac="agente" data-id="${c.id}">Rodar agentes</button>`:''}<button class="btn min" data-ac="prompt" data-id="${c.id}">Copiar prompt para aprofundar</button>`;
+  if(c.etapa==='gravar') extra = `<button class="btn min" data-ac="gravacao" data-id="${c.id}">Modo gravação</button>${agentesLigados()&&!c.agente&&!c.design&&!c.exemplo?`<button class="btn min" data-ac="agente" data-so="design" data-id="${c.id}">Pedir mockups ao Designer</button>`:''}`;
+  if(c.etapa==='design' && agentesLigados() && !c.agente && !c.exemplo) extra = `<button class="btn min" data-ac="agente" data-so="design" data-id="${c.id}">Refazer direção de arte</button>`;
+  if(c.etapa==='edicao' || c.etapa==='postar') extra = `${c.etapa==='postar'&&agentesLigados()&&!c.agente&&!c.exemplo?`<button class="btn min" data-ac="agente" data-so="legenda" data-id="${c.id}">${c.legenda?'Reescrever legenda':'Gerar legenda'}</button>`:''}<button class="btn min" data-ac="prompt" data-id="${c.id}">Copiar prompt</button>`;
+  return `<div class="card">
+    <div class="linha"><h4>${esc(c.titulo)}</h4></div>
+    <div class="linha"><span class="pill fmt">${c.formato}</span>${serieDe(c)?`<span class="pill serie" style="--sc:${serieDe(c).cor}">${esc(serieDe(c).nome)}</span>`:''}${M[ETAPAS[c.etapa].mesa].etapas.length>1?`<span class="pill">${ETAPAS[c.etapa].nome}</span>`:''}${c.exemplo?'<span class="pill ex">exemplo</span>':''}</div>
+    ${corpo}
+    <div class="bts">${av}${extra}${ant?`<button class="btn min" data-ac="voltar" data-id="${c.id}">Voltar etapa</button>`:''}<button class="btn min" data-ac="apagar" data-id="${c.id}">Excluir</button></div>
+  </div>`;
+}
+function gavetaEstrategia(){
+  $('gaveta').style.setProperty('--c', '#1d5c43');
+  $('g-olho').textContent = 'Raio-X + linha editorial';
+  $('g-titulo').textContent = 'Estratégia do perfil';
+  $('g-faz').textContent = `${DNA.posicionamento} Personagens, arquétipos e criatividade trazem alcance e autoridade; os posts Raio-X vendem o Raio-X do seu Instagram; os cases vendem o studio.`;
+  const tot = S.cards.filter(c=>!c.exemplo && c.serie).length;
+  let h = `<div class="secao"><h3>Bio sugerida</h3><div class="bio">${esc(DNA.bio)}</div><div class="bts"><button class="btn min" data-ac="copiarbio">Copiar bio</button></div></div>`;
+  h += `<div class="secao"><h3>Séries e proporção${tot?` · ${tot} pautas suas`:''}</h3><div class="series-lista">${DNA.series.map(x=>{
+    const n = S.cards.filter(c=>!c.exemplo && c.serie===x.id).length, real = tot ? Math.round(n/tot*100) : 0;
+    return `<div class="serie-l" style="--sc:${x.cor}"><div class="topo"><b>${esc(x.nome)}</b><span class="meta">${tot?`${real}% · `:''}meta ${x.meta}%</span></div><div class="trilho"><i style="width:${tot?real:0}%"></i><em style="left:${x.meta}%"></em></div><small>${esc(x.funil)} · CTA: ${esc(x.cta)}</small><small>Referência: ${esc(x.ref)}</small><small>Skill: ${esc(x.skill)}</small></div>`;
+  }).join('')}</div></div>`;
+  h += `<div class="secao"><h3>Esteira</h3>${DNA.produtos.map(x=>`<div class="card"><div class="linha"><h4>${esc(x.nome)}</h4></div><div class="linha"><span class="pill">${esc(x.tipo)}</span></div><p>${esc(x.desc)}</p></div>`).join('')}</div>`;
+  h += `<div class="secao"><h3>Regras da linha editorial</h3><ul class="lista-dna">${DNA.regras.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>`;
+  h += `<div class="secao"><h3>Raio-X do perfil · 31/10/2026</h3><div class="kpis">${DNA.numeros.map(([a,b])=>`<div class="kpi"><small>${esc(a)}</small><strong>${esc(b)}</strong></div>`).join('')}</div><div class="bts"><a class="btn min" href="${RAIOX_URL}" target="_blank" rel="noopener">Abrir o Raio-X completo</a></div></div>`;
+  h += `<div class="secao"><h3>Referências de formato</h3><ul class="lista-dna">${DNA.referencias.map(([a,b])=>`<li><b>${esc(a)}</b>: ${esc(b)}</li>`).join('')}</ul></div>`;
+  h += `<div class="secao"><h3>Bordões</h3><ul class="lista-dna">${DNA.bordoes.map(b=>`<li>${esc(b)}</li>`).join('')}</ul></div>`;
+  h += `<div class="secao"><h3>Skills nos agentes</h3><table class="tab-skills"><tbody>${['pesquisador','roteirista','designer','editor','social'].map(i=>`<tr><td>${M[i].nome}</td><td><code>${esc(M[i].skill)}</code></td></tr>`).join('')}</tbody></table>
+    ${agentesLigados()?`<div class="bts">${ocupado((S.agentes||{}).plano)?'':`<button class="btn min prim" data-ac="geral" data-acao="plano">Montar plano de 4 semanas</button>`}${ocupado((S.agentes||{}).olivetto)?'':`<button class="btn min" data-ac="geral" data-acao="olivetto">Campanha Olivetto do Raio-X</button>`}</div>`:''}${relatorioHTML('plano','Plano de 4 semanas')}${relatorioHTML('olivetto','Campanha Olivetto do Raio-X')}
+    <div class="bts"><button class="btn min" data-ac="promptplano">Copiar prompt do plano de 4 semanas</button><button class="btn min" data-ac="promptolivetto">Copiar prompt Olivetto da oferta do Raio-X</button></div></div>`;
+  h += `<textarea class="fallback" id="fallback" hidden aria-label="Texto para copiar"></textarea>`;
+  $('g-corpo').innerHTML = h;
+}
+function preencherGaveta(id){
+  if(id==='estrategia') return gavetaEstrategia();
+  const m = M[id];
+  $('gaveta').style.setProperty('--c', m.css);
+  $('g-olho').textContent = m.papel;
+  $('g-titulo').textContent = m.nome;
+  $('g-faz').textContent = m.faz;
+  let h = '';
+  if(id==='assistente'){
+    const g = naEtapa('gravar');
+    h += `<div class="secao"><h3>Mensagem de hoje</h3><div class="zapmsg">${esc(msgZap())}</div>
+      <div class="bts"><button class="btn min prim" data-ac="copiarzap">Copiar mensagem</button><a class="btn min" href="https://wa.me/?text=${encodeURIComponent(msgZap())}" target="_blank" rel="noopener">Abrir no WhatsApp</a></div></div>`;
+    h += `<div class="secao"><h3>O que ela está cobrando (${g.length})</h3>${g.length ? g.map(c=>`<div class="card"><div class="linha"><h4>${esc(c.titulo)}</h4></div><div class="linha"><span class="pill fmt">${c.formato}</span>${c.exemplo?'<span class="pill ex">exemplo</span>':''}</div></div>`).join('') : '<div class="vazio">Nada parado no estúdio. Ela fica quieta hoje.</div>'}</div>`;
+    if(agentesLigados()) h += `<div class="secao"><h3>Escrita pela Assistente</h3>${ocupado((S.agentes||{}).cobranca)?'':`<div class="bts"><button class="btn min" data-ac="geral" data-acao="cobranca">Escrever a cobrança de hoje</button></div>`}${relatorioHTML('cobranca','Cobrança de hoje')}</div>`;
+    h += `<p class="skill">O envio no WhatsApp ainda é manual: copie a mensagem e mande.</p>`;
+  } else if(id==='social'){
+    const noar = naEtapa('noar'), tot = noar.reduce((a,c)=>a+(c.views||0),0);
+    const top = noar.slice().sort((a,b)=>(b.views||0)-(a.views||0))[0];
+    h += `<div class="secao"><h3>Placar do perfil</h3><div class="kpis"><div class="kpi"><small>No ar</small><strong>${noar.length}</strong></div><div class="kpi"><small>Views</small><strong>${fmtN(tot)}</strong></div><div class="kpi"><small>Média</small><strong>${fmtN(noar.length?Math.round(tot/noar.length):0)}</strong></div></div>${top&&top.views?`<p class="skill">Campeão: <code>${esc(top.titulo)}</code></p>`:''}<div class="bts">${agentesLigados()&&!ocupado((S.agentes||{}).analise)?`<button class="btn min prim" data-ac="geral" data-acao="analise">Analisar o perfil</button>`:''}<button class="btn min" data-ac="promptgeral">Copiar prompt de análise do perfil</button></div>${relatorioHTML('analise','Análise do perfil')}</div>`;
+    ['postar','noar'].forEach(e=>{ const cs = naEtapa(e); h += `<div class="secao"><h3>${ETAPAS[e].nome} (${cs.length})</h3>${cs.length?cs.map(c=>cardHTML(c,id)).join(''):'<div class="vazio">Vazio por enquanto.</div>'}</div>`; });
+    h += `<p class="skill">Skill sugerida: <code>${m.skill}</code></p>`;
+  } else {
+    const cs = daMesa(id);
+    if(id==='pesquisador'){
+      const manual = `<p class="dica-card"><b>1.</b> Copie o prompt e rode no Claude. <b>2.</b> Cole o <code>pesquisa-da-semana.md</code> aqui. Cada assunto vira uma pauta com a pesquisa anexada.</p>
+      <div class="bts"><button class="btn min prim" data-ac="promptgeral">Copiar prompt da pesquisa da semana</button><button class="btn min" data-ac="nova">Pauta avulsa</button></div>
+      <textarea id="imp" rows="4" aria-label="Colar pesquisa da semana" placeholder="## Assunto 1&#10;Por que está quente…&#10;## Assunto 2…"></textarea>
+      <div class="bts"><button class="btn min" data-ac="importar">Criar pautas a partir da pesquisa</button></div>`;
+      const semana = (S.agentes||{}).semana;
+      h += agentesLigados()
+        ? `<div class="secao ciclo"><h3>Ciclo de terça · próxima pesquisa ${proximaTerca()}</h3>
+          <p class="dica-card">Toda terça, às 9h, o Pesquisador traz as pautas da semana sozinho, e cada uma já segue para o Roteirista. Pauta que você jogar aqui entra na mesma esteira.</p>
+          ${agenteHTML(semana, `<button class="btn min" data-ac="geral" data-acao="semana">Tentar de novo</button>`)}
+          <div class="bts">${ocupado(semana)?'':`<button class="btn min prim" data-ac="geral" data-acao="semana">Buscar pautas agora</button>`}<button class="btn min" data-ac="nova">Pauta avulsa</button></div>
+          <details class="manual"><summary>Fazer manualmente</summary>${manual}</details></div>`
+        : `<div class="secao ciclo"><h3>Ciclo de terça · próxima pesquisa ${proximaTerca()}</h3>${nuvem.on?'<p class="dica-card">Agentes desligados: falta a chave da API do Claude no servidor.</p>':''}${manual}</div>`;
+    }
+    h += `<div class="secao"><h3>Na mesa (${cs.length})</h3>${cs.length?cs.map(c=>cardHTML(c,id)).join(''):`<div class="vazio">${id==='estudio'?'Nada para gravar agora.':id==='editor'?'Sem bruto esperando edição.':id==='designer'?'Nenhum carrossel ou mockup esperando.':id==='roteirista'?'Nenhum assunto esperando gancho. Mande uma pauta do Pesquisador.':'Sem pauta. Rode a pesquisa da semana e cole o resultado acima.'}</div>`}</div>`;
+    h += `<p class="skill">Skill sugerida: <code>${m.skill}</code></p>`;
+  }
+  h += `<textarea class="fallback" id="fallback" hidden aria-label="Texto para copiar"></textarea>`;
+  $('g-corpo').innerHTML = h;
+}
+function copiar(txt){
+  const falha = ()=>{ const t = $('fallback'); if(t){ t.hidden = false; t.value = txt; t.focus(); t.select(); } toast('Texto selecionado. Use ⌘C para copiar'); };
+  try{ navigator.clipboard.writeText(txt).then(()=>toast('Copiado'), falha); }catch(e){ falha(); }
+}
+let tT; function toast(t){ const el = $('toast'); el.textContent = t; el.hidden = false; clearTimeout(tT); tT = setTimeout(()=>el.hidden = true, 1900); }
+
+let apagando = null;
+$('g-corpo').addEventListener('click', e=>{
+  const b = e.target.closest('[data-ac]'); if(!b || b.tagName==='INPUT') return;
+  const c = S.cards.find(x=>x.id===b.dataset.id);
+  switch(b.dataset.ac){
+    case 'avancar': { const de = ETAPAS[c.etapa].mesa; c.etapa = proxima(c); const para = ETAPAS[c.etapa].mesa; if(de!==para) voar(de,para); salvar(); render(); toast(c.etapa==='noar'?'Postado. O Social acompanha.':`Enviado para ${M[para].nome}`); varrer(); break; }
+    case 'voltar': { const de = ETAPAS[c.etapa].mesa; c.etapa = anterior(c); const para = ETAPAS[c.etapa].mesa; if(de!==para) voar(de,para); salvar(); render(); break; }
+    case 'apagar': if(apagando===c.id){ S.cards = S.cards.filter(x=>x!==c); apagando = null; salvar(); render(); toast('Excluído'); } else { apagando = c.id; b.textContent = 'Confirmar exclusão'; } break;
+    case 'prompt': copiar(promptDe(ETAPAS[c.etapa].mesa, c)); break;
+    case 'promptroteiro': copiar(promptDe('roteirista', c, 'roteiro')); break;
+    case 'promptgeral': copiar(promptDe(aberta, null)); break;
+    case 'copiarzap': copiar(msgZap()); break;
+    case 'copiarbio': copiar(DNA.bio); break;
+    case 'promptplano': copiar(promptDe('estrategia', null)); break;
+    case 'promptolivetto': copiar(promptDe('estrategia', null, 'olivetto')); break;
+    case 'nova': abrirNova(); break;
+    case 'lerganchos': { const gs = lerGanchos($('g-'+c.id).value); if(!gs.length){ toast('Não achei ganchos numerados. Cole no formato 1. [ângulo] gancho — motivo'); break; } c.ganchos = gs; c.escolhido = null; salvar(); render(); toast(`${gs.length} ganchos na mesa`); break; }
+    case 'refazer': if(agentesLigados()){ agenteDoCard(c,'ganchos'); break; } c.ganchos = []; c.escolhido = null; salvar(); render(); break;
+    case 'agente': agenteDoCard(c, b.dataset.so); break;
+    case 'geral': agenteChamar({acao:b.dataset.acao}); break;
+    case 'copiarlegenda': copiar(c.legenda); break;
+    case 'copiarpeca': copiar(c.design.pecas[+b.dataset.i].prompt); break;
+    case 'rotaba': abaRoteiro[c.id] = b.dataset.aba; render(); break;
+    case 'copiarsec': { const x = lerRoteiro(c.roteiro).secoes.find(y=>y.nome===b.dataset.nome); if(x) copiar(x.texto.replace(/\*\*/g,'')); break; }
+    case 'gravacao': abrirGravacao(c); break;
+    case 'importar': { const itens = lerPesquisa($('imp').value); if(!itens.length){ toast('Não achei assuntos. Use um "## " antes de cada assunto'); break; } itens.reverse().forEach((it,k)=>S.cards.unshift({id:'c'+Date.now().toString(36)+k, titulo:it.titulo, formato:it.formato, serie:it.serie, etapa:'pauta', pesquisa:it.pesquisa, criado:Date.now()})); salvar(); render(); toast(`${itens.length} pautas criadas`); break; }
+  }
+});
+$('g-corpo').addEventListener('change', e=>{
+  const d = e.target.dataset, c = S.cards.find(x=>x.id===d.id); if(!c) return;
+  if(d.ac==='views'){ c.views = Math.max(0, parseInt(e.target.value)||0); salvar(); render(); }
+  if(d.ac==='escolher'){ c.escolhido = +d.i; salvar(); render(); }
+  if(d.ac==='roteiro'){ c.roteiro = e.target.value; salvar(); }
+});
+
+function abrirGravacao(c){
+  const g = ganchoEscolhido(c);
+  $('p-titulo').textContent = c.titulo;
+  $('p-gancho').textContent = g ? g.texto : '';
+  const rg = lerRoteiro(c.roteiro), falas = rg.cenas.filter(x=>!semFala(x.fala));
+  if(falas.length) $('p-roteiro').innerHTML = falas.map(x=>`<p class="p-fala"><small>${esc(x.tempo)}</small>${esc(x.fala)}</p>`).join('');
+  else $('p-roteiro').textContent = c.roteiro || 'Sem roteiro. Grave só com o gancho.';
+  $('prompter').hidden = false; $('p-fechar').focus();
+}
+$('p-fechar').addEventListener('click', ()=>$('prompter').hidden = true);
+
+$('f-serie').innerHTML = '<option value="">Sem série</option>' + DNA.series.map(x=>`<option value="${x.id}">${esc(x.nome)} · ${esc(x.funil)}</option>`).join('');
+$('estrat').addEventListener('click', ()=>abrir('estrategia'));
+function abrirNova(){ $('form-pauta').reset(); $('modal').hidden = false; setTimeout(()=>$('f-titulo').focus(),30); }
+$('nova').addEventListener('click', abrirNova);
+$('f-cancelar').addEventListener('click', ()=>$('modal').hidden = true);
+$('form-pauta').addEventListener('submit', e=>{
+  e.preventDefault(); const t = $('f-titulo').value.trim(); if(!t) return;
+  S.cards.unshift({id:'c'+Date.now().toString(36), titulo:t, formato:$('f-formato').value, serie:$('f-serie').value||null, etapa:'pauta', pesquisa:$('f-nota').value.trim(), criado:Date.now()});
+  salvar(); $('modal').hidden = true; abrir('pesquisador'); toast('Pauta na mesa do Pesquisador'); varrer();
+});
+$('arroba').addEventListener('click', ()=>{ $('f-arroba').value = S.arroba; $('f-nicho').value = S.nicho||''; $('modal-arroba').hidden = false; setTimeout(()=>$('f-arroba').focus(),30); });
+$('a-cancelar').addEventListener('click', ()=>$('modal-arroba').hidden = true);
+$('form-arroba').addEventListener('submit', e=>{ e.preventDefault(); S.arroba = $('f-arroba').value.replace(/^@+/,'').trim() || 'seuperfil'; S.nicho = $('f-nicho').value.trim(); salvar(); $('modal-arroba').hidden = true; render(); });
+$('form-login').addEventListener('submit', async e=>{
+  e.preventDefault(); const bt = $('l-entrar'); bt.disabled = true; $('l-erro').hidden = true;
+  try{
+    const r = await fetch('/api/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({senha:$('f-senha').value}), credentials:'same-origin'});
+    if(r.ok){ $('modal-login').hidden = true; await nuvemPuxar(true); }
+    else { const j = await r.json().catch(()=>({})); $('l-erro').textContent = j.erro || 'Não deu para entrar. Tente de novo.'; $('l-erro').hidden = false; }
+  }catch(err){ $('l-erro').textContent = 'Sem conexão. Tente de novo.'; $('l-erro').hidden = false; }
+  bt.disabled = false;
+});
+$('l-depois').addEventListener('click', ()=>{ try{ sessionStorage.setItem('agencia-login-depois','1'); }catch(e){} $('modal-login').hidden = true; toast('As pautas ficam só neste navegador'); });
+addEventListener('online', ()=>{ if(nuvem.on && nuvemMeta().sujo) nuvemEnviar(); });
+// Traz o que os agentes fizeram: rápido enquanto alguém trabalha. Não mexe na tela enquanto você digita.
+setInterval(()=>{
+  if(!nuvem.on || document.hidden || nuvem.enviando) return;
+  const el = document.activeElement;
+  if(el && /^(TEXTAREA|INPUT|SELECT)$/.test(el.tagName) && !el.closest('label.gch')) return;
+  const rodando = S.cards.some(c=>ocupado(c.agente)) || Object.values(S.agentes||{}).some(ocupado);
+  nuvem.tique = (nuvem.tique+1)%6;
+  nuvem.tiqueM = ((nuvem.tiqueM||0)+1)%120; if(nuvem.tiqueM===0) metricasPuxar(); // a cada 10 min
+  if(rodando || nuvem.tique===0) nuvemPuxar(false);
+}, 5000);
+document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible' && nuvem.on && !nuvem.enviando) nuvemPuxar(false); });
+[$('modal'),$('modal-arroba')].forEach(md=>md.addEventListener('click', e=>{ if(e.target===md) md.hidden = true; }));
+
+/* ---------- Loop ---------- */
+function redimensionar(){ const w = innerWidth, h = innerHeight; renderer.setSize(w,h,false); camera.aspect = w/h; camera.updateProjectionMatrix(); GERAL.r = w<700 ? 110 : (w/h<1.1 ? 88 : 72); }
+addEventListener('resize', redimensionar); redimensionar();
+cam.r = des.r = GERAL.r;
+
+/* ---------- Tour ---------- */
+const ORDEM_TOUR = ['pesquisador','roteirista','designer','estudio','editor','social','assistente'];
+let tourAtual = null, tourTimer = null, ultimoToque = 0, vidaPausada = false;
+$('pausa').addEventListener('click', ()=>{ vidaPausada = !vidaPausada; $('pausa').setAttribute('aria-pressed', String(vidaPausada)); $('pausa').textContent = vidaPausada ? 'Retomar' : 'Pausar'; });
+function mostrarLegenda(id, i){
+  const m = M[id];
+  $('lg-olho').textContent = `Etapa ${i+1} · ${m.papel}`;
+  $('lg-nome').textContent = m.nome;
+  $('lg-faz').textContent = m.faz.split('. ')[0].replace(/\.$/,'') + '.';
+  $('legenda').hidden = false;
+}
+function passoTour(i){
+  if(i >= ORDEM_TOUR.length){ pararTour(); irPara(GERAL); return; }
+  tourAtual = ORDEM_TOUR[i]; focarMesa(tourAtual); mostrarLegenda(tourAtual, i);
+  tourTimer = setTimeout(()=>passoTour(i+1), 6500);
+}
+function iniciarTour(){ fechar(); clearTimeout(tourTimer); $('tour').setAttribute('aria-pressed','true'); $('tour').textContent = '■ Parar tour'; passoTour(0); }
+function pararTour(){ clearTimeout(tourTimer); tourAtual = null; $('legenda').hidden = true; $('tour').setAttribute('aria-pressed','false'); $('tour').textContent = '▶ Tour'; }
+$('tour').addEventListener('click', ()=> tourAtual ? (pararTour(), irPara(GERAL)) : iniciarTour());
+canvas.addEventListener('pointerdown', ()=>{ ultimoToque = performance.now(); if(tourAtual) pararTour(); });
+canvas.addEventListener('wheel', ()=>{ ultimoToque = performance.now(); });
+
+/* ---------- Vida no escritório ---------- */
+const relogio = new THREE.Clock();
+const aleat = (a,b) => a + Math.random()*(b-a);
+const lerpAng = (a,b,k) => { let d = ((b-a+Math.PI)%(Math.PI*2)+Math.PI*2)%(Math.PI*2)-Math.PI; return a + d*k; };
+const PESOS = [['agua',.24],['cafe',.2],['banheiro',.14],['sofa',.16],['janela',.14],['telao',.12]];
+function sorteiaDestino(){ let r = Math.random(), acc = 0; for(const [k,w] of PESOS){ acc += w; if(r <= acc) return k; } return 'agua'; }
+
+function poseSentado(p, t, i, digitando){
+  p.quadril.position.y = .52; p.tronco.position.y = .52;
+  p.pernas.forEach(l=>{ l.coxa.rotation.x = -Math.PI/2; l.canela.rotation.x = Math.PI/2; });
+  p.bracos.forEach((b,k)=>{ b.ombro.rotation.x = -.75; b.ombro.rotation.z = 0; b.cotovelo.rotation.x = -.75 + (digitando ? Math.sin(t*12+i*3+k*1.7)*.07 : 0); });
+  p.cab.rotation.x = .1 + Math.sin(t*.7+i)*.05; p.cab.rotation.y = Math.sin(t*.33+i*2)*.18;
+}
+function poseAndando(p, t){
+  const ph = p.passo;
+  p.quadril.position.y = .56 + Math.abs(Math.sin(ph))*.03; p.tronco.position.y = p.quadril.position.y;
+  p.pernas.forEach((l,k)=>{ const s = Math.sin(ph + k*Math.PI); l.coxa.rotation.x = s*.55; l.canela.rotation.x = Math.max(0, -s)*.8; });
+  p.bracos.forEach((b,k)=>{ b.ombro.rotation.x = -Math.sin(ph + k*Math.PI)*.45; b.ombro.rotation.z = 0; b.cotovelo.rotation.x = -.25; });
+  p.cab.rotation.x = 0; p.cab.rotation.y *= .9;
+}
+function poseEmPe(p, t, i){
+  p.quadril.position.y = .56; p.tronco.position.y = .56;
+  p.pernas.forEach(l=>{ l.coxa.rotation.x = 0; l.canela.rotation.x = 0; });
+  p.bracos.forEach(b=>{ b.ombro.rotation.x = 0; b.ombro.rotation.z = 0; b.cotovelo.rotation.x = -.1; });
+  p.cab.rotation.y = Math.sin(t*.5+i)*.35; p.cab.rotation.x = Math.sin(t*.3+i)*.06;
+}
+function andar(p, dt, vel){
+  const alvo = p.rota[p.i], pos = p.g.position;
+  const dx = alvo[0]-pos.x, dz = alvo[1]-pos.z, d = Math.hypot(dx,dz), v = vel*dt;
+  if(d > .001) p.g.rotation.y = lerpAng(p.g.rotation.y, Math.atan2(dx,dz), Math.min(1, dt*9));
+  if(d <= v){ pos.x = alvo[0]; pos.z = alvo[1]; p.i++; return p.i >= p.rota.length; }
+  pos.x += dx/d*v; pos.z += dz/d*v; p.passo = (p.passo||0) + dt*vel*5.2;
+  return false;
+}
+function sentaNaMesa(p){ p.g.position.set(p.assento[0], 0, p.assento[1]); p.g.rotation.y = Math.PI; p.g.visible = true; p.copo.visible = false; p.estado = 'sentado'; }
+pessoas.forEach(p=>{ if(!p.estudio) sentaNaMesa(p); });
+
+function vidaPessoas(dt, t){
+  const fora = pessoas.filter(p=>!p.estudio && p.estado!=='sentado').length;
+  pessoas.forEach((p,i)=>{
+    if(p.estudio){
+      const grav = naEtapa('gravar').length>0;
+      p.cab.rotation.y = Math.sin(t*1.1)*.18;
+      p.bracos[1].ombro.rotation.x = grav ? -.6 + Math.sin(t*2.4)*.25 : -.2;
+      p.bracos[1].ombro.rotation.z = grav ? Math.sin(t*1.7)*.2 : 0;
+      p.tronco.rotation.z = Math.sin(t*.9)*.03;
+      return;
+    }
+    const ocupado = aberta===p.mesa || tourAtual===p.mesa;
+    switch(p.estado){
+      case 'sentado':
+        poseSentado(p, t, i, true);
+        if(!ocupado) p.timer -= dt;
+        if(p.timer <= 0 && fora < 2){ p.dest = sorteiaDestino(); p.rota = caminho(p, p.dest); p.i = 1; p.estado = 'indo'; p.g.position.set(p.assento[0],0,p.assento[1]); }
+        else if(p.timer <= 0) p.timer = aleat(3,8);
+        break;
+      case 'indo':
+      case 'voltando':
+        poseAndando(p, t);
+        if(andar(p, dt, 1.55)){
+          if(p.estado==='voltando'){ sentaNaMesa(p); p.timer = aleat(14,38); break; }
+          const d = DESTINOS[p.dest]; p.estado = 'acao'; p.timer = aleat(...d.t); p.alvoRot = d.olha;
+          if(d.acao==='sumir') p.g.visible = false;
+          if(d.acao==='beber') p.copo.visible = true;
+        }
+        break;
+      case 'acao': {
+        const d = DESTINOS[p.dest];
+        p.g.rotation.y = lerpAng(p.g.rotation.y, p.alvoRot, Math.min(1, dt*6));
+        if(d.acao==='sofa'){ poseSentado(p, t, i, false); p.g.position.y = .12; p.bracos.forEach(b=>{ b.ombro.rotation.x = -.25; b.cotovelo.rotation.x = -.5; }); p.cab.rotation.y = Math.sin(t*.4+i)*.4; }
+        else { poseEmPe(p, t, i); }
+        if(d.acao==='beber'){ const gole = (Math.sin(t*1.3+i) > .55); p.bracos[1].ombro.rotation.x = gole ? -2.3 : -.9; p.bracos[1].cotovelo.rotation.x = gole ? -1.1 : -1.2; p.cab.rotation.x = gole ? -.18 : 0; }
+        p.timer -= dt;
+        if(p.timer <= 0 || (ocupado && d.acao!=='sumir')){
+          p.g.visible = true; p.copo.visible = false; p.g.position.y = 0;
+          p.rota = caminho(p, p.dest).reverse(); p.i = 1; p.estado = 'voltando';
+        }
+        break;
+      }
+    }
+  });
+}
+
+function vidaGato(dt, t){
+  const c = gato, pos = c.g.position;
+  c.segs.forEach((s,k)=>{ s.rotation.y = Math.sin(t*(c.estado==='andando'?6:2.2) + k*.6)*(.25+k*.08); s.rotation.x = k===0 ? (c.estado==='deitado' ? .2 : -.7) : -.12; });
+  c.cab.rotation.y = Math.sin(t*.45)*.5;
+  if(c.estado==='andando'){
+    const [ax,az] = c.alvo, dx = ax-pos.x, dz = az-pos.z, d = Math.hypot(dx,dz), v = .9*dt;
+    c.g.rotation.y = lerpAng(c.g.rotation.y, Math.atan2(dx,dz), Math.min(1, dt*6));
+    c.corpo.position.y = .3 + Math.abs(Math.sin(t*10))*.015; c.corpo.rotation.x = 0;
+    c.patas.forEach((p,k)=>{ p.rotation.x = Math.sin(t*10 + (k%2?Math.PI:0) + (k>1?Math.PI/2:0))*.5; p.scale.y = 1; });
+    pos.y += ((c.lugar[2]==='sofa' && d<.6 ? .62 : 0) - pos.y)*Math.min(1, dt*8);
+    if(d <= v){ pos.x = ax; pos.z = az; c.estado = c.lugar[2]==='deitar' ? 'deitado' : 'sentado'; c.timer = aleat(6,16); }
+    else { pos.x += dx/d*v; pos.z += dz/d*v; }
+  } else {
+    c.timer -= dt;
+    if(c.estado==='deitado'){ c.corpo.position.y = .17; c.corpo.rotation.x = 0; c.patas.forEach(p=>{ p.scale.y = .3; p.rotation.x = 0; }); c.corpo.scale.y = 1 + Math.sin(t*1.6)*.03; }
+    else { c.corpo.position.y = .3; c.corpo.rotation.x = -.45; c.patas.forEach((p,k)=>{ p.scale.y = k<2 ? 1 : .55; p.rotation.x = 0; }); }
+    if(c.timer <= 0){
+      const opcoes = LUGARES_GATO.filter(l=>l!==c.lugar);
+      c.lugar = opcoes[Math.floor(Math.random()*opcoes.length)]; c.alvo = [c.lugar[0], c.lugar[1]]; c.estado = 'andando'; c.corpo.scale.y = 1;
+    }
+  }
+}
+gato.lugar = LUGARES_GATO[0];
+
+function loop(){
+  const dt = Math.min(relogio.getDelta(), .05), t = relogio.elapsedTime;
+  const k = 1 - Math.pow(.003, dt);
+  cam.theta += (des.theta-cam.theta)*k; cam.phi += (des.phi-cam.phi)*k; cam.r += (des.r-cam.r)*k; cam.alvo.lerp(des.alvo,k);
+  if(!reduz && !aberta && !tourAtual && ptrs.size===0 && performance.now()-ultimoToque > 9000) des.theta = limTheta(GERAL.theta + Math.sin(t*.05)*.35);
+  aplicarCam();
+  const agora = new Date();
+  const hm = agora.getHours()%12 + agora.getMinutes()/60, mm = agora.getMinutes() + agora.getSeconds()/60;
+  ponteiroH.rotation.z = -hm/12*Math.PI*2; ponteiroH.position.set(Math.sin(hm/12*Math.PI*2)*.12, Math.cos(hm/12*Math.PI*2)*.12, .05);
+  ponteiroM.rotation.z = -mm/60*Math.PI*2; ponteiroM.position.set(Math.sin(mm/60*Math.PI*2)*.18, Math.cos(mm/60*Math.PI*2)*.18, .06);
+  const grav = naEtapa('gravar').length>0;
+  if(!vidaPausada){
+    vidaPessoas(dt, t);
+    vidaGato(dt, t);
+    transito.forEach(c=>{ const x = c.g.position.x + c.dir*c.vel*dt; c.g.position.x = x > 150 ? -150 : x < -150 ? 150 : x; });
+    pedestres.forEach(p=>{ const lim = p.praca ? 13 : 75; p.g.position.x += p.dir*p.vel*dt; if(Math.abs(p.g.position.x) > lim){ p.dir *= -1; p.g.rotation.y = p.dir>0 ? Math.PI/2 : -Math.PI/2; } p.passo += dt*p.vel*5.2; poseAndando(p, t); });
+    const st = palcos.assistente.userData;
+    if(st.cel){ st.cel.rotation.y = grav && (t%2.2<.5) ? Math.sin(t*70)*.06 : 0; st.celTela.visible = !grav || (t%1<.75); }
+  }
+  palcos.estudio.userData.onair.material.color.setScalar(grav ? (reduz?1:.55+.45*Math.abs(Math.sin(t*2))) : .25);
+  Object.entries(holos).forEach(([id,h])=>{ const alvo = id===aberta || id===tourAtual ? 1 : id===sobre ? 1 : (aberta||tourAtual) ? .35 : .92; h.sp.material.opacity += (alvo - h.sp.material.opacity)*.12; });
+  MESAS.forEach(m=>{ const a = palcos[m.id].userData.anel; const alvo = m.id===aberta || m.id===tourAtual ? .9 : m.id===sobre ? .5 : 0; a.material.opacity += (alvo-a.material.opacity)*.15; });
+  for(let i=voos.length-1;i>=0;i--){ const v = voos[i]; v.t += dt/1.3; const p = Math.min(1,v.t); const e = p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2; v.m.position.lerpVectors(v.a,v.b,e); v.m.position.y = 2.6 + Math.sin(p*Math.PI)*4; if(p>=1){ scene.remove(v.m); voos.splice(i,1); } }
+  renderer.render(scene,camera);
+  requestAnimationFrame(loop);
+}
+render();
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(render);
+nuvemIniciar();
+loop();
+})();
+</script>
+</body>
+</html>
