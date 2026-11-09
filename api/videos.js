@@ -40,6 +40,7 @@ const PASTAS = {
   cnebh: { id: "1ybwVpKVHWRlmDTXOfmMkQptsMhZ2FfCt", versao: "STORYS" },
   cne: { id: "1yn092fEuO28MaHqYlp3KQMa9qlZqvdEm", versao: "STORYS" },
   xmt: { id: "1lOEv6xltbi3YBZxFn35-2jC7V0AUmIIN", versao: "STORYS" },
+  njt: { id: "1gyl53pK8puISaBxsw8v8UBWrIGtQc3KF", versao: "STORYS" },
 };
 
 /* Pastas dos estáticos, por remessa. Não entram na lista de artes — as
@@ -61,9 +62,14 @@ const PASTAS_ARTE = {
      sai da varredura, aqui fica só a raiz dos estáticos */
   cne:  { r0: "1yyCHfzPOAm6Ahnv7H952P4povx6VyIep" },
   cfef: { r01: "1JSPtos5jfWrcXyuibxHEMtdFHRy2MQnX",
-          r02: "1lxgUfGfw_9ouhVPHeHhOs_lPXhv-eJFQ" },
+          r02: "1lxgUfGfw_9ouhVPHeHhOs_lPXhv-eJFQ",
+          r03: "1aueXBNwdmf1O59pJCAaaeCDb3X7QEjWW" },
+  njt:  { r01: "1kT7RW7LXcZNFsBzlUYvULR0GwXbQWLXF" },
   xmt:  { r01: "1GRJ08fnIha7SkhRrL7CJyDEeMhzLY-_9",
-          r02: "1M8EyTaJLJ1lqIl5O07gvmNT5ZUH7BQO5" },
+          r02: "1M8EyTaJLJ1lqIl5O07gvmNT5ZUH7BQO5",
+          r03: "1L_tpUY6V5csRNVPAC9nt50KkfhnZ0xV_",
+          r04: "1VEpNDyRFc2foe3zcacrlCIhJwEDhX0na",
+          r05: "1XC8IJg-QCZmE9irlQNBPjGdkf1AzUaJ3" },
 };
 
 const PROFUNDIDADE = 4;        // raiz → leva → cidade → AD já é o pior caso
